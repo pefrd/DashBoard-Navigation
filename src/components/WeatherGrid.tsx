@@ -5,9 +5,10 @@ import { getBeaufortScale, decodeWMOWeatherCode } from '../utils/hydroLogic';
 
 interface WeatherGridProps {
   weather: WeatherData;
+  isNightMode?: boolean;
 }
 
-export const WeatherGrid: React.FC<WeatherGridProps> = ({ weather }) => {
+export const WeatherGrid: React.FC<WeatherGridProps> = ({ weather, isNightMode = false }) => {
   const {
     airTemp,
     apparentTemp,
@@ -28,78 +29,120 @@ export const WeatherGrid: React.FC<WeatherGridProps> = ({ weather }) => {
   const beaufort = getBeaufortScale(windSpeedKmh);
   const conditionLabel = decodeWMOWeatherCode(weatherCode);
 
+  const cardBg = isNightMode
+    ? 'bg-[#121A2D] border-[#1E2942] text-white shadow-sm'
+    : 'bg-white border-slate-300 text-slate-900 shadow-sm';
+
+  const labelColor = isNightMode ? 'text-slate-400' : 'text-slate-700';
+  const unitColor = isNightMode ? 'text-slate-400' : 'text-slate-600';
+  const primaryNumberColor = isNightMode ? 'text-white' : 'text-slate-950';
+
   return (
     <div className="space-y-3">
       {/* Header with Condition */}
       <div className="flex items-center justify-between px-1">
-        <h2 className="text-xs sm:text-sm font-black uppercase tracking-tight text-slate-800 flex items-center gap-1.5">
+        <h2
+          className={`text-xs sm:text-sm font-black uppercase tracking-tight flex items-center gap-1.5 ${
+            isNightMode ? 'text-slate-200' : 'text-slate-900'
+          }`}
+        >
           <CloudSun className="w-4 h-4 text-[#F37021]" />
           Conditions Météorologiques & Thermiques
         </h2>
-        <span className="text-[11px] font-semibold text-[#002D72] bg-white px-2.5 py-1 rounded-md border border-slate-200 shadow-sm">
+        <span
+          className={`text-[11px] font-extrabold px-2.5 py-1 rounded-md border shadow-sm ${
+            isNightMode
+              ? 'bg-[#17233D] text-sky-300 border-[#25365A]'
+              : 'bg-white text-[#002D72] border-slate-300'
+          }`}
+        >
           {conditionLabel}
         </span>
       </div>
 
       <div className="grid grid-cols-2 gap-2.5">
-        {/* Temp Eau (Critical for Swimmer) */}
-        <div className="bg-white rounded-xl shadow-sm border border-slate-200/90 p-3 flex flex-col justify-between">
+        {/* Temp Eau */}
+        <div className={`${cardBg} rounded-xl border p-3.5 flex flex-col justify-between`}>
           <div className="flex justify-between items-start">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">
+            <span className={`text-[10px] font-black uppercase tracking-wider ${labelColor}`}>
               Température Eau
             </span>
-            <span className="text-[10px] text-blue-600 font-semibold bg-blue-50 px-1.5 py-0.5 rounded">
+            <span
+              className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${
+                isNightMode
+                  ? 'bg-sky-950 text-sky-300 border border-sky-800/40'
+                  : 'bg-blue-100 text-[#002D72]'
+              }`}
+            >
               Inertie 7j
             </span>
           </div>
           <div className="flex items-baseline gap-1 my-2">
-            <span className="text-3xl font-black text-[#002D72] font-mono tabular-nums">
+            <span
+              className={`text-3xl font-black font-mono tabular-nums ${
+                isNightMode ? 'text-sky-400' : 'text-[#002D72]'
+              }`}
+            >
               {estimatedWaterTemp !== null ? estimatedWaterTemp.toFixed(1) : '--.-'}
             </span>
-            <span className="text-sm font-bold text-slate-400">°C</span>
+            <span className={`text-sm font-bold ${unitColor}`}>°C</span>
           </div>
-          <div className="text-[10px] text-slate-400">
-            Modèle inertiel sol/air 7j
+          <div className={`text-[10px] font-semibold ${isNightMode ? 'text-slate-400' : 'text-slate-600'}`}>
+            Modèle inertiel sol/air
           </div>
         </div>
 
         {/* Temp Air */}
-        <div className="bg-white rounded-xl shadow-sm border border-slate-200/90 p-3 flex flex-col justify-between">
+        <div className={`${cardBg} rounded-xl border p-3.5 flex flex-col justify-between`}>
           <div className="flex justify-between items-start">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">
+            <span className={`text-[10px] font-black uppercase tracking-wider ${labelColor}`}>
               Température Air
             </span>
-            <span className="text-[10px] text-slate-400 font-mono">
+            <span
+              className={`text-[10px] font-mono font-bold ${
+                isNightMode ? 'text-slate-400' : 'text-slate-600'
+              }`}
+            >
               AROME
             </span>
           </div>
           <div className="flex items-baseline gap-1 my-2">
-            <span className="text-3xl font-black text-slate-800 font-mono tabular-nums">
+            <span className={`text-3xl font-black font-mono tabular-nums ${primaryNumberColor}`}>
               {airTemp !== null ? airTemp.toFixed(1) : '--.-'}
             </span>
-            <span className="text-sm font-bold text-slate-400">°C</span>
+            <span className={`text-sm font-bold ${unitColor}`}>°C</span>
           </div>
-          <div className="text-[10px] text-slate-600 font-medium">
+          <div className={`text-[10px] font-bold ${isNightMode ? 'text-slate-300' : 'text-slate-700'}`}>
             Ressenti : <strong className="text-[#F37021] font-mono">{apparentTemp !== null ? `${apparentTemp.toFixed(1)}°C` : '--'}</strong>
           </div>
         </div>
 
-        {/* Vent & Rafales (Full Width Strip for Tactical Wind Awareness) */}
-        <div className="col-span-2 bg-white rounded-xl shadow-sm border border-slate-200/90 p-3.5">
+        {/* Vent & Rafales */}
+        <div className={`${cardBg} col-span-2 rounded-xl border p-3.5`}>
           <div className="flex items-center justify-between mb-2">
             <div className="flex items-center gap-1.5">
-              <Wind className="w-4 h-4 text-[#002D72]" />
-              <span className="text-[11px] font-bold uppercase tracking-wider text-slate-600">
+              <Wind className="w-4 h-4 text-[#F37021]" />
+              <span className={`text-[11px] font-black uppercase tracking-wider ${labelColor}`}>
                 Vent & Rafales
               </span>
-              <span className="text-slate-300">·</span>
-              <span className="text-[11px] font-semibold text-slate-700">
+              <span className="opacity-40">·</span>
+              <span
+                className={`text-[11px] font-bold ${
+                  isNightMode ? 'text-slate-300' : 'text-slate-800'
+                }`}
+              >
                 Force {beaufort.force} ({beaufort.description})
               </span>
             </div>
 
             {/* Compass badge */}
-            <div className="flex items-center gap-1.5 bg-slate-50 px-2 py-0.5 rounded border border-slate-200 text-xs font-mono font-bold text-[#002D72]">
+            <div
+              className={`flex items-center gap-1.5 px-2 py-0.5 rounded border text-xs font-mono font-extrabold ${
+                isNightMode
+                  ? 'bg-[#0E1626] text-sky-300 border-[#25365A]'
+                  : 'bg-slate-100 text-[#002D72] border-slate-300'
+              }`}
+            >
               <div
                 style={{
                   transform: `rotate(${windDirDeg !== null ? windDirDeg : 0}deg)`,
@@ -116,62 +159,62 @@ export const WeatherGrid: React.FC<WeatherGridProps> = ({ weather }) => {
           <div className="grid grid-cols-2 gap-4 items-center">
             {/* Vent moyen */}
             <div className="flex items-baseline gap-1.5">
-              <span className="text-3xl font-black text-slate-900 font-mono tabular-nums">
+              <span className={`text-3xl font-black font-mono tabular-nums ${primaryNumberColor}`}>
                 {windSpeedKmh !== null ? Math.round(windSpeedKmh) : '--'}
               </span>
-              <span className="text-xs font-bold text-slate-400 uppercase">km/h moyen</span>
+              <span className={`text-xs font-bold uppercase ${unitColor}`}>km/h moyen</span>
             </div>
 
             {/* Rafales */}
             <div className="text-right">
-              <div className="text-[10px] uppercase font-bold text-slate-400 mb-0.5">
+              <div className={`text-[10px] uppercase font-black mb-0.5 ${labelColor}`}>
                 Rafales Maximum
               </div>
               <div className="flex items-baseline justify-end gap-1">
-                <span className={`text-2xl font-black font-mono tabular-nums ${windGustsKmh && windGustsKmh >= 40 ? 'text-rose-600' : 'text-[#F37021]'}`}>
+                <span className="text-2xl font-black font-mono tabular-nums text-[#F37021]">
                   {windGustsKmh !== null ? Math.round(windGustsKmh) : '--'}
                 </span>
-                <span className="text-xs font-bold text-slate-500 uppercase">km/h</span>
+                <span className={`text-xs font-bold uppercase ${unitColor}`}>km/h</span>
               </div>
             </div>
           </div>
         </div>
 
         {/* Pluie & Précipitations */}
-        <div className="bg-white rounded-xl shadow-sm border border-slate-200/90 p-3">
-          <div className="flex items-center justify-between text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-1">
-            <span>Précipitations</span>
+        <div className={`${cardBg} rounded-xl border p-3.5`}>
+          <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-wider mb-1">
+            <span className={labelColor}>Précipitations</span>
             <Droplets className="w-3.5 h-3.5 text-blue-500" />
           </div>
           <div className="flex items-baseline gap-1 my-1">
-            <span className="text-2xl font-black text-slate-900 font-mono tabular-nums">
+            <span className={`text-2xl font-black font-mono tabular-nums ${primaryNumberColor}`}>
               {precipNow.toFixed(1)}
             </span>
-            <span className="text-xs font-semibold text-slate-500">mm/h</span>
+            <span className={`text-xs font-bold ${unitColor}`}>mm/h</span>
           </div>
-          <div className="text-[10px] text-slate-500 mt-1">
-            Cumul +3h : <strong className="text-[#002D72] font-mono">{precip3h.toFixed(1)} mm</strong>
+          <div className={`text-[10px] font-bold mt-1 ${isNightMode ? 'text-slate-300' : 'text-slate-700'}`}>
+            Cumul +3h : <strong className="text-sky-500 font-mono">{precip3h.toFixed(1)} mm</strong>
           </div>
         </div>
 
         {/* Éphéméride & Ensoleillement */}
-        <div className="bg-white rounded-xl shadow-sm border border-slate-200/90 p-3">
-          <div className="flex items-center justify-between text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-1">
-            <span>Lumière / Éphéméride</span>
+        <div className={`${cardBg} rounded-xl border p-3.5`}>
+          <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-wider mb-1">
+            <span className={labelColor}>Lumière / Éphéméride</span>
             <Sun className="w-3.5 h-3.5 text-[#F37021]" />
           </div>
-          <div className="space-y-1 mt-1 text-xs font-mono text-slate-700">
+          <div className="space-y-1 mt-1 text-xs font-mono font-bold">
             <div className="flex items-center justify-between">
-              <span className="flex items-center gap-1 text-[11px] text-slate-500">
+              <span className={`flex items-center gap-1 text-[11px] ${labelColor}`}>
                 <Sunrise className="w-3 h-3 text-amber-500" /> Lever :
               </span>
-              <strong className="text-slate-900">{sunrise || '07:30'}</strong>
+              <strong className={primaryNumberColor}>{sunrise || '07:30'}</strong>
             </div>
             <div className="flex items-center justify-between">
-              <span className="flex items-center gap-1 text-[11px] text-slate-500">
+              <span className={`flex items-center gap-1 text-[11px] ${labelColor}`}>
                 <Sunset className="w-3 h-3 text-orange-600" /> Coucher :
               </span>
-              <strong className="text-slate-900">{sunset || '19:15'}</strong>
+              <strong className={primaryNumberColor}>{sunset || '19:15'}</strong>
             </div>
           </div>
         </div>

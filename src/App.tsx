@@ -11,13 +11,14 @@ import { SectorMode, RiverStationData, WeatherData } from './types';
 import {
   computeRiverVelocityMs,
   degreesToCardinal,
+  formatRelativeTime,
 } from './utils/hydroLogic';
 
 // Baseline realistic seed data for instant first-paint and high offline resilience
 const INITIAL_SEINE: RiverStationData = {
   stationCode: 'F700000103',
   name: 'LA SEINE — Pont d\'Austerlitz',
-  location: 'Cale de mise à l\'eau : Écluse Port de l\'Arsenal (PK 167.5)',
+  location: 'Cale : Écluse Port de l\'Arsenal (PK 167.5)',
   flowM3s: 280,
   flowTrend: 'Stable (±4 m³/s)',
   heightM: 1.42,
@@ -67,15 +68,37 @@ const INITIAL_WEATHER: WeatherData = {
 };
 
 export default function App() {
-  // SEINE PAR DÉFAUT (conforme à la demande explicite de l'utilisateur)
+  // SEINE PAR DÉFAUT
   const [sector, setSector] = useState<SectorMode>('seine');
   const [seine, setSeine] = useState<RiverStationData>(INITIAL_SEINE);
   const [marne, setMarne] = useState<RiverStationData>(INITIAL_MARNE);
   const [weather, setWeather] = useState<WeatherData>(INITIAL_WEATHER);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [lastSyncTime, setLastSyncTime] = useState<string | null>(null);
+  const [lastSyncIso, setLastSyncIso] = useState<string | null>(null);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [isBriefingOpen, setIsBriefingOpen] = useState<boolean>(false);
+
+  // Amélioration 3 : Mode Nuit Nautique
+  const [isNightMode, setIsNightMode] = useState<boolean>(() => {
+    try {
+      return localStorage.getItem('bpi_night_mode') === 'true';
+    } catch {
+      return false;
+    }
+  });
+
+  const toggleNightMode = useCallback(() => {
+    setIsNightMode((prev) => {
+      const next = !prev;
+      try {
+        localStorage.setItem('bpi_night_mode', String(next));
+      } catch {
+        // ignore
+      }
+      return next;
+    });
+  }, []);
 
   const showToast = useCallback((msg: string) => {
     setToastMessage(msg);
@@ -270,13 +293,12 @@ export default function App() {
         currentVelocityKmh: Number((vMarneMs * 3.6).toFixed(1)),
       });
 
-      const nowFormatted = new Date().toLocaleTimeString('fr-FR', {
-        hour: '2-digit',
-        minute: '2-digit',
-      });
-      setLastSyncTime(nowFormatted);
+      const now = new Date();
+      setLastSyncTime(now.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }));
+      setLastSyncIso(now.toISOString());
     } catch (err) {
-      setLastSyncTime('Hors-ligne (secours)');
+      setLastSyncTime('Hors-ligne');
+      setLastSyncIso(new Date().toISOString());
     } finally {
       setIsLoading(false);
     }
@@ -288,13 +310,22 @@ export default function App() {
     return () => clearInterval(interval);
   }, [fetchData]);
 
+  const relativeSyncTime = formatRelativeTime(lastSyncIso);
+
   return (
-    <div className="min-h-screen flex flex-col bg-slate-50 text-slate-900 pb-20 sm:pb-8">
+    <div
+      className={`min-h-screen flex flex-col transition-colors pb-20 sm:pb-8 ${
+        isNightMode ? 'bg-[#080E1B] text-slate-100' : 'bg-slate-100 text-slate-900'
+      }`}
+    >
       {/* Top Header */}
       <Header
         sector={sector}
         lastSyncTime={lastSyncTime}
+        relativeSyncTime={relativeSyncTime}
         isLoading={isLoading}
+        isNightMode={isNightMode}
+        onToggleNightMode={toggleNightMode}
         onRefresh={() => {
           fetchData();
           showToast('Actualisation des capteurs Vigicrues...');
@@ -303,34 +334,33 @@ export default function App() {
       />
 
       {/* Main Container */}
-      <main className="max-w-7xl w-full mx-auto px-3 sm:px-6 lg:px-8 py-3.5 sm:py-6 space-y-4 sm:space-y-6 flex-grow">
-        {/* Sector Selector (Seine par défaut) */}
+      <main className="max-w-7xl w-full mx-auto px-3 sm:px-6 lg:px-8 py-3 sm:py-5 space-y-3.5 sm:space-y-5 flex-grow">
+        {/* Sector Selector */}
         <section aria-label="Secteur d'intervention">
-          <SectorSelector activeSector={sector} onSelectSector={setSector} />
+          <SectorSelector
+            activeSector={sector}
+            onSelectSector={setSector}
+            isNightMode={isNightMode}
+          />
         </section>
 
-        {/* Hydrométrie Vigicrues (Seine / Marne / Global) */}
-        <section aria-label="Données hydrométriques" className="space-y-4">
-          {sector === 'combined' ? (
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-              <HydrometryCard station={seine} isPrimary={true} />
-              <HydrometryCard station={marne} isPrimary={false} />
-            </div>
-          ) : sector === 'seine' ? (
-            <HydrometryCard station={seine} isPrimary={true} />
+        {/* Hydrométrie Vigicrues (Seine / Marne) */}
+        <section aria-label="Données hydrométriques">
+          {sector === 'seine' ? (
+            <HydrometryCard station={seine} isPrimary={true} isNightMode={isNightMode} />
           ) : (
-            <HydrometryCard station={marne} isPrimary={true} />
+            <HydrometryCard station={marne} isPrimary={false} isNightMode={isNightMode} />
           )}
         </section>
 
         {/* Météo & Atmosphère */}
         <section aria-label="Conditions météo">
-          <WeatherGrid weather={weather} />
+          <WeatherGrid weather={weather} isNightMode={isNightMode} />
         </section>
 
         {/* Prévisions Horaires (+6h) */}
         <section aria-label="Prévisions horaires">
-          <HourlyCarousel hourly={weather.hourly} />
+          <HourlyCarousel hourly={weather.hourly} isNightMode={isNightMode} />
         </section>
       </main>
 
@@ -342,6 +372,8 @@ export default function App() {
           showToast('Actualisation des capteurs...');
         }}
         isLoading={isLoading}
+        isNightMode={isNightMode}
+        onToggleNightMode={toggleNightMode}
       />
 
       {/* Modal Briefing / Point Nav */}
@@ -352,6 +384,7 @@ export default function App() {
         seine={seine}
         marne={marne}
         weather={weather}
+        isNightMode={isNightMode}
         onShowToast={showToast}
       />
 

@@ -4,6 +4,7 @@ import {
   computeRiverVelocityMs,
   degreesToCardinal,
   decodeWMOWeatherCode,
+  formatRelativeTime,
 } from './hydroLogic.ts';
 
 test('computeRiverVelocityMs calculates Seine velocity accurately', () => {
@@ -27,4 +28,14 @@ test('decodeWMOWeatherCode decodes codes to readable French', () => {
   assert.equal(decodeWMOWeatherCode(0), 'Ciel dégagé');
   assert.equal(decodeWMOWeatherCode(61), 'Pluie faible');
   assert.equal(decodeWMOWeatherCode(95), 'Orage');
+});
+
+test('formatRelativeTime returns accurate relative minutes and hours', () => {
+  const baseTime = 1700000000000;
+  // 30 seconds ago
+  assert.equal(formatRelativeTime(new Date(baseTime - 30000).toISOString(), baseTime), 'à l\'instant');
+  // 5 minutes ago
+  assert.equal(formatRelativeTime(new Date(baseTime - 5 * 60000).toISOString(), baseTime), 'il y a 5 min');
+  // 1 hour 15 minutes ago
+  assert.equal(formatRelativeTime(new Date(baseTime - 75 * 60000).toISOString(), baseTime), 'il y a 1h15');
 });

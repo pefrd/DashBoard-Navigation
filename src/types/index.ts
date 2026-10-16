@@ -1,4 +1,4 @@
-export type SectorMode = 'seine' | 'marne' | 'combined';
+export type SectorMode = 'seine' | 'marne';
 
 export interface RiverStationData {
   stationCode: string;

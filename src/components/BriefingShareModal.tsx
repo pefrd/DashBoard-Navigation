@@ -9,6 +9,7 @@ interface BriefingShareModalProps {
   seine: RiverStationData;
   marne: RiverStationData;
   weather: WeatherData;
+  isNightMode?: boolean;
   onShowToast: (msg: string) => void;
 }
 
@@ -19,6 +20,7 @@ export const BriefingShareModal: React.FC<BriefingShareModalProps> = ({
   seine,
   marne,
   weather,
+  isNightMode = false,
   onShowToast,
 }) => {
   const [copied, setCopied] = useState(false);
@@ -53,9 +55,7 @@ export const BriefingShareModal: React.FC<BriefingShareModalProps> = ({
     `📍 Secteur : ${
       sector === 'seine'
         ? 'Seine (Arsenal / Austerlitz PK 167.5)'
-        : sector === 'marne'
-        ? 'Marne (Créteil / Gournay PK 152)'
-        : 'Bassin Seine & Marne'
+        : 'Marne (Créteil / Gournay PK 152)'
     }`,
     `🕒 ${nowStr}`,
     ``,
@@ -70,16 +70,14 @@ export const BriefingShareModal: React.FC<BriefingShareModalProps> = ({
     `🌊 *HYDROMÉTRIE VIGICRUES*`,
   ];
 
-  if (sector === 'seine' || sector === 'combined') {
+  if (sector === 'seine') {
     lines.push(
       `• SEINE (Austerlitz) :`,
       `  - Vitesse courant : ${seine.currentVelocityKmh.toFixed(1)} km/h (${seine.currentVelocityMs.toFixed(2)} m/s)`,
       `  - Débit : ${seine.flowM3s !== null ? Math.round(seine.flowM3s) : '--'} m³/s (${seine.flowTrend})`,
       `  - Hauteur d'eau : ${seine.heightM !== null ? seine.heightM.toFixed(2) : '--'} m`
     );
-  }
-
-  if (sector === 'marne' || sector === 'combined') {
+  } else {
     lines.push(
       `• MARNE (Créteil) :`,
       `  - Vitesse courant : ${marne.currentVelocityKmh.toFixed(1)} km/h (${marne.currentVelocityMs.toFixed(2)} m/s)`,
@@ -147,9 +145,15 @@ export const BriefingShareModal: React.FC<BriefingShareModalProps> = ({
       role="dialog"
       aria-modal="true"
       aria-labelledby="briefing-title"
-      className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/60 backdrop-blur-xs p-0 sm:p-4"
+      className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/70 backdrop-blur-xs p-0 sm:p-4"
     >
-      <div className="bg-white w-full sm:max-w-xl max-h-[92vh] rounded-t-3xl sm:rounded-2xl shadow-2xl flex flex-col overflow-hidden animate-in fade-in slide-in-from-bottom duration-200">
+      <div
+        className={`w-full sm:max-w-xl max-h-[92vh] rounded-t-3xl sm:rounded-2xl shadow-2xl flex flex-col overflow-hidden animate-in fade-in slide-in-from-bottom duration-200 border ${
+          isNightMode
+            ? 'bg-[#0E1626] border-[#1E2942] text-white'
+            : 'bg-white border-slate-300 text-slate-900'
+        }`}
+      >
         {/* Header */}
         <div className="p-4 bg-[#002D72] text-white flex items-center justify-between">
           <div>
@@ -172,17 +176,27 @@ export const BriefingShareModal: React.FC<BriefingShareModalProps> = ({
 
         {/* Text Area Content */}
         <div className="p-4 overflow-y-auto max-h-[55vh]">
-          <pre className="p-3.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-mono text-slate-800 whitespace-pre-wrap leading-relaxed select-all">
+          <pre
+            className={`p-3.5 rounded-xl text-xs font-mono whitespace-pre-wrap leading-relaxed select-all border ${
+              isNightMode
+                ? 'bg-[#080D17] border-[#182338] text-slate-200'
+                : 'bg-slate-100 border-slate-300 text-slate-900'
+            }`}
+          >
             {fullBriefingText}
           </pre>
         </div>
 
         {/* Action Buttons */}
-        <div className="p-3 sm:p-4 bg-slate-50 border-t border-slate-200 flex flex-col sm:flex-row gap-2">
+        <div
+          className={`p-3 sm:p-4 border-t flex flex-col sm:flex-row gap-2 ${
+            isNightMode ? 'bg-[#0A101C] border-[#1E2942]' : 'bg-slate-50 border-slate-300'
+          }`}
+        >
           <button
             type="button"
             onClick={handleCopy}
-            className="flex-1 min-h-[44px] px-4 py-2.5 rounded-xl bg-[#F37021] hover:bg-[#D85C12] text-white font-bold text-xs sm:text-sm flex items-center justify-center gap-2 active:scale-95 transition shadow-sm"
+            className="flex-1 min-h-[44px] px-4 py-2.5 rounded-xl bg-[#F37021] hover:bg-[#D85C12] text-white font-extrabold text-xs sm:text-sm flex items-center justify-center gap-2 active:scale-95 transition shadow-sm"
           >
             {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
             <span>{copied ? 'Copié !' : 'Copier le Point Nav'}</span>
@@ -203,7 +217,11 @@ export const BriefingShareModal: React.FC<BriefingShareModalProps> = ({
               type="button"
               onClick={handleNativeShare}
               aria-label="Partager le briefing"
-              className="min-h-[44px] px-3 py-2.5 rounded-xl bg-slate-200 hover:bg-slate-300 text-slate-800 font-semibold text-xs flex items-center justify-center gap-1.5 active:scale-95 transition"
+              className={`min-h-[44px] px-3 py-2.5 rounded-xl font-bold text-xs flex items-center justify-center gap-1.5 active:scale-95 transition border ${
+                isNightMode
+                  ? 'bg-[#17233D] text-slate-200 border-[#25365A] hover:bg-[#1E2E50]'
+                  : 'bg-slate-200 hover:bg-slate-300 text-slate-800 border-slate-300'
+              }`}
             >
               <Share2 className="w-4 h-4" />
               <span className="sm:inline">Partager</span>

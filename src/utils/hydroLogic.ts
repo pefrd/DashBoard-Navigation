@@ -77,3 +77,22 @@ export function decodeWMOWeatherCode(code: number | null | undefined): string {
   };
   return codes[code] || 'Variable';
 }
+
+/**
+ * Returns human-readable relative time (e.g., 'il y a 4 min', 'à l\'instant')
+ */
+export function formatRelativeTime(dateStr: string | null, nowMs: number = Date.now()): string {
+  if (!dateStr) return '';
+  const parsed = new Date(dateStr).getTime();
+  if (isNaN(parsed)) return '';
+  const diffMs = Math.max(0, nowMs - parsed);
+  const diffMin = Math.floor(diffMs / 60000);
+  if (diffMin < 1) return 'à l\'instant';
+  if (diffMin === 1) return 'il y a 1 min';
+  if (diffMin < 60) return `il y a ${diffMin} min`;
+  const diffHours = Math.floor(diffMin / 60);
+  const remMin = diffMin % 60;
+  if (remMin === 0) return `il y a ${diffHours}h`;
+  return `il y a ${diffHours}h${remMin.toString().padStart(2, '0')}`;
+}
+
