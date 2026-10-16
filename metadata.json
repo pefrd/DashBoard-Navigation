@@ -1,0 +1,8 @@
+{
+  "name": "BPI Nautique - Préparation Pilote & Nageur",
+  "description": "Application opérationnelle de préparation pilote et nageur de BPI (Bateau de Première Intervention) pour la Protection Civile nautique. Données hydrométriques Vigicrues et météo en direct.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
