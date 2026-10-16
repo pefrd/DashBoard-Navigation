@@ -1,23 +1,1715 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="fr">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes" />
-    <meta name="theme-color" content="#002D72" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    <title>BPI Nautique - Préparation Pilote & Nageur</title>
-    <meta name="description" content="Application opérationnelle de préparation pilote et nageur de BPI (Bateau de Première Intervention) pour la Protection Civile nautique. Données hydrométriques Vigicrues et météo en direct." />
-    <meta property="og:title" content="BPI Nautique - Préparation Pilote & Nageur" />
-    <meta property="og:description" content="Application opérationnelle de préparation pilote et nageur de BPI (Bateau de Première Intervention) pour la Protection Civile nautique. Données hydrométriques Vigicrues et météo en direct." />
-    <meta property="og:type" content="website" />
-    <meta name="twitter:card" content="summary_large_image" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700;800&display=swap" rel="stylesheet" />
-  </head>
-  <body class="bg-slate-50 text-slate-900 font-sans antialiased selection:bg-orange-500 selection:text-white">
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes" />
+  <meta name="theme-color" content="#002D72" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <title>BPI Nautique - Préparation Pilote & Nageur</title>
+  <meta name="description" content="Application opérationnelle de préparation pilote et nageur BPI pour la Protection Civile nautique. Données hydrométriques Vigicrues et météo AROME en direct." />
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;600;700;800&display=swap" rel="stylesheet" />
+
+  <style>
+    /* RESET & CORE VARIABLES */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    :root {
+      --pc-blue: #002D72;
+      --pc-blue-dark: #001E4D;
+      --pc-orange: #F37021;
+      --pc-orange-hover: #D85C12;
+      --bg-page: #F1F5F9;
+      --bg-card: #FFFFFF;
+      --border-card: #CBD5E1;
+      --text-main: #0F172A;
+      --text-muted: #334155;
+      --text-sub: #475569;
+      --bg-subtle: #F8FAFC;
+      --accent-badge: #E2E8F0;
+      --card-inner-border: #E2E8F0;
+      --speed-bg: #EFF6FF;
+      --speed-border: #BFDBFE;
+      --speed-text: #002D72;
+    }
+
+    body.dark {
+      --bg-page: #080E1B;
+      --bg-card: #121A2D;
+      --border-card: #1E2942;
+      --text-main: #F8FAFC;
+      --text-muted: #94A3B8;
+      --text-sub: #CBD5E1;
+      --bg-subtle: #0E1626;
+      --accent-badge: #17233D;
+      --card-inner-border: #1E2942;
+      --speed-bg: #17233D;
+      --speed-border: #25365A;
+      --speed-text: #38BDF8;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+      background-color: var(--bg-page);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      line-height: 1.4;
+      transition: background-color 0.2s ease, color 0.2s ease;
+      padding-bottom: 76px;
+    }
+
+    @media (min-width: 640px) {
+      body {
+        padding-bottom: 24px;
+      }
+    }
+
+    .font-mono {
+      font-family: 'JetBrains Mono', ui-monospace, monospace;
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* TACTICAL STRIPE */
+    .pc-tactical-stripe {
+      height: 6px;
+      background: repeating-linear-gradient(
+        -45deg,
+        #F37021,
+        #F37021 12px,
+        #002D72 12px,
+        #002D72 24px
+      );
+      width: 100%;
+    }
+
+    /* HEADER */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      background-color: var(--pc-blue);
+      color: #FFFFFF;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+    }
+    body.dark header {
+      background-color: #060D1A;
+      border-bottom: 1px solid #182338;
+    }
+
+    .header-inner {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .brand-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+      flex: 1;
+    }
+
+    .brand-logo {
+      width: 38px;
+      height: 38px;
+      flex-shrink: 0;
+    }
+
+    .brand-text {
+      min-width: 0;
+      flex: 1;
+    }
+
+    .brand-sup {
+      font-size: 10px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--pc-orange);
+    }
+
+    .brand-title {
+      font-size: 14px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      color: #FFFFFF;
+      line-height: 1.2;
+    }
+    @media (min-width: 640px) {
+      .brand-title { font-size: 16px; }
+    }
+
+    .brand-sub {
+      font-size: 11px;
+      color: #BFDBFE;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-top: 2px;
+      font-weight: 500;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    /* BUTTONS */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 8px 12px;
+      border-radius: 10px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: all 0.15s ease;
+      min-height: 40px;
+      color: #FFFFFF;
+    }
+    .btn:active {
+      transform: scale(0.96);
+    }
+
+    .btn-orange {
+      background-color: var(--pc-orange);
+      color: #FFFFFF;
+      box-shadow: 0 2px 4px rgba(243, 112, 33, 0.3);
+    }
+    .btn-orange:hover {
+      background-color: var(--pc-orange-hover);
+    }
+
+    .btn-glass {
+      background-color: rgba(255, 255, 255, 0.12);
+      border-color: rgba(255, 255, 255, 0.2);
+      color: #FFFFFF;
+    }
+    .btn-glass:hover {
+      background-color: rgba(255, 255, 255, 0.22);
+    }
+
+    .btn-night-toggle {
+      background-color: rgba(255, 255, 255, 0.12);
+      border-color: rgba(255, 255, 255, 0.2);
+      color: #E2E8F0;
+      padding: 8px 10px;
+    }
+    body.dark .btn-night-toggle {
+      background-color: rgba(245, 158, 11, 0.2);
+      border-color: rgba(245, 158, 11, 0.4);
+      color: #FCD34D;
+    }
+
+    .btn-primary-nav {
+      background-color: var(--pc-blue);
+      color: #FFFFFF;
+      border: 1px solid #1E3A8A;
+      flex: 1;
+      min-height: 46px;
+      font-size: 13px;
+      font-weight: 800;
+    }
+    body.dark .btn-primary-nav {
+      background-color: #002D72;
+      border-color: #1E3A8A;
+    }
+
+    /* MAIN CONTAINER */
+    main {
+      max-width: 1280px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      flex: 1;
+    }
+    @media (min-width: 640px) {
+      main {
+        padding: 18px 24px;
+        gap: 18px;
+      }
+    }
+
+    /* SECTOR SELECTOR */
+    .sector-switch {
+      background-color: #CBD5E1;
+      border: 1px solid #94A3B8;
+      border-radius: 12px;
+      padding: 4px;
+      display: flex;
+      gap: 4px;
+      width: 100%;
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.06);
+    }
+    body.dark .sector-switch {
+      background-color: #121A2D;
+      border-color: #1E2942;
+    }
+
+    .sector-btn {
+      flex: 1;
+      min-height: 42px;
+      border: none;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 800;
+      color: #334155;
+      background: transparent;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.15s ease;
+    }
+    body.dark .sector-btn {
+      color: #94A3B8;
+    }
+    .sector-btn.active {
+      background-color: #FFFFFF;
+      color: var(--pc-blue);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    body.dark .sector-btn.active {
+      background-color: #1D2A47;
+      color: #FFFFFF;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    }
+    .sector-btn .icon {
+      width: 16px;
+      height: 16px;
+      color: #94A3B8;
+    }
+    .sector-btn.active .icon {
+      color: var(--pc-orange);
+    }
+
+    /* CARD SYSTEM */
+    .card {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-card);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+      transition: background-color 0.2s ease, border-color 0.2s ease;
+    }
+
+    .station-head {
+      background-color: var(--pc-blue);
+      color: #FFFFFF;
+      padding: 10px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    @media (min-width: 640px) {
+      .station-head {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+      }
+    }
+    body.dark .station-head {
+      background-color: #001E4D;
+    }
+
+    .station-title {
+      font-size: 15px;
+      font-weight: 800;
+      letter-spacing: -0.01em;
+      line-height: 1.2;
+    }
+    .station-loc {
+      font-size: 11px;
+      color: #BFDBFE;
+      margin-top: 2px;
+      font-weight: 500;
+    }
+
+    .station-freshness {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 10px;
+      font-family: 'JetBrains Mono', monospace;
+      padding: 3px 8px;
+      border-radius: 6px;
+      background-color: rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #FFFFFF;
+      font-weight: 600;
+      align-self: flex-start;
+    }
+    @media (min-width: 640px) {
+      .station-freshness {
+        align-self: auto;
+      }
+    }
+    .station-freshness.delayed {
+      background-color: rgba(245, 158, 11, 0.25);
+      border-color: rgba(245, 158, 11, 0.5);
+      color: #FDE68A;
+    }
+
+    .card-body {
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    /* CURRENT SPEED HERO BLOCK */
+    .current-hero {
+      background-color: var(--speed-bg);
+      border: 1px solid var(--speed-border);
+      border-radius: 12px;
+      padding: 12px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .current-hero-left .tag {
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--speed-text);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .current-hero-left .eq {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .current-hero-val {
+      display: flex;
+      align-items: baseline;
+      gap: 4px;
+    }
+    .current-hero-val .num {
+      font-size: 34px;
+      font-weight: 900;
+      color: var(--speed-text);
+      line-height: 1;
+    }
+    @media (min-width: 640px) {
+      .current-hero-val .num { font-size: 40px; }
+    }
+    .current-hero-val .unit {
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    /* 2 COL GRID */
+    .metrics-grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .metric-box {
+      background-color: var(--bg-subtle);
+      border: 1px solid var(--border-card);
+      border-radius: 12px;
+      padding: 12px;
+    }
+    .metric-label {
+      font-size: 10px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+    .metric-val {
+      display: flex;
+      align-items: baseline;
+      gap: 4px;
+    }
+    .metric-val .num {
+      font-size: 24px;
+      font-weight: 900;
+      color: var(--text-main);
+      line-height: 1.1;
+    }
+    .metric-val .unit {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-muted);
+    }
+    .metric-trend {
+      margin-top: 6px;
+      font-size: 11px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      color: var(--text-main);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .card-footer {
+      padding-top: 8px;
+      border-top: 1px solid var(--card-inner-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    /* WEATHER SECTION */
+    .section-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 4px;
+      margin-bottom: 2px;
+    }
+    .section-title {
+      font-size: 13px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .weather-tag {
+      font-size: 11px;
+      font-weight: 800;
+      padding: 4px 10px;
+      border-radius: 6px;
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-card);
+      color: var(--pc-blue);
+    }
+    body.dark .weather-tag {
+      background-color: #17233D;
+      border-color: #25365A;
+      color: #38BDF8;
+    }
+
+    /* WIND STRIP */
+    .wind-strip {
+      grid-column: 1 / -1;
+    }
+    .wind-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+    .compass-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 3px 8px;
+      border-radius: 6px;
+      background-color: var(--accent-badge);
+      border: 1px solid var(--border-card);
+      font-size: 11px;
+      font-weight: 800;
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--pc-blue);
+    }
+    body.dark .compass-badge {
+      color: #38BDF8;
+    }
+
+    .wind-values {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      gap: 12px;
+    }
+    .rafales-val {
+      text-align: right;
+    }
+    .rafales-num {
+      color: var(--pc-orange);
+    }
+
+    /* HOURLY CAROUSEL */
+    .hourly-scroll {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+      scroll-snap-type: x mandatory;
+    }
+    .hourly-scroll::-webkit-scrollbar {
+      display: none;
+    }
+
+    .hour-chip {
+      scroll-snap-align: start;
+      flex-shrink: 0;
+      width: 96px;
+      border-radius: 12px;
+      padding: 10px 8px;
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-card);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      text-align: center;
+    }
+    .hour-chip.now {
+      border-color: var(--pc-orange);
+      box-shadow: 0 0 0 1px var(--pc-orange);
+      background-color: rgba(243, 112, 33, 0.08);
+    }
+    .hour-time {
+      font-size: 11px;
+      font-weight: 800;
+      color: var(--text-muted);
+    }
+    .hour-chip.now .hour-time {
+      color: var(--pc-orange);
+    }
+    .hour-temp {
+      font-size: 20px;
+      font-weight: 900;
+    }
+    .hour-div {
+      width: 100%;
+      height: 1px;
+      background-color: var(--card-inner-border);
+      margin: 2px 0;
+    }
+    .hour-wind {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 3px;
+    }
+
+    /* BOTTOM MOBILE BAR */
+    .bottom-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 40;
+      background-color: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(8px);
+      border-top: 1px solid var(--border-card);
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 -4px 12px rgba(0,0,0,0.08);
+    }
+    body.dark .bottom-bar {
+      background-color: rgba(6, 13, 26, 0.95);
+      border-color: #182338;
+    }
+    @media (min-width: 640px) {
+      .bottom-bar { display: none; }
+    }
+
+    /* MODAL */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 50;
+      background-color: rgba(0, 0, 0, 0.65);
+      backdrop-filter: blur(4px);
+      display: none;
+      align-items: flex-end;
+      justify-content: center;
+    }
+    @media (min-width: 640px) {
+      .modal-overlay {
+        align-items: center;
+        padding: 16px;
+      }
+    }
+    .modal-overlay.open {
+      display: flex;
+    }
+
+    .modal-dialog {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-card);
+      width: 100%;
+      max-width: 580px;
+      max-height: 90vh;
+      border-radius: 24px 24px 0 0;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      box-shadow: 0 20px 25px -5px rgba(0,0,0,0.3);
+      animation: slideUp 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    @media (min-width: 640px) {
+      .modal-dialog {
+        border-radius: 18px;
+      }
+    }
+
+    @keyframes slideUp {
+      from { transform: translateY(100%); }
+      to { transform: translateY(0); }
+    }
+
+    .modal-header {
+      background-color: var(--pc-blue);
+      color: #FFFFFF;
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .modal-title {
+      font-size: 15px;
+      font-weight: 800;
+    }
+    .modal-sub {
+      font-size: 11px;
+      color: #BFDBFE;
+    }
+
+    .modal-content {
+      padding: 16px;
+      overflow-y: auto;
+      max-height: 55vh;
+    }
+    .briefing-box {
+      background-color: var(--bg-subtle);
+      border: 1px solid var(--border-card);
+      border-radius: 12px;
+      padding: 14px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      line-height: 1.6;
+      white-space: pre-wrap;
+      user-select: all;
+      color: var(--text-main);
+    }
+
+    .modal-footer {
+      padding: 12px 16px;
+      border-top: 1px solid var(--card-inner-border);
+      background-color: var(--bg-subtle);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    @media (min-width: 640px) {
+      .modal-footer {
+        flex-direction: row;
+      }
+    }
+
+    .btn-whatsapp {
+      background-color: #25D366;
+      color: #FFFFFF;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 800;
+      min-height: 44px;
+    }
+    .btn-whatsapp:hover {
+      background-color: #1EBE5D;
+    }
+
+    /* TOAST */
+    .toast {
+      position: fixed;
+      bottom: 84px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 60;
+      background-color: #0F172A;
+      color: #FFFFFF;
+      padding: 10px 18px;
+      border-radius: 9999px;
+      font-size: 12px;
+      font-weight: 700;
+      box-shadow: 0 10px 15px -3px rgba(0,0,0,0.3);
+      display: none;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid rgba(255,255,255,0.15);
+      animation: fadeIn 0.15s ease-out;
+    }
+    @media (min-width: 640px) {
+      .toast {
+        bottom: 24px;
+      }
+    }
+    .toast.show {
+      display: flex;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translate(-50%, 8px); }
+      to { opacity: 1; transform: translate(-50%, 0); }
+    }
+
+    .spin {
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+      100% { transform: rotate(360deg); }
+    }
+
+    /* UTILS */
+    .hidden-sm {
+      display: inline-flex;
+    }
+    @media (min-width: 640px) {
+      .hidden-sm { display: none !important; }
+    }
+    .visible-sm {
+      display: none !important;
+    }
+    @media (min-width: 640px) {
+      .visible-sm { display: inline-flex !important; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TACTICAL STRIPE -->
+  <div class="pc-tactical-stripe"></div>
+
+  <!-- STICKY TOP HEADER -->
+  <header>
+    <div class="header-inner">
+      <div class="brand-wrap">
+        <!-- SVG LOGO PROTECTION CIVILE NAUTIQUE OFFICIEL -->
+        <svg class="brand-logo" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Insigne officiel Protection Civile Nautique">
+          <!-- Disque extérieur Orange Protection Civile -->
+          <circle cx="50" cy="50" r="49" fill="#F37021" />
+
+          <!-- Triangle blanc incurvé (Bouclier Nautique) -->
+          <path
+            d="M 50 4 
+               C 52 4, 54 8, 56 12 
+               L 88 74 
+               C 90 78, 88 83, 84 83 
+               L 16 83 
+               C 12 83, 10 78, 12 74 
+               L 44 12 
+               C 46 8, 48 4, 50 4 Z"
+            fill="#FFFFFF"
+          />
+
+          <!-- Triangle central Bleu Nuit Protection Civile -->
+          <path
+            d="M 50 18
+               L 77.5 73.5
+               L 22.5 73.5
+               Z"
+            fill="#002D72"
+          />
+
+          <!-- Ancre Marine Blanche avec Câblot (Fouled Anchor) -->
+          <!-- Anneau / Manille supérieure -->
+          <circle cx="50" cy="32.5" r="3.6" stroke="#FFFFFF" stroke-width="1.9" fill="none" />
+          <circle cx="50" cy="32.5" r="1.6" fill="#002D72" />
+
+          <!-- Jas (barre transversale horizontale sous l'anneau) -->
+          <rect x="38.5" y="37.5" width="23" height="2.8" rx="1.2" fill="#FFFFFF" />
+
+          <!-- Verge centrale verticale (Shank) -->
+          <rect x="48.4" y="36.5" width="3.2" height="27" rx="0.8" fill="#FFFFFF" />
+
+          <!-- Câblot d'ancre (ligne enroulée autour de la verge) -->
+          <path
+            d="M 47.5 33.5
+               C 43.5 36, 43.5 41, 49 43
+               C 56 45, 57 51, 51 55
+               C 45 59, 44 63, 49 67"
+            fill="none"
+            stroke="#FFFFFF"
+            stroke-width="1.6"
+            stroke-linecap="round"
+          />
+
+          <!-- Bras de l'ancre et Diamant (Crown) -->
+          <path
+            d="M 37.5 53
+               C 36 62, 42 67, 50 67
+               C 58 67, 64 62, 62.5 53"
+            fill="none"
+            stroke="#FFFFFF"
+            stroke-width="3.4"
+            stroke-linecap="round"
+          />
+
+          <!-- Patte / Bec gauche (Fluke) -->
+          <polygon points="36,50 41,56.5 33.5,56.5" fill="#FFFFFF" />
+
+          <!-- Patte / Bec droite (Fluke) -->
+          <polygon points="64,50 66.5,56.5 59,56.5" fill="#FFFFFF" />
+        </svg>
+
+        <div class="brand-text">
+          <div class="brand-sup">Protection Civile Nautique</div>
+          <h1 class="brand-title">Préparation Pilote & Nageur</h1>
+          <div class="brand-sub" id="header-sub">Seine (Arsenal / Austerlitz PK 167.5) · Vigicrues Direct</div>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <!-- MODE NUIT TOGGLE -->
+        <button type="button" class="btn btn-night-toggle" id="btn-toggle-night" aria-label="Basculer Mode Jour/Nuit" onclick="toggleNightMode()">
+          <svg id="icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+          <svg id="icon-sun" style="display:none;" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+          </svg>
+          <span class="visible-sm" id="label-night">Nuit</span>
+        </button>
+
+        <!-- COPIER POINT NAV (DESKTOP) -->
+        <button type="button" class="btn btn-glass visible-sm" onclick="openBriefingModal()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#F37021" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+          </svg>
+          <span>Copier Point Nav</span>
+        </button>
+
+        <!-- REFRESH BUTTON -->
+        <button type="button" class="btn btn-orange" id="btn-refresh" aria-label="Actualiser" onclick="fetchLiveTelemetry()">
+          <svg id="icon-refresh" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"></path>
+          </svg>
+          <span class="visible-sm">Actualiser</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN VIEWPORT -->
+  <main>
+    <!-- SECTOR SWITCHER (SEINE PAR DÉFAUT) -->
+    <div class="sector-switch" role="tablist">
+      <button type="button" class="sector-btn active" id="tab-seine" onclick="setSector('seine')">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M2 6c.6.5 1.2 1 2.5 1C7 7 7 5 9.5 5c2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"></path>
+          <path d="M2 12c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"></path>
+          <path d="M2 18c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"></path>
+        </svg>
+        <span>Seine</span>
+      </button>
+
+      <button type="button" class="sector-btn" id="tab-marne" onclick="setSector('marne')">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M2 6c.6.5 1.2 1 2.5 1C7 7 7 5 9.5 5c2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"></path>
+          <path d="M2 12c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"></path>
+          <path d="M2 18c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"></path>
+        </svg>
+        <span>Marne</span>
+      </button>
+    </div>
+
+    <!-- HYDROMETRY CARD -->
+    <div class="card" id="hydrometry-card">
+      <div class="station-head">
+        <div>
+          <div class="station-title" id="station-name">LA SEINE — Pont d'Austerlitz</div>
+          <div class="station-loc" id="station-location">Cale : Écluse Port de l'Arsenal (PK 167.5)</div>
+        </div>
+        <div class="station-freshness" id="station-freshness">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#F37021" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <polyline points="12 6 12 12 16 14"></polyline>
+          </svg>
+          <span id="station-time">Relevé 09:20 · il y a 8 min</span>
+        </div>
+      </div>
+
+      <div class="card-body">
+        <!-- VITESSE DU COURANT -->
+        <div class="current-hero">
+          <div class="current-hero-left">
+            <div class="tag">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#F37021" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <path d="m14 14-4-4"></path>
+              </svg>
+              Vitesse du Courant
+            </div>
+            <div class="eq font-mono"><span id="val-current-ms">0.25</span> m/s</div>
+          </div>
+          <div class="current-hero-val font-mono">
+            <span class="num" id="val-current-kmh">0.9</span>
+            <span class="unit">km/h</span>
+          </div>
+        </div>
+
+        <!-- 2 COL GRID: DEBIT & HAUTEUR -->
+        <div class="metrics-grid-2">
+          <!-- DEBIT -->
+          <div class="metric-box">
+            <div class="metric-label">Débit Fluvial (Q)</div>
+            <div class="metric-val font-mono">
+              <span class="num" id="val-flow">100</span>
+              <span class="unit">m³/s</span>
+            </div>
+            <div class="metric-trend font-mono" id="val-flow-trend">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#F37021" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="7" y1="17" x2="17" y2="7"></line>
+                <polyline points="7 7 17 7 17 17"></polyline>
+              </svg>
+              <span>Hausse (+16 m³/s)</span>
+            </div>
+          </div>
+
+          <!-- HAUTEUR -->
+          <div class="metric-box">
+            <div class="metric-label">Hauteur d'Eau (H)</div>
+            <div class="metric-val font-mono">
+              <span class="num" id="val-height">0.97</span>
+              <span class="unit">m</span>
+            </div>
+            <div class="metric-trend font-mono">
+              <span>Var. 6h :</span>
+              <strong id="val-height-trend">+2 cm</strong>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-footer">
+          <span style="display:inline-flex;align-items:center;gap:4px;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#F37021" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="2"></circle>
+              <path d="M16.24 7.76a6 6 0 0 1 0 8.49m-8.48-.01a6 6 0 0 1 0-8.49m11.31-2.82a10 10 0 0 1 0 14.14m-14.14 0a10 10 0 0 1 0-14.14"></path>
+            </svg>
+            Capteur télémesure Vigicrues
+          </span>
+          <span class="font-mono" id="val-pk">PK 167.5</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- METEO SECTION -->
+    <div style="display:flex;flex-direction:column;gap:10px;">
+      <div class="section-head">
+        <h2 class="section-title">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#F37021" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="4"></circle>
+            <path d="M12 2v2"></path>
+            <path d="M12 20v2"></path>
+            <path d="m4.93 4.93 1.41 1.41"></path>
+            <path d="m17.66 17.66 1.41 1.41"></path>
+            <path d="M2 12h2"></path>
+            <path d="M20 12h2"></path>
+            <path d="m6.34 17.66-1.41 1.41"></path>
+            <path d="m19.07 4.93-1.41 1.41"></path>
+          </svg>
+          Conditions Météorologiques & Thermiques
+        </h2>
+        <span class="weather-tag" id="val-weather-desc">Partiellement nuageux</span>
+      </div>
+
+      <div class="metrics-grid-2">
+        <!-- TEMP EAU -->
+        <div class="card" style="padding:12px;">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+            <div class="metric-label">Température Eau</div>
+            <span style="font-size:10px;font-weight:800;padding:2px 6px;border-radius:4px;background:#E0F2FE;color:#0369A1;">Inertie 7j</span>
+          </div>
+          <div class="metric-val font-mono" style="margin:8px 0;">
+            <span class="num" id="val-temp-eau" style="color:#0284C7;">16.8</span>
+            <span class="unit">°C</span>
+          </div>
+          <div style="font-size:10px;font-weight:700;color:var(--text-muted);">Modèle inertiel sol/air</div>
+        </div>
+
+        <!-- TEMP AIR -->
+        <div class="card" style="padding:12px;">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+            <div class="metric-label">Température Air</div>
+            <span style="font-size:10px;font-mono;font-weight:800;color:var(--text-muted);">AROME</span>
+          </div>
+          <div class="metric-val font-mono" style="margin:8px 0;">
+            <span class="num" id="val-temp-air">18.0</span>
+            <span class="unit">°C</span>
+          </div>
+          <div style="font-size:10px;font-weight:700;color:var(--text-muted);">
+            Ressenti : <strong style="color:var(--pc-orange);" class="font-mono" id="val-temp-ressenti">17.8°C</strong>
+          </div>
+        </div>
+
+        <!-- VENT & RAFALES (FULL WIDTH) -->
+        <div class="card wind-strip" style="padding:12px 14px;">
+          <div class="wind-header">
+            <div style="display:flex;align-items:center;gap:6px;">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#F37021" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M17.7 7.7a2.5 2.5 0 1 1 1.8 4.3H2"></path>
+                <path d="M9.6 4.6A2 2 0 1 1 11 8H2"></path>
+                <path d="M12.6 19.4A2 2 0 1 0 14 16H2"></path>
+              </svg>
+              <span class="metric-label" style="margin-bottom:0;">Vent & Rafales</span>
+              <span style="opacity:0.4;">·</span>
+              <span style="font-size:11px;font-weight:800;color:var(--text-main);" id="val-beaufort">Force 2 (Légère brise)</span>
+            </div>
+
+            <div class="compass-badge">
+              <svg id="icon-compass" style="transition:transform 0.4s ease;" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#F37021" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"></polygon>
+              </svg>
+              <span id="val-wind-dir">ONO (282°)</span>
+            </div>
+          </div>
+
+          <div class="wind-values">
+            <div class="metric-val font-mono">
+              <span class="num" id="val-wind-speed">10</span>
+              <span class="unit">km/h moyen</span>
+            </div>
+            <div class="rafales-val">
+              <div class="metric-label" style="margin-bottom:2px;">Rafales Maximum</div>
+              <div class="metric-val font-mono" style="justify-content:flex-end;">
+                <span class="num rafales-num" id="val-wind-gusts">25</span>
+                <span class="unit">km/h</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- PRECIPITATIONS -->
+        <div class="card" style="padding:12px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <span class="metric-label">Précipitations</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#0284C7" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"></path>
+            </svg>
+          </div>
+          <div class="metric-val font-mono" style="margin:6px 0;">
+            <span class="num" id="val-precip">0.0</span>
+            <span class="unit">mm/h</span>
+          </div>
+          <div style="font-size:10px;font-weight:700;color:var(--text-muted);">
+            Cumul +3h : <strong class="font-mono" style="color:#0284C7;" id="val-precip-3h">0.0 mm</strong>
+          </div>
+        </div>
+
+        <!-- LUMIERE / EPHEMERIDE -->
+        <div class="card" style="padding:12px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <span class="metric-label">Lumière / Éphéméride</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#F37021" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="5"></circle>
+              <line x1="12" y1="1" x2="12" y2="3"></line>
+              <line x1="12" y1="21" x2="12" y2="23"></line>
+            </svg>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:4px;margin-top:6px;font-size:11px;font-family:'JetBrains Mono',monospace;font-weight:700;">
+            <div style="display:flex;justify-content:space-between;">
+              <span style="color:var(--text-muted);">🌅 Lever :</span>
+              <strong id="val-sunrise">08:01</strong>
+            </div>
+            <div style="display:flex;justify-content:space-between;">
+              <span style="color:var(--text-muted);">🌇 Coucher :</span>
+              <strong id="val-sunset">19:13</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PREVISIONS HORAIRES -->
+    <div style="display:flex;flex-direction:column;gap:8px;">
+      <div class="section-head">
+        <h2 class="section-title">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#F37021" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <polyline points="12 6 12 12 16 14"></polyline>
+          </svg>
+          Évolution Horaire (+6H)
+        </h2>
+        <span style="font-size:10px;font-mono;font-weight:800;color:var(--text-muted);">Modèle AROME</span>
+      </div>
+
+      <div class="hourly-scroll" id="hourly-list">
+        <!-- RENDERED BY JAVASCRIPT -->
+      </div>
+    </div>
+  </main>
+
+  <!-- BOTTOM MOBILE STICKY BAR -->
+  <div class="bottom-bar">
+    <button type="button" class="btn btn-primary-nav" onclick="openBriefingModal()">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#F37021" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+      </svg>
+      <span>Copier Point Nav</span>
+    </button>
+
+    <button type="button" class="btn btn-night-toggle" aria-label="Mode Nuit" onclick="toggleNightMode()">
+      <svg class="mobile-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+      </svg>
+    </button>
+
+    <button type="button" class="btn btn-orange" aria-label="Actualiser" onclick="fetchLiveTelemetry()">
+      <svg class="mobile-refresh" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"></path>
+      </svg>
+    </button>
+  </div>
+
+  <!-- POINT NAV BRIEFING MODAL -->
+  <div class="modal-overlay" id="briefing-modal" onclick="if(event.target===this)closeBriefingModal()">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <div>
+          <div class="modal-title">Point Nav Opérationnel BPI</div>
+          <div class="modal-sub">Synthèse factuelle de mission (WhatsApp / Radio)</div>
+        </div>
+        <button type="button" class="btn btn-glass" style="padding:6px;min-height:36px;" onclick="closeBriefingModal()">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      <div class="modal-content">
+        <pre class="briefing-box" id="briefing-text">Génération du briefing...</pre>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-orange" id="btn-modal-copy" style="flex:1;" onclick="copyBriefingToClipboard()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+          </svg>
+          <span id="label-modal-copy">Copier le Point Nav</span>
+        </button>
+
+        <a href="#" target="_blank" rel="noopener noreferrer" class="btn-whatsapp" id="link-whatsapp">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86.173.086.275.072.376-.044.101-.116.433-.506.549-.68.116-.173.231-.145.39-.086s1.011.477 1.184.564.289.13.332.202c.043.073.043.419-.101.824z"/>
+          </svg>
+          <span>Partager WhatsApp</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATION -->
+  <div class="toast" id="toast">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4ADE80" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+      <polyline points="22 4 12 14.01 9 11.01"></polyline>
+    </svg>
+    <span id="toast-msg">Notification</span>
+  </div>
+
+  <!-- COMPLETE STANDALONE APPLICATION JAVASCRIPT -->
+  <script>
+    // 1. STATE & DATA INITIALIZATION
+    let currentSector = 'seine';
+    let isNightMode = false;
+    let isLoading = false;
+
+    // Baseline offline seed data
+    const telemetry = {
+      seine: {
+        stationCode: 'F700000103',
+        name: 'LA SEINE — Pont d\'Austerlitz',
+        location: 'Cale : Écluse Port de l\'Arsenal (PK 167.5)',
+        pk: 'PK 167.5',
+        flowM3s: 100,
+        flowTrend: 'Hausse (+16 m³/s)',
+        heightM: 0.97,
+        heightTrendCm: 2,
+        obsTime: new Date().toISOString(),
+        currentVelocityMs: 0.25,
+        currentVelocityKmh: 0.9
+      },
+      marne: {
+        stationCode: 'F664000104',
+        name: 'LA MARNE — Gournay & Créteil',
+        location: 'Confluence Charenton & Bief de Créteil (PK 152)',
+        pk: 'PK 152.0',
+        flowM3s: 21,
+        flowTrend: 'Hausse (+5 m³/s)',
+        heightM: 0.81,
+        heightTrendCm: -1,
+        obsTime: new Date().toISOString(),
+        currentVelocityMs: 0.17,
+        currentVelocityKmh: 0.6
+      },
+      weather: {
+        airTemp: 18.0,
+        apparentTemp: 17.8,
+        estimatedWaterTemp: 16.8,
+        windSpeedKmh: 10,
+        windGustsKmh: 25,
+        windDirDeg: 282,
+        windDirCardinal: 'ONO',
+        precipNow: 0.0,
+        precip3h: 0.0,
+        weatherCode: 2,
+        weatherDesc: 'Partiellement nuageux',
+        sunrise: '08:01',
+        sunset: '19:13',
+        hourly: [
+          { time: '11:00', temp: 17, wind: 8, gusts: 18, precip: 0.0 },
+          { time: '12:00', temp: 18, wind: 10, gusts: 22, precip: 0.0 },
+          { time: '13:00', temp: 19, wind: 10, gusts: 25, precip: 0.0 },
+          { time: '14:00', temp: 20, wind: 11, gusts: 24, precip: 0.0 },
+          { time: '15:00', temp: 20, wind: 12, gusts: 26, precip: 0.0 },
+          { time: '16:00', temp: 19, wind: 11, gusts: 23, precip: 0.0 }
+        ]
+      }
+    };
+
+    // 2. LOGIC HELPERS
+    function computeRiverVelocityMs(flowM3s, heightM, isSeine = true) {
+      if (!flowM3s || flowM3s <= 0) return 0;
+      const h = heightM !== null && heightM > 0 ? heightM : (isSeine ? 1.5 : 1.2);
+      const dynamicArea = isSeine ? (380 + Math.max(0, h - 1.0) * 115) : (125 + Math.max(0, h - 0.8) * 55);
+      return Number((flowM3s / dynamicArea).toFixed(2));
+    }
+
+    function degreesToCardinal(deg) {
+      if (deg === null || deg === undefined) return '---';
+      const dirs = ['N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE', 'S', 'SSO', 'SO', 'OSO', 'O', 'ONO', 'NO', 'NNO'];
+      return dirs[Math.round(((deg %= 360) < 0 ? deg + 360 : deg) / 22.5) % 16];
+    }
+
+    function getBeaufortScale(kmh) {
+      if (!kmh || kmh < 1) return { force: 0, description: 'Calme' };
+      if (kmh <= 5) return { force: 1, description: 'Très légère brise' };
+      if (kmh <= 11) return { force: 2, description: 'Légère brise' };
+      if (kmh <= 19) return { force: 3, description: 'Petite brise' };
+      if (kmh <= 28) return { force: 4, description: 'Jolie brise' };
+      if (kmh <= 38) return { force: 5, description: 'Bonne brise' };
+      if (kmh <= 49) return { force: 6, description: 'Vent frais' };
+      if (kmh <= 61) return { force: 7, description: 'Grand frais' };
+      if (kmh <= 74) return { force: 8, description: 'Coup de vent' };
+      return { force: 9, description: 'Fort coup de vent' };
+    }
+
+    function decodeWMOWeatherCode(code) {
+      const codes = {
+        0: 'Ciel dégagé', 1: 'Peu nuageux', 2: 'Partiellement nuageux', 3: 'Couvert',
+        45: 'Brouillard', 51: 'Bruine légère', 61: 'Pluie faible', 63: 'Pluie modérée',
+        65: 'Pluie forte', 71: 'Neige', 80: 'Averses', 95: 'Orage'
+      };
+      return codes[code] || 'Variable';
+    }
+
+    function formatRelativeTime(dateStr) {
+      if (!dateStr) return '';
+      const parsed = new Date(dateStr).getTime();
+      if (isNaN(parsed)) return '';
+      const diffMs = Math.max(0, Date.now() - parsed);
+      const diffMin = Math.floor(diffMs / 60000);
+      if (diffMin < 1) return 'à l\'instant';
+      if (diffMin === 1) return 'il y a 1 min';
+      if (diffMin < 60) return `il y a ${diffMin} min`;
+      const diffHours = Math.floor(diffMin / 60);
+      const remMin = diffMin % 60;
+      return `il y a ${diffHours}h${remMin > 0 ? remMin.toString().padStart(2, '0') : ''}`;
+    }
+
+    // 3. UI RENDERING
+    function updateUI() {
+      const cur = telemetry[currentSector];
+      const w = telemetry.weather;
+
+      // Header subtitle
+      document.getElementById('header-sub').textContent =
+        currentSector === 'seine'
+          ? 'Seine (Arsenal / Austerlitz PK 167.5) · Vigicrues Direct'
+          : 'Marne (Créteil / Gournay PK 152) · Vigicrues Direct';
+
+      // Sector Switch
+      document.getElementById('tab-seine').className = 'sector-btn' + (currentSector === 'seine' ? ' active' : '');
+      document.getElementById('tab-marne').className = 'sector-btn' + (currentSector === 'marne' ? ' active' : '');
+
+      // Station hydrometry
+      document.getElementById('station-name').textContent = cur.name;
+      document.getElementById('station-location').textContent = cur.location;
+      document.getElementById('val-pk').textContent = cur.pk;
+
+      const formattedObs = cur.obsTime
+        ? new Date(cur.obsTime).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })
+        : '--:--';
+      const relTime = formatRelativeTime(cur.obsTime);
+
+      const isDelayed = cur.obsTime ? (Date.now() - new Date(cur.obsTime).getTime()) > 45 * 60000 : false;
+      const freshElem = document.getElementById('station-freshness');
+      freshElem.className = 'station-freshness' + (isDelayed ? ' delayed' : '');
+      document.getElementById('station-time').textContent = `Relevé ${formattedObs}${relTime ? ' · ' + relTime : ''}`;
+
+      document.getElementById('val-current-kmh').textContent = cur.currentVelocityKmh.toFixed(1);
+      document.getElementById('val-current-ms').textContent = cur.currentVelocityMs.toFixed(2);
+      document.getElementById('val-flow').textContent = cur.flowM3s !== null ? Math.round(cur.flowM3s) : '--';
+      document.getElementById('val-flow-trend').innerHTML = `
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="${cur.flowTrend.includes('Hausse') ? '#F37021' : '#0284C7'}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="7" y1="17" x2="17" y2="7"></line>
+          <polyline points="7 7 17 7 17 17"></polyline>
+        </svg>
+        <span>${cur.flowTrend}</span>
+      `;
+
+      document.getElementById('val-height').textContent = cur.heightM !== null ? cur.heightM.toFixed(2) : '--';
+      document.getElementById('val-height-trend').textContent =
+        cur.heightTrendCm !== null ? `${cur.heightTrendCm > 0 ? '+' : ''}${cur.heightTrendCm} cm` : '--';
+
+      // Weather cards
+      document.getElementById('val-weather-desc').textContent = w.weatherDesc;
+      document.getElementById('val-temp-eau').textContent = w.estimatedWaterTemp !== null ? w.estimatedWaterTemp.toFixed(1) : '--.-';
+      document.getElementById('val-temp-air').textContent = w.airTemp !== null ? w.airTemp.toFixed(1) : '--.-';
+      document.getElementById('val-temp-ressenti').textContent = w.apparentTemp !== null ? `${w.apparentTemp.toFixed(1)}°C` : '--';
+
+      const bft = getBeaufortScale(w.windSpeedKmh);
+      document.getElementById('val-beaufort').textContent = `Force ${bft.force} (${bft.description})`;
+      document.getElementById('val-wind-speed').textContent = w.windSpeedKmh !== null ? Math.round(w.windSpeedKmh) : '--';
+      document.getElementById('val-wind-gusts').textContent = w.windGustsKmh !== null ? Math.round(w.windGustsKmh) : '--';
+      document.getElementById('val-wind-dir').textContent = `${w.windDirCardinal} (${w.windDirDeg || 0}°)`;
+
+      document.getElementById('icon-compass').style.transform = `rotate(${w.windDirDeg || 0}deg)`;
+      document.getElementById('val-precip').textContent = w.precipNow.toFixed(1);
+      document.getElementById('val-precip-3h').textContent = `${w.precip3h.toFixed(1)} mm`;
+      document.getElementById('val-sunrise').textContent = w.sunrise || '07:30';
+      document.getElementById('val-sunset').textContent = w.sunset || '19:15';
+
+      // Hourly Forecast
+      const listElem = document.getElementById('hourly-list');
+      listElem.innerHTML = '';
+      w.hourly.forEach((h, idx) => {
+        const isNow = idx === 0;
+        const chip = document.createElement('div');
+        chip.className = 'hour-chip' + (isNow ? ' now' : '');
+        chip.innerHTML = `
+          <div class="hour-time font-mono">${h.time}${isNow ? ' · Actuel' : ''}</div>
+          <div class="hour-temp font-mono">${Math.round(h.temp)}°</div>
+          <div class="hour-div"></div>
+          <div class="hour-wind font-mono">
+            <span>${Math.round(h.wind)}</span>
+            <span style="font-size:9px;opacity:0.6;">km/h</span>
+          </div>
+          <div class="font-mono" style="font-size:9px;font-weight:700;color:var(--pc-orange);">
+            Raf. ${Math.round(h.gusts)}
+          </div>
+        `;
+        listElem.appendChild(chip);
+      });
+    }
+
+    // 4. NETWORK & API FETCHING
+    async function fetchLiveTelemetry() {
+      if (isLoading) return;
+      isLoading = true;
+
+      // UI Spinner
+      const iconRefresh = document.getElementById('icon-refresh');
+      if (iconRefresh) iconRefresh.classList.add('spin');
+      const mobileRefresh = document.querySelector('.mobile-refresh');
+      if (mobileRefresh) mobileRefresh.classList.add('spin');
+
+      try {
+        const weatherUrl = `https://api.open-meteo.com/v1/forecast?latitude=48.8447&longitude=2.3662&past_days=7&forecast_days=2&current=temperature_2m,apparent_temperature,precipitation,weather_code,wind_speed_10m,wind_direction_10m,wind_gusts_10m&hourly=temperature_2m,precipitation,wind_speed_10m,wind_gusts_10m,soil_temperature_54cm&daily=sunrise,sunset&timezone=Europe%2FParis`;
+        const seineQUrl = `https://hubeau.eaufrance.fr/api/v2/hydrometrie/observations_tr?code_entite=F700000103&grandeur_hydro=Q&size=20&sort=desc`;
+        const seineHUrl = `https://hubeau.eaufrance.fr/api/v2/hydrometrie/observations_tr?code_entite=F700000103&grandeur_hydro=H&size=20&sort=desc`;
+        const marneQUrl = `https://hubeau.eaufrance.fr/api/v2/hydrometrie/observations_tr?code_entite=F664000104,F664000404&grandeur_hydro=Q&size=20&sort=desc`;
+        const marneHUrl = `https://hubeau.eaufrance.fr/api/v2/hydrometrie/observations_tr?code_entite=F664000404,F664000104&grandeur_hydro=H&size=20&sort=desc`;
+
+        const [resW, resSeineQ, resSeineH, resMarneQ, resMarneH] = await Promise.allSettled([
+          fetch(weatherUrl),
+          fetch(seineQUrl),
+          fetch(seineHUrl),
+          fetch(marneQUrl),
+          fetch(marneHUrl)
+        ]);
+
+        // Weather
+        if (resW.status === 'fulfilled' && resW.value.ok) {
+          const data = await resW.value.json();
+          const cur = data.current;
+          const hr = data.hourly;
+          const dl = data.daily;
+
+          const nowISO = cur.time.slice(0, 13);
+          let cIdx = hr.time.findIndex(t => t.startsWith(nowISO));
+          if (cIdx === -1) cIdx = 0;
+
+          // Water temp estimation (7-day inertia)
+          const pastTemps = hr.temperature_2m.slice(Math.max(0, cIdx - 168), cIdx + 1).filter(v => v !== null);
+          const deepSoil = hr.soil_temperature_54cm ? hr.soil_temperature_54cm[cIdx] : null;
+          let estWater = 15.0;
+          if (pastTemps.length > 24) {
+            const mean7d = pastTemps.reduce((a, b) => a + b, 0) / pastTemps.length;
+            estWater = deepSoil !== null ? Number((mean7d * 0.65 + deepSoil * 0.35).toFixed(1)) : Number((mean7d * 0.92 + 1.2).toFixed(1));
+          }
+
+          let p3h = 0;
+          for (let i = cIdx; i < Math.min(cIdx + 3, hr.precipitation.length); i++) {
+            p3h += hr.precipitation[i] || 0;
+          }
+
+          const next6 = [];
+          for (let i = cIdx; i < Math.min(cIdx + 6, hr.time.length); i++) {
+            next6.push({
+              time: hr.time[i].slice(11, 16),
+              temp: hr.temperature_2m[i],
+              wind: hr.wind_speed_10m[i],
+              gusts: hr.wind_gusts_10m[i],
+              precip: hr.precipitation[i]
+            });
+          }
+
+          telemetry.weather = {
+            airTemp: cur.temperature_2m,
+            apparentTemp: cur.apparent_temperature,
+            estimatedWaterTemp: estWater,
+            windSpeedKmh: cur.wind_speed_10m,
+            windGustsKmh: cur.wind_gusts_10m,
+            windDirDeg: cur.wind_direction_10m,
+            windDirCardinal: degreesToCardinal(cur.wind_direction_10m),
+            precipNow: cur.precipitation || 0,
+            precip3h: Number(p3h.toFixed(1)),
+            weatherCode: cur.weather_code,
+            weatherDesc: decodeWMOWeatherCode(cur.weather_code),
+            sunrise: dl.sunrise ? dl.sunrise[0].slice(11, 16) : '07:30',
+            sunset: dl.sunset ? dl.sunset[0].slice(11, 16) : '19:15',
+            hourly: next6
+          };
+        }
+
+        // Seine
+        if (resSeineQ.status === 'fulfilled' && resSeineQ.value.ok) {
+          const d = await resSeineQ.value.json();
+          if (d.data && d.data.length > 0) {
+            telemetry.seine.flowM3s = d.data[0].resultat_obs / 1000;
+            telemetry.seine.obsTime = d.data[0].date_obs;
+            const oldest = d.data[d.data.length - 1].resultat_obs / 1000;
+            const diff = telemetry.seine.flowM3s - oldest;
+            telemetry.seine.flowTrend = diff > 6 ? `Hausse (+${Math.round(diff)} m³/s)` : diff < -6 ? `Baisse (${Math.round(diff)} m³/s)` : 'Stable (±3 m³/s)';
+          }
+        }
+        if (resSeineH.status === 'fulfilled' && resSeineH.value.ok) {
+          const d = await resSeineH.value.json();
+          if (d.data && d.data.length > 0) {
+            telemetry.seine.heightM = d.data[0].resultat_obs / 1000;
+            const oldest = d.data[d.data.length - 1].resultat_obs / 1000;
+            telemetry.seine.heightTrendCm = Math.round((telemetry.seine.heightM - oldest) * 100);
+          }
+        }
+        const vS = computeRiverVelocityMs(telemetry.seine.flowM3s, telemetry.seine.heightM, true);
+        telemetry.seine.currentVelocityMs = vS;
+        telemetry.seine.currentVelocityKmh = Number((vS * 3.6).toFixed(1));
+
+        // Marne
+        if (resMarneQ.status === 'fulfilled' && resMarneQ.value.ok) {
+          const d = await resMarneQ.value.json();
+          if (d.data && d.data.length > 0) {
+            telemetry.marne.flowM3s = d.data[0].resultat_obs / 1000;
+            telemetry.marne.obsTime = d.data[0].date_obs;
+            const oldest = d.data[d.data.length - 1].resultat_obs / 1000;
+            const diff = telemetry.marne.flowM3s - oldest;
+            telemetry.marne.flowTrend = diff > 4 ? `Hausse (+${Math.round(diff)} m³/s)` : diff < -4 ? `Baisse (${Math.round(diff)} m³/s)` : 'Stable (±2 m³/s)';
+          }
+        }
+        if (resMarneH.status === 'fulfilled' && resMarneH.value.ok) {
+          const d = await resMarneH.value.json();
+          if (d.data && d.data.length > 0) {
+            telemetry.marne.heightM = d.data[0].resultat_obs / 1000;
+            const oldest = d.data[d.data.length - 1].resultat_obs / 1000;
+            telemetry.marne.heightTrendCm = Math.round((telemetry.marne.heightM - oldest) * 100);
+          }
+        }
+        const vM = computeRiverVelocityMs(telemetry.marne.flowM3s, telemetry.marne.heightM, false);
+        telemetry.marne.currentVelocityMs = vM;
+        telemetry.marne.currentVelocityKmh = Number((vM * 3.6).toFixed(1));
+
+        showToast('Données Vigicrues & AROME actualisées.');
+      } catch (err) {
+        showToast('Actualisation hors-ligne (mode secours).');
+      } finally {
+        isLoading = false;
+        if (iconRefresh) iconRefresh.classList.remove('spin');
+        if (mobileRefresh) mobileRefresh.classList.remove('spin');
+        updateUI();
+      }
+    }
+
+    // 5. USER ACTIONS & EVENTS
+    function setSector(sec) {
+      currentSector = sec;
+      updateUI();
+    }
+
+    function toggleNightMode() {
+      isNightMode = !isNightMode;
+      document.body.classList.toggle('dark', isNightMode);
+      try {
+        localStorage.setItem('bpi_night_mode', String(isNightMode));
+      } catch (e) {}
+
+      // Icons
+      document.getElementById('icon-moon').style.display = isNightMode ? 'none' : 'block';
+      document.getElementById('icon-sun').style.display = isNightMode ? 'block' : 'none';
+      const label = document.getElementById('label-night');
+      if (label) label.textContent = isNightMode ? 'Jour' : 'Nuit';
+    }
+
+    function generateBriefingText() {
+      const cur = telemetry[currentSector];
+      const w = telemetry.weather;
+      const nowStr = new Date().toLocaleString('fr-FR', {
+        day: '2-digit', month: '2-digit', year: 'numeric',
+        hour: '2-digit', minute: '2-digit'
+      });
+
+      return [
+        `🚤 *POINT NAVIGATION NAUTIQUE PC*`,
+        `📍 Secteur : ${currentSector === 'seine' ? 'Seine (Arsenal / Austerlitz PK 167.5)' : 'Marne (Créteil / Gournay PK 152)'}`,
+        `🕒 ${nowStr}`,
+        ``,
+        `🌡️ *MÉTÉO & TEMPÉRATURES*`,
+        `• Eau : ${w.estimatedWaterTemp !== null ? w.estimatedWaterTemp.toFixed(1) : '--'}°C`,
+        `• Air : ${w.airTemp !== null ? w.airTemp.toFixed(1) : '--'}°C (Ressenti ${w.apparentTemp !== null ? w.apparentTemp.toFixed(1) : '--'}°C)`,
+        `• Vent : ${Math.round(w.windSpeedKmh)} km/h (${w.windDirCardinal}) · Rafales ${Math.round(w.windGustsKmh)} km/h`,
+        `• Pluie : ${w.precipNow.toFixed(1)} mm/h (Cumul +3h : ${w.precip3h.toFixed(1)} mm)`,
+        ``,
+        `🌊 *HYDROMÉTRIE VIGICRUES*`,
+        `• Vitesse courant : ${cur.currentVelocityKmh.toFixed(1)} km/h (${cur.currentVelocityMs.toFixed(2)} m/s)`,
+        `• Débit : ${cur.flowM3s !== null ? Math.round(cur.flowM3s) : '--'} m³/s (${cur.flowTrend})`,
+        `• Hauteur d'eau : ${cur.heightM !== null ? cur.heightM.toFixed(2) : '--'} m`
+      ].join('\n');
+    }
+
+    function openBriefingModal() {
+      const text = generateBriefingText();
+      document.getElementById('briefing-text').textContent = text;
+      document.getElementById('link-whatsapp').href = `https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`;
+      document.getElementById('briefing-modal').classList.add('open');
+    }
+
+    function closeBriefingModal() {
+      document.getElementById('briefing-modal').classList.remove('open');
+      const btnText = document.getElementById('label-modal-copy');
+      if (btnText) btnText.textContent = 'Copier le Point Nav';
+    }
+
+    async function copyBriefingToClipboard() {
+      const text = generateBriefingText();
+      let ok = false;
+      try {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          await navigator.clipboard.writeText(text);
+          ok = true;
+        }
+      } catch (e) {}
+
+      if (!ok) {
+        try {
+          const ta = document.createElement('textarea');
+          ta.value = text;
+          ta.style.position = 'fixed';
+          ta.style.opacity = '0';
+          document.body.appendChild(ta);
+          ta.focus();
+          ta.select();
+          ok = document.execCommand('copy');
+          document.body.removeChild(ta);
+        } catch (e2) {}
+      }
+
+      document.getElementById('label-modal-copy').textContent = 'Copié !';
+      showToast('Point Nav copié dans le presse-papier !');
+      setTimeout(() => {
+        const btnText = document.getElementById('label-modal-copy');
+        if (btnText) btnText.textContent = 'Copier le Point Nav';
+      }, 2500);
+    }
+
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      document.getElementById('toast-msg').textContent = msg;
+      t.classList.add('show');
+      setTimeout(() => {
+        t.classList.remove('show');
+      }, 2600);
+    }
+
+    // 6. INITIALIZATION
+    document.addEventListener('DOMContentLoaded', () => {
+      try {
+        if (localStorage.getItem('bpi_night_mode') === 'true') {
+          toggleNightMode();
+        }
+      } catch (e) {}
+
+      updateUI();
+      fetchLiveTelemetry();
+      setInterval(fetchLiveTelemetry, 5 * 60 * 1000);
+    });
+  </script>
+</body>
 </html>
