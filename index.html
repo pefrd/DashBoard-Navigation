@@ -262,58 +262,106 @@
       }
     }
 
-    /* SECTOR SELECTOR */
-    .sector-switch {
-      background-color: #CBD5E1;
-      border: 1px solid #94A3B8;
-      border-radius: 12px;
-      padding: 4px;
-      display: flex;
-      gap: 4px;
+    /* STATION SELECTOR BAR (TAP TO OPEN BOTTOM SHEET) */
+    .station-bar-btn {
       width: 100%;
-      box-shadow: inset 0 2px 4px rgba(0,0,0,0.06);
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-card);
+      border-radius: 14px;
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      cursor: pointer;
+      text-align: left;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+      transition: all 0.15s ease;
     }
-    body.dark .sector-switch {
+    .station-bar-btn:active {
+      transform: scale(0.99);
+      background-color: var(--bg-subtle);
+    }
+    body.dark .station-bar-btn {
       background-color: #121A2D;
       border-color: #1E2942;
     }
 
-    .sector-btn {
+    .station-bar-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
       flex: 1;
-      min-height: 42px;
-      border: none;
-      border-radius: 8px;
-      font-size: 13px;
-      font-weight: 800;
-      color: #334155;
-      background: transparent;
-      cursor: pointer;
-      display: inline-flex;
+    }
+    .station-bar-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background-color: var(--pc-blue);
+      color: #FFFFFF;
+      display: flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
-      transition: all 0.15s ease;
+      flex-shrink: 0;
     }
-    body.dark .sector-btn {
-      color: #94A3B8;
+    body.dark .station-bar-icon {
+      background-color: #1E2D4A;
+      color: #38BDF8;
     }
-    .sector-btn.active {
-      background-color: #FFFFFF;
-      color: var(--pc-blue);
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+
+    .station-bar-info {
+      min-width: 0;
+      flex: 1;
     }
-    body.dark .sector-btn.active {
-      background-color: #1D2A47;
-      color: #FFFFFF;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.3);
-    }
-    .sector-btn .icon {
-      width: 16px;
-      height: 16px;
-      color: #94A3B8;
-    }
-    .sector-btn.active .icon {
+    .station-bar-meta {
+      font-size: 10px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
       color: var(--pc-orange);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .station-bar-name {
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--text-main);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      line-height: 1.2;
+    }
+    .station-bar-loc {
+      font-size: 11px;
+      color: var(--text-muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .station-bar-right {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+    .station-pill-action {
+      background-color: var(--pc-blue);
+      color: #FFFFFF;
+      font-size: 11px;
+      font-weight: 800;
+      padding: 6px 10px;
+      border-radius: 8px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    body.dark .station-pill-action {
+      background-color: #1D2A47;
+      color: #38BDF8;
+      border: 1px solid #283A60;
     }
 
     /* CARD SYSTEM */
@@ -657,11 +705,204 @@
       .bottom-bar { display: none; }
     }
 
+    /* BOTTOM SHEET DRAWER (SELECTION DES STATIONS) */
+    .drawer-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 55;
+      background-color: rgba(0, 0, 0, 0.65);
+      backdrop-filter: blur(5px);
+      display: none;
+      align-items: flex-end;
+      justify-content: center;
+    }
+    @media (min-width: 640px) {
+      .drawer-overlay {
+        align-items: center;
+        padding: 20px;
+      }
+    }
+    .drawer-overlay.open {
+      display: flex;
+    }
+
+    .drawer-sheet {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-card);
+      width: 100%;
+      max-width: 600px;
+      max-height: 86vh;
+      border-radius: 28px 28px 0 0;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      box-shadow: 0 25px 30px -5px rgba(0,0,0,0.4);
+      animation: slideUpSheet 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    @media (min-width: 640px) {
+      .drawer-sheet {
+        border-radius: 20px;
+      }
+    }
+
+    @keyframes slideUpSheet {
+      from { transform: translateY(100%); }
+      to { transform: translateY(0); }
+    }
+
+    .drawer-pull {
+      width: 44px;
+      height: 5px;
+      border-radius: 9999px;
+      background-color: #CBD5E1;
+      margin: 8px auto 4px auto;
+    }
+    body.dark .drawer-pull {
+      background-color: #334155;
+    }
+
+    .drawer-header {
+      padding: 12px 18px 14px 18px;
+      border-bottom: 1px solid var(--card-inner-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .drawer-title {
+      font-size: 16px;
+      font-weight: 900;
+      letter-spacing: -0.01em;
+      color: var(--text-main);
+    }
+    .drawer-sub {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 1px;
+    }
+
+    .drawer-content {
+      padding: 14px 16px;
+      overflow-y: auto;
+      max-height: 68vh;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .station-group-title {
+      font-size: 11px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--pc-orange);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .station-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .station-option {
+      background-color: var(--bg-subtle);
+      border: 1.5px solid var(--border-card);
+      border-radius: 14px;
+      padding: 12px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      text-align: left;
+    }
+    .station-option:active {
+      transform: scale(0.98);
+    }
+    body.dark .station-option {
+      background-color: #0E1626;
+      border-color: #1E2942;
+    }
+
+    .station-option.active {
+      border-color: var(--pc-orange);
+      background-color: rgba(243, 112, 33, 0.08);
+      box-shadow: 0 0 0 1px var(--pc-orange);
+    }
+    body.dark .station-option.active {
+      border-color: var(--pc-orange);
+      background-color: rgba(243, 112, 33, 0.15);
+    }
+
+    .station-option-left {
+      min-width: 0;
+      flex: 1;
+    }
+    .station-option-name {
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .station-option-loc {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+    .station-option-tags {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      margin-top: 4px;
+      flex-wrap: wrap;
+    }
+    .tag-badge {
+      font-size: 9px;
+      font-weight: 800;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .tag-pk {
+      background-color: var(--pc-blue);
+      color: #FFFFFF;
+    }
+    body.dark .tag-pk {
+      background-color: #1E2D4A;
+      color: #38BDF8;
+    }
+    .tag-type {
+      background-color: var(--accent-badge);
+      color: var(--text-muted);
+    }
+
+    .station-option-check {
+      width: 24px;
+      height: 24px;
+      border-radius: 9999px;
+      background-color: var(--pc-orange);
+      color: #FFFFFF;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .station-option.active .station-option-check {
+      display: flex;
+    }
+
     /* MODAL */
     .modal-overlay {
       position: fixed;
       inset: 0;
-      z-index: 50;
+      z-index: 60;
       background-color: rgba(0, 0, 0, 0.65);
       backdrop-filter: blur(4px);
       display: none;
@@ -775,7 +1016,7 @@
       bottom: 84px;
       left: 50%;
       transform: translateX(-50%);
-      z-index: 60;
+      z-index: 70;
       background-color: #0F172A;
       color: #FFFFFF;
       padding: 10px 18px;
@@ -836,76 +1077,23 @@
       <div class="brand-wrap">
         <!-- SVG LOGO PROTECTION CIVILE NAUTIQUE OFFICIEL -->
         <svg class="brand-logo" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Insigne officiel Protection Civile Nautique">
-          <!-- Disque extérieur Orange Protection Civile -->
           <circle cx="50" cy="50" r="49" fill="#F37021" />
-
-          <!-- Triangle blanc incurvé (Bouclier Nautique) -->
-          <path
-            d="M 50 4 
-               C 52 4, 54 8, 56 12 
-               L 88 74 
-               C 90 78, 88 83, 84 83 
-               L 16 83 
-               C 12 83, 10 78, 12 74 
-               L 44 12 
-               C 46 8, 48 4, 50 4 Z"
-            fill="#FFFFFF"
-          />
-
-          <!-- Triangle central Bleu Nuit Protection Civile -->
-          <path
-            d="M 50 18
-               L 77.5 73.5
-               L 22.5 73.5
-               Z"
-            fill="#002D72"
-          />
-
-          <!-- Ancre Marine Blanche avec Câblot (Fouled Anchor) -->
-          <!-- Anneau / Manille supérieure -->
+          <path d="M 50 4 C 52 4, 54 8, 56 12 L 88 74 C 90 78, 88 83, 84 83 L 16 83 C 12 83, 10 78, 12 74 L 44 12 C 46 8, 48 4, 50 4 Z" fill="#FFFFFF" />
+          <path d="M 50 18 L 77.5 73.5 L 22.5 73.5 Z" fill="#002D72" />
           <circle cx="50" cy="32.5" r="3.6" stroke="#FFFFFF" stroke-width="1.9" fill="none" />
           <circle cx="50" cy="32.5" r="1.6" fill="#002D72" />
-
-          <!-- Jas (barre transversale horizontale sous l'anneau) -->
           <rect x="38.5" y="37.5" width="23" height="2.8" rx="1.2" fill="#FFFFFF" />
-
-          <!-- Verge centrale verticale (Shank) -->
           <rect x="48.4" y="36.5" width="3.2" height="27" rx="0.8" fill="#FFFFFF" />
-
-          <!-- Câblot d'ancre (ligne enroulée autour de la verge) -->
-          <path
-            d="M 47.5 33.5
-               C 43.5 36, 43.5 41, 49 43
-               C 56 45, 57 51, 51 55
-               C 45 59, 44 63, 49 67"
-            fill="none"
-            stroke="#FFFFFF"
-            stroke-width="1.6"
-            stroke-linecap="round"
-          />
-
-          <!-- Bras de l'ancre et Diamant (Crown) -->
-          <path
-            d="M 37.5 53
-               C 36 62, 42 67, 50 67
-               C 58 67, 64 62, 62.5 53"
-            fill="none"
-            stroke="#FFFFFF"
-            stroke-width="3.4"
-            stroke-linecap="round"
-          />
-
-          <!-- Patte / Bec gauche (Fluke) -->
+          <path d="M 47.5 33.5 C 43.5 36, 43.5 41, 49 43 C 56 45, 57 51, 51 55 C 45 59, 44 63, 49 67" fill="none" stroke="#FFFFFF" stroke-width="1.6" stroke-linecap="round" />
+          <path d="M 37.5 53 C 36 62, 42 67, 50 67 C 58 67, 64 62, 62.5 53" fill="none" stroke="#FFFFFF" stroke-width="3.4" stroke-linecap="round" />
           <polygon points="36,50 41,56.5 33.5,56.5" fill="#FFFFFF" />
-
-          <!-- Patte / Bec droite (Fluke) -->
           <polygon points="64,50 66.5,56.5 59,56.5" fill="#FFFFFF" />
         </svg>
 
         <div class="brand-text">
           <div class="brand-sup">Protection Civile Nautique</div>
           <h1 class="brand-title">Préparation Pilote & Nageur</h1>
-          <div class="brand-sub" id="header-sub">Seine (Arsenal / Austerlitz PK 167.5) · Vigicrues Direct</div>
+          <div class="brand-sub" id="header-sub">Pont d'Austerlitz (PK 167.5) · Vigicrues Direct</div>
         </div>
       </div>
 
@@ -951,26 +1139,34 @@
 
   <!-- MAIN VIEWPORT -->
   <main>
-    <!-- SECTOR SWITCHER (SEINE PAR DÉFAUT) -->
-    <div class="sector-switch" role="tablist">
-      <button type="button" class="sector-btn active" id="tab-seine" onclick="setSector('seine')">
-        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M2 6c.6.5 1.2 1 2.5 1C7 7 7 5 9.5 5c2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"></path>
-          <path d="M2 12c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"></path>
-          <path d="M2 18c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"></path>
-        </svg>
-        <span>Seine</span>
-      </button>
-
-      <button type="button" class="sector-btn" id="tab-marne" onclick="setSector('marne')">
-        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M2 6c.6.5 1.2 1 2.5 1C7 7 7 5 9.5 5c2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"></path>
-          <path d="M2 12c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"></path>
-          <path d="M2 18c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"></path>
-        </svg>
-        <span>Marne</span>
-      </button>
-    </div>
+    <!-- STATION BAR (TAP TO OPEN DRAWER) -->
+    <button type="button" class="station-bar-btn" onclick="openStationDrawer()" aria-label="Choisir le point de navigation">
+      <div class="station-bar-left">
+        <div class="station-bar-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+            <circle cx="12" cy="10" r="3"></circle>
+          </svg>
+        </div>
+        <div class="station-bar-info">
+          <div class="station-bar-meta">
+            <span id="bar-river-label">SEINE</span>
+            <span>·</span>
+            <span class="font-mono" id="bar-pk-label">PK 167.5</span>
+          </div>
+          <div class="station-bar-name" id="bar-station-name">LA SEINE — Pont d'Austerlitz</div>
+          <div class="station-bar-loc" id="bar-station-loc">Cale : Écluse Port de l'Arsenal</div>
+        </div>
+      </div>
+      <div class="station-bar-right">
+        <span class="station-pill-action">
+          <span>Changer</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </span>
+      </div>
+    </button>
 
     <!-- HYDROMETRY CARD -->
     <div class="card" id="hydrometry-card">
@@ -997,44 +1193,44 @@
                 <circle cx="12" cy="12" r="10"></circle>
                 <path d="m14 14-4-4"></path>
               </svg>
-              Vitesse du Courant
+              <span id="label-hero-type">Vitesse du Courant</span>
             </div>
-            <div class="eq font-mono"><span id="val-current-ms">0.25</span> m/s</div>
+            <div class="eq font-mono" id="hero-secondary-metric"><span id="val-current-ms">0.25</span> m/s</div>
           </div>
           <div class="current-hero-val font-mono">
             <span class="num" id="val-current-kmh">0.9</span>
-            <span class="unit">km/h</span>
+            <span class="unit" id="unit-hero-speed">km/h</span>
           </div>
         </div>
 
         <!-- 2 COL GRID: DEBIT & HAUTEUR -->
         <div class="metrics-grid-2">
-          <!-- DEBIT -->
+          <!-- DEBIT / MAREE -->
           <div class="metric-box">
-            <div class="metric-label">Débit Fluvial (Q)</div>
+            <div class="metric-label" id="label-metric-q">Débit Fluvial (Q)</div>
             <div class="metric-val font-mono">
               <span class="num" id="val-flow">100</span>
-              <span class="unit">m³/s</span>
+              <span class="unit" id="unit-flow">m³/s</span>
             </div>
             <div class="metric-trend font-mono" id="val-flow-trend">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#F37021" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                 <line x1="7" y1="17" x2="17" y2="7"></line>
                 <polyline points="7 7 17 7 17 17"></polyline>
               </svg>
-              <span>Hausse (+16 m³/s)</span>
+              <span id="val-flow-trend-text">Stable (±3 m³/s)</span>
             </div>
           </div>
 
           <!-- HAUTEUR -->
           <div class="metric-box">
-            <div class="metric-label">Hauteur d'Eau (H)</div>
+            <div class="metric-label" id="label-metric-h">Hauteur d'Eau (H)</div>
             <div class="metric-val font-mono">
               <span class="num" id="val-height">0.97</span>
               <span class="unit">m</span>
             </div>
             <div class="metric-trend font-mono">
               <span>Var. 6h :</span>
-              <strong id="val-height-trend">+2 cm</strong>
+              <strong id="val-height-trend">+1 cm</strong>
             </div>
           </div>
         </div>
@@ -1045,7 +1241,7 @@
               <circle cx="12" cy="12" r="2"></circle>
               <path d="M16.24 7.76a6 6 0 0 1 0 8.49m-8.48-.01a6 6 0 0 1 0-8.49m11.31-2.82a10 10 0 0 1 0 14.14m-14.14 0a10 10 0 0 1 0-14.14"></path>
             </svg>
-            Capteur télémesure Vigicrues
+            <span id="label-sensor-type">Capteur Vigicrues</span>
           </span>
           <span class="font-mono" id="val-pk">PK 167.5</span>
         </div>
@@ -1093,11 +1289,11 @@
             <span style="font-size:10px;font-mono;font-weight:800;color:var(--text-muted);">AROME</span>
           </div>
           <div class="metric-val font-mono" style="margin:8px 0;">
-            <span class="num" id="val-temp-air">18.0</span>
+            <span class="num" id="val-temp-air">19.0</span>
             <span class="unit">°C</span>
           </div>
           <div style="font-size:10px;font-weight:700;color:var(--text-muted);">
-            Ressenti : <strong style="color:var(--pc-orange);" class="font-mono" id="val-temp-ressenti">17.8°C</strong>
+            Ressenti : <strong style="color:var(--pc-orange);" class="font-mono" id="val-temp-ressenti">18.5°C</strong>
           </div>
         </div>
 
@@ -1132,7 +1328,7 @@
             <div class="rafales-val">
               <div class="metric-label" style="margin-bottom:2px;">Rafales Maximum</div>
               <div class="metric-val font-mono" style="justify-content:flex-end;">
-                <span class="num rafales-num" id="val-wind-gusts">25</span>
+                <span class="num rafales-num" id="val-wind-gusts">23</span>
                 <span class="unit">km/h</span>
               </div>
             </div>
@@ -1222,6 +1418,153 @@
     </button>
   </div>
 
+  <!-- BOTTOM SHEET DRAWER - CHOIX DES STATIONS -->
+  <div class="drawer-overlay" id="station-drawer" onclick="if(event.target===this)closeStationDrawer()">
+    <div class="drawer-sheet">
+      <div class="drawer-pull"></div>
+      <div class="drawer-header">
+        <div>
+          <div class="drawer-title">Points de Navigation Vigicrues</div>
+          <div class="drawer-sub">Sélectionnez le bief d'intervention</div>
+        </div>
+        <button type="button" class="btn btn-glass" style="padding:6px;min-height:36px;color:var(--text-main);" onclick="closeStationDrawer()">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      <div class="drawer-content">
+        <!-- GROUPE 1: BASSIN DE LA SEINE -->
+        <div>
+          <div class="station-group-title">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M2 6c.6.5 1.2 1 2.5 1C7 7 7 5 9.5 5c2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"></path>
+              <path d="M2 12c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"></path>
+            </svg>
+            <span>Bassin de la Seine</span>
+          </div>
+
+          <div class="station-list">
+            <!-- Paris Austerlitz -->
+            <div class="station-option" id="opt-seine_austerlitz" onclick="selectStation('seine_austerlitz')">
+              <div class="station-option-left">
+                <div class="station-option-name">
+                  <span>Paris — Pont d'Austerlitz</span>
+                </div>
+                <div class="station-option-loc">Cale : Écluse Port de l'Arsenal</div>
+                <div class="station-option-tags">
+                  <span class="tag-badge tag-pk">PK 167.5</span>
+                  <span class="tag-badge tag-type">Débit Q + Cote H</span>
+                  <span class="tag-badge" style="background:#DBEAFE;color:#1E40AF;">F700000103</span>
+                </div>
+              </div>
+              <div class="station-option-check">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+              </div>
+            </div>
+
+            <!-- Suresnes Barrage Amont -->
+            <div class="station-option" id="opt-seine_suresnes" onclick="selectStation('seine_suresnes')">
+              <div class="station-option-left">
+                <div class="station-option-name">
+                  <span>Suresnes — Barrage (amont)</span>
+                </div>
+                <div class="station-option-loc">Barrage-Écluse VNF · Bief Paris aval</div>
+                <div class="station-option-tags">
+                  <span class="tag-badge tag-pk">PK 185.0</span>
+                  <span class="tag-badge tag-type">Cote H amont barrage</span>
+                  <span class="tag-badge" style="background:#DBEAFE;color:#1E40AF;">F704000101</span>
+                </div>
+              </div>
+              <div class="station-option-check">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+              </div>
+            </div>
+
+            <!-- Rouen Jean-Ango -->
+            <div class="station-option" id="opt-seine_rouen" onclick="selectStation('seine_rouen')">
+              <div class="station-option-left">
+                <div class="station-option-name">
+                  <span>Rouen — Jean-Ango [HAROPA]</span>
+                </div>
+                <div class="station-option-loc">Station partenaire HAROPA · Seine Maritime</div>
+                <div class="station-option-tags">
+                  <span class="tag-badge tag-pk">Maritime</span>
+                  <span class="tag-badge tag-type" style="background:#FEF3C7;color:#92400E;">Marée estuaire (H)</span>
+                  <span class="tag-badge" style="background:#DBEAFE;color:#1E40AF;">H503011001</span>
+                </div>
+              </div>
+              <div class="station-option-check">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- GROUPE 2: BASSIN DE LA MARNE -->
+        <div>
+          <div class="station-group-title">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M2 6c.6.5 1.2 1 2.5 1C7 7 7 5 9.5 5c2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"></path>
+              <path d="M2 12c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"></path>
+            </svg>
+            <span>Bassin de la Marne</span>
+          </div>
+
+          <div class="station-list">
+            <!-- Créteil Passerelle Débitmétrique -->
+            <div class="station-option" id="opt-marne_creteil" onclick="selectStation('marne_creteil')">
+              <div class="station-option-left">
+                <div class="station-option-name">
+                  <span>Créteil — Passerelle [Débitmètre]</span>
+                </div>
+                <div class="station-option-loc">Station débitmétrique & Bief de Créteil</div>
+                <div class="station-option-tags">
+                  <span class="tag-badge tag-pk">PK 152.0</span>
+                  <span class="tag-badge tag-type">Débit Q + Cote H</span>
+                  <span class="tag-badge" style="background:#DBEAFE;color:#1E40AF;">F664000404</span>
+                </div>
+              </div>
+              <div class="station-option-check">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+              </div>
+            </div>
+
+            <!-- Gournay-sur-Marne -->
+            <div class="station-option" id="opt-marne_gournay" onclick="selectStation('marne_gournay')">
+              <div class="station-option-left">
+                <div class="station-option-name">
+                  <span>Gournay-sur-Marne</span>
+                </div>
+                <div class="station-option-loc">Bief amont de Gournay / Noisy</div>
+                <div class="station-option-tags">
+                  <span class="tag-badge tag-pk">PK 140.0</span>
+                  <span class="tag-badge tag-type">Débit Q + Cote H</span>
+                  <span class="tag-badge" style="background:#DBEAFE;color:#1E40AF;">F664000104</span>
+                </div>
+              </div>
+              <div class="station-option-check">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- POINT NAV BRIEFING MODAL -->
   <div class="modal-overlay" id="briefing-modal" onclick="if(event.target===this)closeBriefingModal()">
     <div class="modal-dialog">
@@ -1272,67 +1615,158 @@
 
   <!-- COMPLETE STANDALONE APPLICATION JAVASCRIPT -->
   <script>
-    // 1. STATE & DATA INITIALIZATION
-    let currentSector = 'seine';
-    let isNightMode = false;
-    let isLoading = false;
-
-    // Baseline offline seed data
-    const telemetry = {
-      seine: {
-        stationCode: 'F700000103',
+    // 1. CONFIGURATION COMPLETE DES STATIONS VIGICRUES
+    const STATIONS = {
+      seine_austerlitz: {
+        id: 'seine_austerlitz',
+        river: 'seine',
+        riverLabel: 'Seine',
         name: 'LA SEINE — Pont d\'Austerlitz',
+        shortName: 'Pont d\'Austerlitz',
         location: 'Cale : Écluse Port de l\'Arsenal (PK 167.5)',
+        subLocation: 'Arsenal / Austerlitz',
         pk: 'PK 167.5',
+        codeStation: 'F700000103',
+        lat: 48.8447,
+        lon: 2.3662,
+        hasFlow: true,
+        isTidal: false,
         flowM3s: 100,
-        flowTrend: 'Hausse (+16 m³/s)',
+        flowTrend: 'Stable (±3 m³/s)',
         heightM: 0.97,
-        heightTrendCm: 2,
+        heightTrendCm: 1,
         obsTime: new Date().toISOString(),
         currentVelocityMs: 0.25,
         currentVelocityKmh: 0.9
       },
-      marne: {
-        stationCode: 'F664000104',
-        name: 'LA MARNE — Gournay & Créteil',
-        location: 'Confluence Charenton & Bief de Créteil (PK 152)',
+      seine_suresnes: {
+        id: 'seine_suresnes',
+        river: 'seine',
+        riverLabel: 'Seine',
+        name: 'LA SEINE — Suresnes [Barrage (amont)]',
+        shortName: 'Suresnes (Barrage)',
+        location: 'Barrage-Écluse VNF · Bief Paris aval (PK 185.0)',
+        subLocation: 'Barrage amont VNF',
+        pk: 'PK 185.0',
+        codeStation: 'F704000101',
+        refFlowCode: 'F700000103', // Seine Paris flow reference for velocity
+        lat: 48.8714,
+        lon: 2.2272,
+        hasFlow: true,
+        isTidal: false,
+        flowM3s: 102,
+        flowTrend: 'Stable (±3 m³/s)',
+        heightM: 3.24,
+        heightTrendCm: 0,
+        obsTime: new Date().toISOString(),
+        currentVelocityMs: 0.26,
+        currentVelocityKmh: 0.9
+      },
+      seine_rouen: {
+        id: 'seine_rouen',
+        river: 'seine',
+        riverLabel: 'Seine Maritime',
+        name: 'LA SEINE — Rouen [Jean-Ango · HAROPA]',
+        shortName: 'Rouen (Jean-Ango)',
+        location: 'Station partenaire HAROPA · Estuaire maritime',
+        subLocation: 'HAROPA · Quai Jean-Ango',
+        pk: 'Maritime',
+        codeStation: 'H503011001',
+        lat: 49.4433,
+        lon: 1.0720,
+        hasFlow: false,
+        isTidal: true, // Marée dynamique
+        flowM3s: null,
+        flowTrend: 'Influence marée',
+        heightM: 4.19,
+        heightTrendCm: -8,
+        obsTime: new Date().toISOString(),
+        currentVelocityMs: 0.45,
+        currentVelocityKmh: 1.6
+      },
+      marne_creteil: {
+        id: 'marne_creteil',
+        river: 'marne',
+        riverLabel: 'Marne',
+        name: 'LA MARNE — Créteil [Passerelle]',
+        shortName: 'Créteil (Passerelle)',
+        location: 'Station débitmétrique & Passerelle (PK 152.0)',
+        subLocation: 'Passerelle débitmètre',
         pk: 'PK 152.0',
-        flowM3s: 21,
-        flowTrend: 'Hausse (+5 m³/s)',
-        heightM: 0.81,
+        codeStation: 'F664000404',
+        lat: 48.7906,
+        lon: 2.4556,
+        hasFlow: true,
+        isTidal: false,
+        flowM3s: 22,
+        flowTrend: 'Stable (±2 m³/s)',
+        heightM: 0.82,
         heightTrendCm: -1,
         obsTime: new Date().toISOString(),
-        currentVelocityMs: 0.17,
+        currentVelocityMs: 0.18,
         currentVelocityKmh: 0.6
       },
-      weather: {
-        airTemp: 18.0,
-        apparentTemp: 17.8,
-        estimatedWaterTemp: 16.8,
-        windSpeedKmh: 10,
-        windGustsKmh: 25,
-        windDirDeg: 282,
-        windDirCardinal: 'ONO',
-        precipNow: 0.0,
-        precip3h: 0.0,
-        weatherCode: 2,
-        weatherDesc: 'Partiellement nuageux',
-        sunrise: '08:01',
-        sunset: '19:13',
-        hourly: [
-          { time: '11:00', temp: 17, wind: 8, gusts: 18, precip: 0.0 },
-          { time: '12:00', temp: 18, wind: 10, gusts: 22, precip: 0.0 },
-          { time: '13:00', temp: 19, wind: 10, gusts: 25, precip: 0.0 },
-          { time: '14:00', temp: 20, wind: 11, gusts: 24, precip: 0.0 },
-          { time: '15:00', temp: 20, wind: 12, gusts: 26, precip: 0.0 },
-          { time: '16:00', temp: 19, wind: 11, gusts: 23, precip: 0.0 }
-        ]
+      marne_gournay: {
+        id: 'marne_gournay',
+        river: 'marne',
+        riverLabel: 'Marne',
+        name: 'LA MARNE — Gournay-sur-Marne',
+        shortName: 'Gournay-sur-Marne',
+        location: 'Bief de Gournay & Noisy-le-Grand (PK 140.0)',
+        subLocation: 'Bief de Gournay',
+        pk: 'PK 140.0',
+        codeStation: 'F664000104',
+        lat: 48.8650,
+        lon: 2.5800,
+        hasFlow: true,
+        isTidal: false,
+        flowM3s: 20,
+        flowTrend: 'Stable (±2 m³/s)',
+        heightM: 1.15,
+        heightTrendCm: 0,
+        obsTime: new Date().toISOString(),
+        currentVelocityMs: 0.16,
+        currentVelocityKmh: 0.6
       }
     };
 
+    let activeStationId = 'seine_austerlitz';
+    try {
+      const saved = localStorage.getItem('bpi_active_station');
+      if (saved && STATIONS[saved]) activeStationId = saved;
+    } catch (e) {}
+
+    let isNightMode = false;
+    let isLoading = false;
+
+    let currentWeather = {
+      airTemp: 19.0,
+      apparentTemp: 18.5,
+      estimatedWaterTemp: 16.8,
+      windSpeedKmh: 10,
+      windGustsKmh: 23,
+      windDirDeg: 282,
+      windDirCardinal: 'ONO',
+      precipNow: 0.0,
+      precip3h: 0.0,
+      weatherCode: 2,
+      weatherDesc: 'Partiellement nuageux',
+      sunrise: '08:01',
+      sunset: '19:13',
+      hourly: [
+        { time: '12:00', temp: 19, wind: 10, gusts: 23, precip: 0.0 },
+        { time: '13:00', temp: 20, wind: 11, gusts: 25, precip: 0.0 },
+        { time: '14:00', temp: 20, wind: 12, gusts: 26, precip: 0.0 },
+        { time: '15:00', temp: 21, wind: 12, gusts: 27, precip: 0.0 },
+        { time: '16:00', temp: 20, wind: 11, gusts: 24, precip: 0.0 },
+        { time: '17:00', temp: 19, wind: 10, gusts: 22, precip: 0.0 }
+      ]
+    };
+
     // 2. LOGIC HELPERS
-    function computeRiverVelocityMs(flowM3s, heightM, isSeine = true) {
+    function computeRiverVelocityMs(flowM3s, heightM, stationId) {
       if (!flowM3s || flowM3s <= 0) return 0;
+      const isSeine = stationId.startsWith('seine');
       const h = heightM !== null && heightM > 0 ? heightM : (isSeine ? 1.5 : 1.2);
       const dynamicArea = isSeine ? (380 + Math.max(0, h - 1.0) * 115) : (125 + Math.max(0, h - 0.8) * 55);
       return Number((flowM3s / dynamicArea).toFixed(2));
@@ -1382,50 +1816,75 @@
 
     // 3. UI RENDERING
     function updateUI() {
-      const cur = telemetry[currentSector];
-      const w = telemetry.weather;
+      const cur = STATIONS[activeStationId];
+      const w = currentWeather;
 
       // Header subtitle
-      document.getElementById('header-sub').textContent =
-        currentSector === 'seine'
-          ? 'Seine (Arsenal / Austerlitz PK 167.5) · Vigicrues Direct'
-          : 'Marne (Créteil / Gournay PK 152) · Vigicrues Direct';
+      document.getElementById('header-sub').textContent = `${cur.shortName} (${cur.pk}) · Vigicrues Direct`;
 
-      // Sector Switch
-      document.getElementById('tab-seine').className = 'sector-btn' + (currentSector === 'seine' ? ' active' : '');
-      document.getElementById('tab-marne').className = 'sector-btn' + (currentSector === 'marne' ? ' active' : '');
+      // Station Bar (Top Trigger)
+      document.getElementById('bar-river-label').textContent = cur.riverLabel.toUpperCase();
+      document.getElementById('bar-pk-label').textContent = cur.pk;
+      document.getElementById('bar-station-name').textContent = cur.name;
+      document.getElementById('bar-station-loc').textContent = cur.location;
 
-      // Station hydrometry
+      // Active Station Options in Drawer
+      Object.keys(STATIONS).forEach(id => {
+        const el = document.getElementById(`opt-${id}`);
+        if (el) {
+          el.className = 'station-option' + (id === activeStationId ? ' active' : '');
+        }
+      });
+
+      // Station Hydrometry Card Header
       document.getElementById('station-name').textContent = cur.name;
       document.getElementById('station-location').textContent = cur.location;
       document.getElementById('val-pk').textContent = cur.pk;
+      document.getElementById('label-sensor-type').textContent = `Capteur Vigicrues (${cur.codeStation})`;
 
       const formattedObs = cur.obsTime
         ? new Date(cur.obsTime).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })
         : '--:--';
       const relTime = formatRelativeTime(cur.obsTime);
-
       const isDelayed = cur.obsTime ? (Date.now() - new Date(cur.obsTime).getTime()) > 45 * 60000 : false;
       const freshElem = document.getElementById('station-freshness');
       freshElem.className = 'station-freshness' + (isDelayed ? ' delayed' : '');
       document.getElementById('station-time').textContent = `Relevé ${formattedObs}${relTime ? ' · ' + relTime : ''}`;
 
-      document.getElementById('val-current-kmh').textContent = cur.currentVelocityKmh.toFixed(1);
-      document.getElementById('val-current-ms').textContent = cur.currentVelocityMs.toFixed(2);
-      document.getElementById('val-flow').textContent = cur.flowM3s !== null ? Math.round(cur.flowM3s) : '--';
-      document.getElementById('val-flow-trend').innerHTML = `
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="${cur.flowTrend.includes('Hausse') ? '#F37021' : '#0284C7'}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <line x1="7" y1="17" x2="17" y2="7"></line>
-          <polyline points="7 7 17 7 17 17"></polyline>
-        </svg>
-        <span>${cur.flowTrend}</span>
-      `;
+      // Handle Tidal (Rouen) vs Standard Stations
+      if (cur.isTidal) {
+        document.getElementById('label-hero-type').textContent = 'Estuaire Maritime / Marée';
+        document.getElementById('hero-secondary-metric').innerHTML = `Marnage dynamique`;
+        document.getElementById('val-current-kmh').textContent = cur.currentVelocityKmh.toFixed(1);
+        document.getElementById('unit-hero-speed').textContent = 'km/h est.';
 
-      document.getElementById('val-height').textContent = cur.heightM !== null ? cur.heightM.toFixed(2) : '--';
-      document.getElementById('val-height-trend').textContent =
-        cur.heightTrendCm !== null ? `${cur.heightTrendCm > 0 ? '+' : ''}${cur.heightTrendCm} cm` : '--';
+        document.getElementById('label-metric-q').textContent = 'Régime Fluvial';
+        document.getElementById('val-flow').textContent = 'Marée';
+        document.getElementById('unit-flow').textContent = 'HAROPA';
+        document.getElementById('val-flow-trend-text').textContent = 'Flot / Jusant';
 
-      // Weather cards
+        document.getElementById('label-metric-h').textContent = 'Cote d\'Eau (H)';
+        document.getElementById('val-height').textContent = cur.heightM !== null ? cur.heightM.toFixed(2) : '--';
+        document.getElementById('val-height-trend').textContent =
+          cur.heightTrendCm !== null ? `${cur.heightTrendCm > 0 ? '+' : ''}${cur.heightTrendCm} cm` : '--';
+      } else {
+        document.getElementById('label-hero-type').textContent = 'Vitesse du Courant';
+        document.getElementById('hero-secondary-metric').innerHTML = `<span id="val-current-ms">${cur.currentVelocityMs.toFixed(2)}</span> m/s`;
+        document.getElementById('val-current-kmh').textContent = cur.currentVelocityKmh.toFixed(1);
+        document.getElementById('unit-hero-speed').textContent = 'km/h';
+
+        document.getElementById('label-metric-q').textContent = 'Débit Fluvial (Q)';
+        document.getElementById('val-flow').textContent = cur.flowM3s !== null ? Math.round(cur.flowM3s) : '--';
+        document.getElementById('unit-flow').textContent = 'm³/s';
+        document.getElementById('val-flow-trend-text').textContent = cur.flowTrend;
+
+        document.getElementById('label-metric-h').textContent = cur.id === 'seine_suresnes' ? 'Cote Amont (H)' : 'Hauteur d\'Eau (H)';
+        document.getElementById('val-height').textContent = cur.heightM !== null ? cur.heightM.toFixed(2) : '--';
+        document.getElementById('val-height-trend').textContent =
+          cur.heightTrendCm !== null ? `${cur.heightTrendCm > 0 ? '+' : ''}${cur.heightTrendCm} cm` : '--';
+      }
+
+      // Weather Metrics
       document.getElementById('val-weather-desc').textContent = w.weatherDesc;
       document.getElementById('val-temp-eau').textContent = w.estimatedWaterTemp !== null ? w.estimatedWaterTemp.toFixed(1) : '--.-';
       document.getElementById('val-temp-air').textContent = w.airTemp !== null ? w.airTemp.toFixed(1) : '--.-';
@@ -1471,28 +1930,29 @@
       if (isLoading) return;
       isLoading = true;
 
-      // UI Spinner
       const iconRefresh = document.getElementById('icon-refresh');
       if (iconRefresh) iconRefresh.classList.add('spin');
       const mobileRefresh = document.querySelector('.mobile-refresh');
       if (mobileRefresh) mobileRefresh.classList.add('spin');
 
-      try {
-        const weatherUrl = `https://api.open-meteo.com/v1/forecast?latitude=48.8447&longitude=2.3662&past_days=7&forecast_days=2&current=temperature_2m,apparent_temperature,precipitation,weather_code,wind_speed_10m,wind_direction_10m,wind_gusts_10m&hourly=temperature_2m,precipitation,wind_speed_10m,wind_gusts_10m,soil_temperature_54cm&daily=sunrise,sunset&timezone=Europe%2FParis`;
-        const seineQUrl = `https://hubeau.eaufrance.fr/api/v2/hydrometrie/observations_tr?code_entite=F700000103&grandeur_hydro=Q&size=20&sort=desc`;
-        const seineHUrl = `https://hubeau.eaufrance.fr/api/v2/hydrometrie/observations_tr?code_entite=F700000103&grandeur_hydro=H&size=20&sort=desc`;
-        const marneQUrl = `https://hubeau.eaufrance.fr/api/v2/hydrometrie/observations_tr?code_entite=F664000104,F664000404&grandeur_hydro=Q&size=20&sort=desc`;
-        const marneHUrl = `https://hubeau.eaufrance.fr/api/v2/hydrometrie/observations_tr?code_entite=F664000404,F664000104&grandeur_hydro=H&size=20&sort=desc`;
+      const curStation = STATIONS[activeStationId];
 
-        const [resW, resSeineQ, resSeineH, resMarneQ, resMarneH] = await Promise.allSettled([
+      try {
+        // 1. Fetch Localized Weather AROME for active station coordinates
+        const weatherUrl = `https://api.open-meteo.com/v1/forecast?latitude=${curStation.lat}&longitude=${curStation.lon}&past_days=7&forecast_days=2&current=temperature_2m,apparent_temperature,precipitation,weather_code,wind_speed_10m,wind_direction_10m,wind_gusts_10m&hourly=temperature_2m,precipitation,wind_speed_10m,wind_gusts_10m,soil_temperature_54cm&daily=sunrise,sunset&timezone=Europe%2FParis`;
+
+        // 2. Fetch Hydrometry from Hub'Eau for all active stations
+        const codesList = 'F700000103,F704000101,H503011001,F664000404,F664000104';
+        const hubeauQUrl = `https://hubeau.eaufrance.fr/api/v2/hydrometrie/observations_tr?code_entite=${codesList}&grandeur_hydro=Q&size=80&sort=desc`;
+        const hubeauHUrl = `https://hubeau.eaufrance.fr/api/v2/hydrometrie/observations_tr?code_entite=${codesList}&grandeur_hydro=H&size=80&sort=desc`;
+
+        const [resW, resQ, resH] = await Promise.allSettled([
           fetch(weatherUrl),
-          fetch(seineQUrl),
-          fetch(seineHUrl),
-          fetch(marneQUrl),
-          fetch(marneHUrl)
+          fetch(hubeauQUrl),
+          fetch(hubeauHUrl)
         ]);
 
-        // Weather
+        // Process Weather
         if (resW.status === 'fulfilled' && resW.value.ok) {
           const data = await resW.value.json();
           const cur = data.current;
@@ -1503,7 +1963,6 @@
           let cIdx = hr.time.findIndex(t => t.startsWith(nowISO));
           if (cIdx === -1) cIdx = 0;
 
-          // Water temp estimation (7-day inertia)
           const pastTemps = hr.temperature_2m.slice(Math.max(0, cIdx - 168), cIdx + 1).filter(v => v !== null);
           const deepSoil = hr.soil_temperature_54cm ? hr.soil_temperature_54cm[cIdx] : null;
           let estWater = 15.0;
@@ -1528,7 +1987,7 @@
             });
           }
 
-          telemetry.weather = {
+          currentWeather = {
             airTemp: cur.temperature_2m,
             apparentTemp: cur.apparent_temperature,
             estimatedWaterTemp: estWater,
@@ -1546,55 +2005,58 @@
           };
         }
 
-        // Seine
-        if (resSeineQ.status === 'fulfilled' && resSeineQ.value.ok) {
-          const d = await resSeineQ.value.json();
-          if (d.data && d.data.length > 0) {
-            telemetry.seine.flowM3s = d.data[0].resultat_obs / 1000;
-            telemetry.seine.obsTime = d.data[0].date_obs;
-            const oldest = d.data[d.data.length - 1].resultat_obs / 1000;
-            const diff = telemetry.seine.flowM3s - oldest;
-            telemetry.seine.flowTrend = diff > 6 ? `Hausse (+${Math.round(diff)} m³/s)` : diff < -6 ? `Baisse (${Math.round(diff)} m³/s)` : 'Stable (±3 m³/s)';
+        // Process Hydrometry Q (Flows)
+        if (resQ.status === 'fulfilled' && resQ.value.ok) {
+          const qData = await resQ.value.json();
+          if (qData.data && qData.data.length > 0) {
+            Object.values(STATIONS).forEach(st => {
+              const codeToSearch = st.codeStation;
+              const matches = qData.data.filter(d => d.code_station === codeToSearch);
+              if (matches.length > 0) {
+                st.flowM3s = matches[0].resultat_obs / 1000;
+                st.obsTime = matches[0].date_obs;
+                const oldest = matches[matches.length - 1].resultat_obs / 1000;
+                const diff = st.flowM3s - oldest;
+                st.flowTrend = diff > 4 ? `Hausse (+${Math.round(diff)} m³/s)` : diff < -4 ? `Baisse (${Math.round(diff)} m³/s)` : 'Stable (±2 m³/s)';
+              } else if (st.refFlowCode) {
+                // Suresnes uses Paris flow reference
+                const refMatches = qData.data.filter(d => d.code_station === st.refFlowCode);
+                if (refMatches.length > 0) {
+                  st.flowM3s = refMatches[0].resultat_obs / 1000;
+                }
+              }
+            });
           }
         }
-        if (resSeineH.status === 'fulfilled' && resSeineH.value.ok) {
-          const d = await resSeineH.value.json();
-          if (d.data && d.data.length > 0) {
-            telemetry.seine.heightM = d.data[0].resultat_obs / 1000;
-            const oldest = d.data[d.data.length - 1].resultat_obs / 1000;
-            telemetry.seine.heightTrendCm = Math.round((telemetry.seine.heightM - oldest) * 100);
-          }
-        }
-        const vS = computeRiverVelocityMs(telemetry.seine.flowM3s, telemetry.seine.heightM, true);
-        telemetry.seine.currentVelocityMs = vS;
-        telemetry.seine.currentVelocityKmh = Number((vS * 3.6).toFixed(1));
 
-        // Marne
-        if (resMarneQ.status === 'fulfilled' && resMarneQ.value.ok) {
-          const d = await resMarneQ.value.json();
-          if (d.data && d.data.length > 0) {
-            telemetry.marne.flowM3s = d.data[0].resultat_obs / 1000;
-            telemetry.marne.obsTime = d.data[0].date_obs;
-            const oldest = d.data[d.data.length - 1].resultat_obs / 1000;
-            const diff = telemetry.marne.flowM3s - oldest;
-            telemetry.marne.flowTrend = diff > 4 ? `Hausse (+${Math.round(diff)} m³/s)` : diff < -4 ? `Baisse (${Math.round(diff)} m³/s)` : 'Stable (±2 m³/s)';
+        // Process Hydrometry H (Heights)
+        if (resH.status === 'fulfilled' && resH.value.ok) {
+          const hData = await resH.value.json();
+          if (hData.data && hData.data.length > 0) {
+            Object.values(STATIONS).forEach(st => {
+              const matches = hData.data.filter(d => d.code_station === st.codeStation);
+              if (matches.length > 0) {
+                st.heightM = matches[0].resultat_obs / 1000;
+                st.obsTime = matches[0].date_obs;
+                const oldest = matches[matches.length - 1].resultat_obs / 1000;
+                st.heightTrendCm = Math.round((st.heightM - oldest) * 100);
+              }
+            });
           }
         }
-        if (resMarneH.status === 'fulfilled' && resMarneH.value.ok) {
-          const d = await resMarneH.value.json();
-          if (d.data && d.data.length > 0) {
-            telemetry.marne.heightM = d.data[0].resultat_obs / 1000;
-            const oldest = d.data[d.data.length - 1].resultat_obs / 1000;
-            telemetry.marne.heightTrendCm = Math.round((telemetry.marne.heightM - oldest) * 100);
-          }
-        }
-        const vM = computeRiverVelocityMs(telemetry.marne.flowM3s, telemetry.marne.heightM, false);
-        telemetry.marne.currentVelocityMs = vM;
-        telemetry.marne.currentVelocityKmh = Number((vM * 3.6).toFixed(1));
 
-        showToast('Données Vigicrues & AROME actualisées.');
+        // Recalculate velocities for all stations
+        Object.values(STATIONS).forEach(st => {
+          if (!st.isTidal) {
+            const v = computeRiverVelocityMs(st.flowM3s, st.heightM, st.id);
+            st.currentVelocityMs = v;
+            st.currentVelocityKmh = Number((v * 3.6).toFixed(1));
+          }
+        });
+
+        showToast(`Données actualisées · ${curStation.shortName}`);
       } catch (err) {
-        showToast('Actualisation hors-ligne (mode secours).');
+        showToast('Actualisation hors-ligne (mode secours)');
       } finally {
         isLoading = false;
         if (iconRefresh) iconRefresh.classList.remove('spin');
@@ -1603,10 +2065,26 @@
       }
     }
 
-    // 5. USER ACTIONS & EVENTS
-    function setSector(sec) {
-      currentSector = sec;
-      updateUI();
+    // 5. USER ACTIONS & DRAWER MANAGEMENT
+    function openStationDrawer() {
+      document.getElementById('station-drawer').classList.add('open');
+    }
+
+    function closeStationDrawer() {
+      document.getElementById('station-drawer').classList.remove('open');
+    }
+
+    function selectStation(stationId) {
+      if (STATIONS[stationId]) {
+        activeStationId = stationId;
+        try {
+          localStorage.setItem('bpi_active_station', stationId);
+        } catch (e) {}
+
+        closeStationDrawer();
+        updateUI();
+        fetchLiveTelemetry(); // Fetch localized weather and station telemetry
+      }
     }
 
     function toggleNightMode() {
@@ -1616,7 +2094,6 @@
         localStorage.setItem('bpi_night_mode', String(isNightMode));
       } catch (e) {}
 
-      // Icons
       document.getElementById('icon-moon').style.display = isNightMode ? 'none' : 'block';
       document.getElementById('icon-sun').style.display = isNightMode ? 'block' : 'none';
       const label = document.getElementById('label-night');
@@ -1624,29 +2101,42 @@
     }
 
     function generateBriefingText() {
-      const cur = telemetry[currentSector];
-      const w = telemetry.weather;
+      const cur = STATIONS[activeStationId];
+      const w = currentWeather;
       const nowStr = new Date().toLocaleString('fr-FR', {
         day: '2-digit', month: '2-digit', year: 'numeric',
         hour: '2-digit', minute: '2-digit'
       });
 
-      return [
+      const lines = [
         `🚤 *POINT NAVIGATION NAUTIQUE PC*`,
-        `📍 Secteur : ${currentSector === 'seine' ? 'Seine (Arsenal / Austerlitz PK 167.5)' : 'Marne (Créteil / Gournay PK 152)'}`,
+        `📍 Point : ${cur.name} (${cur.pk})`,
+        `📌 Cale/Détail : ${cur.location}`,
         `🕒 ${nowStr}`,
         ``,
-        `🌡️ *MÉTÉO & TEMPÉRATURES*`,
+        `🌡️ *MÉTÉO & TEMPÉRATURES LOCALES*`,
         `• Eau : ${w.estimatedWaterTemp !== null ? w.estimatedWaterTemp.toFixed(1) : '--'}°C`,
         `• Air : ${w.airTemp !== null ? w.airTemp.toFixed(1) : '--'}°C (Ressenti ${w.apparentTemp !== null ? w.apparentTemp.toFixed(1) : '--'}°C)`,
         `• Vent : ${Math.round(w.windSpeedKmh)} km/h (${w.windDirCardinal}) · Rafales ${Math.round(w.windGustsKmh)} km/h`,
         `• Pluie : ${w.precipNow.toFixed(1)} mm/h (Cumul +3h : ${w.precip3h.toFixed(1)} mm)`,
         ``,
-        `🌊 *HYDROMÉTRIE VIGICRUES*`,
-        `• Vitesse courant : ${cur.currentVelocityKmh.toFixed(1)} km/h (${cur.currentVelocityMs.toFixed(2)} m/s)`,
-        `• Débit : ${cur.flowM3s !== null ? Math.round(cur.flowM3s) : '--'} m³/s (${cur.flowTrend})`,
-        `• Hauteur d'eau : ${cur.heightM !== null ? cur.heightM.toFixed(2) : '--'} m`
-      ].join('\n');
+        `🌊 *HYDROMÉTRIE VIGICRUES*`
+      ];
+
+      if (cur.isTidal) {
+        lines.push(
+          `• Régime : Marée maritime estuaire (HAROPA)`,
+          `• Cote d'eau (H) : ${cur.heightM !== null ? cur.heightM.toFixed(2) : '--'} m (Var 6h : ${cur.heightTrendCm !== null ? cur.heightTrendCm : 0} cm)`
+        );
+      } else {
+        lines.push(
+          `• Vitesse courant : ${cur.currentVelocityKmh.toFixed(1)} km/h (${cur.currentVelocityMs.toFixed(2)} m/s)`,
+          `• Débit : ${cur.flowM3s !== null ? Math.round(cur.flowM3s) : '--'} m³/s (${cur.flowTrend})`,
+          `• Hauteur d'eau : ${cur.heightM !== null ? cur.heightM.toFixed(2) : '--'} m (Var 6h : ${cur.heightTrendCm !== null ? cur.heightTrendCm : 0} cm)`
+        );
+      }
+
+      return lines.join('\n');
     }
 
     function openBriefingModal() {
