@@ -12,18 +12,28 @@
   <title>BPI Nautique - Préparation Pilote & Nageur</title>
   <meta name="description" content="Application opérationnelle de préparation pilote et nageur BPI pour la Protection Civile nautique. Données hydrométriques Vigicrues et météo AROME en direct." />
   
-  <!-- FAVICONS & ICÔNES BPI NAUTIQUE (FAVORIS TOUS NAVIGATEURS) -->
-  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-  <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png" />
+  <!-- FAVICONS & ICÔNES OFFICIELLES BPI NAUTIQUE (FAVORIS SAFARI, CHROME, TOUS NAVIGATEURS) -->
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+  <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <link rel="shortcut icon" href="/favicon.ico" />
 
-  <!-- APPLE TOUCH ICON (FAVORIS SAFARI & ÉCRAN D'ACCUEIL IPHONE / IPAD) -->
+  <!-- APPLE TOUCH ICON (FAVORIS SAFARI IPHONE & ÉCRAN D'ACCUEIL iOS) -->
   <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-  <link rel="apple-touch-icon" sizes="152x152" href="/apple-touch-icon.png" />
-  <link rel="apple-touch-icon" sizes="120x120" href="/apple-touch-icon.png" />
+  <link rel="apple-touch-icon" sizes="192x192" href="/icon-192.png" />
   <link rel="apple-touch-icon-precomposed" href="/apple-touch-icon-precomposed.png" />
+
+  <!-- OPEN GRAPH & TWITTER (APERÇU POUR FAVORIS SAFARI ET PARTAGE) -->
+  <meta property="og:title" content="BPI Nautique - Préparation Pilote & Nageur" />
+  <meta property="og:description" content="Protection Civile Nautique : Télémesure hydrométrique Vigicrues et météo AROME en direct." />
+  <meta property="og:image" content="/icon-512.png" />
+  <meta property="og:image:width" content="512" />
+  <meta property="og:image:height" content="512" />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:image" content="/icon-512.png" />
 
   <!-- WEB APP MANIFEST -->
   <link rel="manifest" href="/manifest.webmanifest" />
@@ -131,9 +141,12 @@
     }
 
     .brand-logo {
-      width: 36px;
-      height: 36px;
+      width: 38px;
+      height: 38px;
       flex-shrink: 0;
+      border-radius: 9px;
+      object-fit: contain;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
     }
 
     .brand-text {
@@ -539,31 +552,24 @@
       color: #FFFFFF;
       padding: 10px 14px;
       display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-    @media (min-width: 640px) {
-      .station-head {
-        flex-direction: row;
-        align-items: center;
-        justify-content: space-between;
-      }
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
     }
     body.dark .station-head {
       background-color: #001E4D;
     }
 
-    .station-title {
-      font-size: 15px;
-      font-weight: 800;
-      letter-spacing: -0.01em;
-      line-height: 1.2;
-    }
-    .station-loc {
+    .station-head-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
       font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
       color: #BFDBFE;
-      margin-top: 2px;
-      font-weight: 500;
     }
 
     .station-freshness {
@@ -1212,20 +1218,8 @@
   <header>
     <div class="header-inner">
       <div class="brand-wrap">
-        <!-- SVG LOGO PROTECTION CIVILE NAUTIQUE OFFICIEL -->
-        <svg class="brand-logo" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Insigne officiel Protection Civile Nautique">
-          <circle cx="50" cy="50" r="49" fill="#F37021" />
-          <path d="M 50 4 C 52 4, 54 8, 56 12 L 88 74 C 90 78, 88 83, 84 83 L 16 83 C 12 83, 10 78, 12 74 L 44 12 C 46 8, 48 4, 50 4 Z" fill="#FFFFFF" />
-          <path d="M 50 18 L 77.5 73.5 L 22.5 73.5 Z" fill="#002D72" />
-          <circle cx="50" cy="32.5" r="3.6" stroke="#FFFFFF" stroke-width="1.9" fill="none" />
-          <circle cx="50" cy="32.5" r="1.6" fill="#002D72" />
-          <rect x="38.5" y="37.5" width="23" height="2.8" rx="1.2" fill="#FFFFFF" />
-          <rect x="48.4" y="36.5" width="3.2" height="27" rx="0.8" fill="#FFFFFF" />
-          <path d="M 47.5 33.5 C 43.5 36, 43.5 41, 49 43 C 56 45, 57 51, 51 55 C 45 59, 44 63, 49 67" fill="none" stroke="#FFFFFF" stroke-width="1.6" stroke-linecap="round" />
-          <path d="M 37.5 53 C 36 62, 42 67, 50 67 C 58 67, 64 62, 62.5 53" fill="none" stroke="#FFFFFF" stroke-width="3.4" stroke-linecap="round" />
-          <polygon points="36,50 41,56.5 33.5,56.5" fill="#FFFFFF" />
-          <polygon points="64,50 66.5,56.5 59,56.5" fill="#FFFFFF" />
-        </svg>
+        <!-- LOGO OFFICIEL PROTECTION CIVILE BPI NAUTIQUE -->
+        <img src="/logo-bpi.png" alt="Protection Civile Nautique BPI" class="brand-logo" width="38" height="38" />
 
         <div class="brand-text">
           <div class="brand-sup">Protection Civile Nautique</div>
@@ -1296,9 +1290,13 @@
     <!-- HYDROMETRY CARD -->
     <div class="card" id="hydrometry-card">
       <div class="station-head">
-        <div>
-          <div class="station-title" id="station-name">LA SEINE — Pont d'Austerlitz</div>
-          <div class="station-loc" id="station-location">Cale : Écluse Port de l'Arsenal (PK 167.5)</div>
+        <div class="station-head-tag">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#38BDF8" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M2 12h20M2 6c3 0 4 2 7 2s4-2 7-2 4 2 6 2M2 18c3 0 4-2 7-2s4 2 7 2 4-2 6-2"></path>
+          </svg>
+          <span>Télémesure Vigicrues Direct</span>
+          <span id="station-name" style="display:none;"></span>
+          <span id="station-location" style="display:none;"></span>
         </div>
         <div class="station-freshness" id="station-freshness">
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#F37021" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -1990,8 +1988,10 @@
       });
 
       // Station Hydrometry Card Header
-      document.getElementById('station-name').textContent = cur.name;
-      document.getElementById('station-location').textContent = cur.location;
+      const stNameEl = document.getElementById('station-name');
+      if (stNameEl) stNameEl.textContent = cur.name;
+      const stLocEl = document.getElementById('station-location');
+      if (stLocEl) stLocEl.textContent = cur.location;
       const elPk = document.getElementById('val-pk');
       if (elPk) elPk.textContent = cur.pk;
       const elSensor = document.getElementById('label-sensor-type');
