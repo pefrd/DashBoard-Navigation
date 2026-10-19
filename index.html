@@ -423,7 +423,7 @@
       max-width: 1280px;
       width: 100%;
       margin: 0 auto;
-      padding: 12px;
+      padding: 12px 12px calc(76px + max(14px, env(safe-area-inset-bottom, 16px))) 12px;
       display: flex;
       flex-direction: column;
       gap: 14px;
@@ -431,7 +431,7 @@
     }
     @media (min-width: 640px) {
       main {
-        padding: 18px 24px;
+        padding: 18px 24px calc(82px + max(14px, env(safe-area-inset-bottom, 16px))) 24px;
         gap: 18px;
       }
     }
@@ -848,7 +848,728 @@
       gap: 3px;
     }
 
-    /* (Obsolete bottom bar removed to eliminate duplicates and viewport obstruction) */
+    /* ==========================================================================
+       SYSTÈME MULTIPAGES FLUIDE & NAVIGATION INFÉRIEURE NATIVE (iOS & MOBILE)
+       ========================================================================== */
+
+    .tab-pane {
+      display: none;
+      width: 100%;
+      flex-direction: column;
+      gap: 14px;
+      animation: tabFadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    @media (min-width: 640px) {
+      .tab-pane {
+        gap: 18px;
+      }
+    }
+    .tab-pane.active {
+      display: flex;
+    }
+
+    @keyframes tabFadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(6px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* BARRE DE NAVIGATION INFÉRIEURE FIXE (STYLE NATIF) */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 60;
+      background-color: rgba(255, 255, 255, 0.94);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-top: 1px solid rgba(203, 213, 225, 0.85);
+      padding-top: 7px;
+      padding-bottom: max(10px, env(safe-area-inset-bottom, 16px));
+      box-shadow: 0 -4px 18px rgba(0, 0, 0, 0.08);
+      transition: background-color 0.2s ease, border-color 0.2s ease;
+    }
+    body.dark .bottom-nav {
+      background-color: rgba(10, 16, 30, 0.95);
+      border-top: 1px solid rgba(30, 41, 66, 0.9);
+      box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.45);
+    }
+
+    .bottom-nav-inner {
+      max-width: 680px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      padding: 0 10px;
+      gap: 6px;
+    }
+
+    .bottom-nav-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      padding: 4px 6px 3px 6px;
+      background: transparent;
+      border: 1px solid transparent;
+      border-radius: 12px;
+      cursor: pointer;
+      color: #64748B;
+      transition: all 0.15s ease;
+      min-height: 48px;
+      position: relative;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    body.dark .bottom-nav-btn {
+      color: #94A3B8;
+    }
+    .bottom-nav-btn:active {
+      transform: scale(0.92);
+    }
+
+    .bottom-nav-icon-wrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 24px;
+    }
+
+    .bottom-nav-icon {
+      transition: transform 0.2s ease, stroke 0.15s ease;
+    }
+
+    .bottom-nav-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      white-space: nowrap;
+      transition: color 0.15s ease;
+    }
+
+    /* ÉTAT ACTIF BARRE INFÉRIEURE */
+    .bottom-nav-btn.active {
+      color: var(--pc-orange);
+    }
+    .bottom-nav-btn.active .bottom-nav-icon {
+      stroke: var(--pc-orange);
+      stroke-width: 2.6;
+      transform: translateY(-1px);
+      filter: drop-shadow(0 2px 5px rgba(243, 112, 33, 0.35));
+    }
+    .bottom-nav-btn.active .bottom-nav-label {
+      color: var(--pc-blue);
+      font-weight: 900;
+    }
+    body.dark .bottom-nav-btn.active .bottom-nav-label {
+      color: #F8FAFC;
+    }
+
+    .bottom-nav-badge {
+      position: absolute;
+      top: -3px;
+      right: -8px;
+      background-color: var(--pc-orange);
+      color: #FFFFFF;
+      font-size: 9px;
+      font-weight: 900;
+      padding: 1px 5px;
+      border-radius: 9999px;
+      line-height: 1.1;
+      font-family: 'JetBrains Mono', monospace;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.25);
+      border: 1px solid rgba(255,255,255,0.4);
+    }
+
+    /* ==========================================================================
+       PAGE 2: CHECK-LIST BPI & ARMEMENT FLUVIAL
+       ========================================================================== */
+
+    .checklist-progress-card {
+      background: linear-gradient(135deg, var(--bg-card) 0%, var(--bg-subtle) 100%);
+      border: 1px solid var(--border-card);
+      border-radius: 16px;
+      padding: 14px 16px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    body.dark .checklist-progress-card {
+      background: linear-gradient(135deg, #121A2D 0%, #0E1626 100%);
+      border-color: #1E2942;
+    }
+
+    .checklist-header-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    .checklist-title-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .checklist-badge-tag {
+      font-size: 10px;
+      font-weight: 900;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--pc-orange);
+    }
+    .checklist-main-title {
+      font-size: 16px;
+      font-weight: 900;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .checklist-status-pill {
+      font-size: 11px;
+      font-weight: 800;
+      padding: 5px 11px;
+      border-radius: 9999px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+      transition: all 0.2s ease;
+    }
+    .checklist-status-pill.status-ready {
+      background-color: #DCFCE7;
+      color: #15803D;
+      border: 1px solid #86EFAC;
+    }
+    .checklist-status-pill.status-progress {
+      background-color: #FEF3C7;
+      color: #B45309;
+      border: 1px solid #FCD34D;
+    }
+    .checklist-status-pill.status-empty {
+      background-color: #FEE2E2;
+      color: #B91C1C;
+      border: 1px solid #FCA5A5;
+    }
+    body.dark .checklist-status-pill.status-ready {
+      background-color: rgba(34, 197, 94, 0.18);
+      color: #4ADE80;
+      border-color: rgba(34, 197, 94, 0.35);
+    }
+    body.dark .checklist-status-pill.status-progress {
+      background-color: rgba(245, 158, 11, 0.18);
+      color: #FCD34D;
+      border-color: rgba(245, 158, 11, 0.35);
+    }
+    body.dark .checklist-status-pill.status-empty {
+      background-color: rgba(239, 68, 68, 0.18);
+      color: #F87171;
+      border-color: rgba(239, 68, 68, 0.35);
+    }
+
+    .checklist-bar-track {
+      width: 100%;
+      height: 10px;
+      background-color: var(--card-inner-border);
+      border-radius: 9999px;
+      overflow: hidden;
+      position: relative;
+    }
+    .checklist-bar-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--pc-orange) 0%, #10B981 100%);
+      border-radius: 9999px;
+      transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .checklist-stats-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 11px;
+      color: var(--text-muted);
+      font-weight: 700;
+    }
+
+    .checklist-actions-bar {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .btn-checklist-action {
+      min-height: 40px;
+      padding: 6px 12px;
+      border-radius: 10px;
+      font-size: 12px;
+      font-weight: 800;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      border: 1px solid var(--border-card);
+      background-color: var(--bg-card);
+      color: var(--text-main);
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .btn-checklist-action:hover {
+      background-color: var(--bg-subtle);
+    }
+    .btn-checklist-action:active {
+      transform: scale(0.96);
+    }
+
+    .btn-checklist-checkall {
+      border-color: var(--speed-border);
+      color: var(--pc-blue);
+      background-color: var(--speed-bg);
+    }
+    .btn-checklist-checkall:hover {
+      background-color: rgba(0, 45, 114, 0.1);
+    }
+    body.dark .btn-checklist-checkall {
+      color: #38BDF8;
+    }
+
+    .btn-checklist-reset {
+      color: #DC2626;
+      border-color: rgba(220, 38, 38, 0.3);
+      background-color: rgba(220, 38, 38, 0.05);
+    }
+    .btn-checklist-reset:hover {
+      background-color: rgba(220, 38, 38, 0.12);
+    }
+    body.dark .btn-checklist-reset {
+      color: #F87171;
+      border-color: rgba(239, 68, 68, 0.35);
+      background-color: rgba(239, 68, 68, 0.1);
+    }
+
+    .checklist-section-card {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-card);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+      transition: background-color 0.2s ease, border-color 0.2s ease;
+    }
+    .checklist-sec-head {
+      padding: 10px 14px;
+      background-color: rgba(0, 45, 114, 0.04);
+      border-bottom: 1px solid var(--card-inner-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    body.dark .checklist-sec-head {
+      background-color: rgba(56, 189, 248, 0.04);
+    }
+    .checklist-sec-title {
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+    .checklist-sec-badge {
+      font-size: 10px;
+      font-weight: 800;
+      font-family: 'JetBrains Mono', monospace;
+      padding: 2px 7px;
+      border-radius: 6px;
+      background-color: var(--accent-badge);
+      color: var(--text-muted);
+    }
+
+    .checklist-items-list {
+      display: flex;
+      flex-direction: column;
+    }
+    .checklist-item {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--card-inner-border);
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      cursor: pointer;
+      user-select: none;
+      -webkit-user-select: none;
+      transition: background-color 0.15s ease;
+    }
+    .checklist-item:last-child {
+      border-bottom: none;
+    }
+    .checklist-item:active {
+      background-color: var(--bg-subtle);
+    }
+    .checklist-item.checked {
+      background-color: rgba(16, 185, 129, 0.06);
+    }
+    body.dark .checklist-item.checked {
+      background-color: rgba(16, 185, 129, 0.09);
+    }
+
+    .check-box-custom {
+      width: 22px;
+      height: 22px;
+      border-radius: 6px;
+      border: 2px solid var(--border-card);
+      background-color: var(--bg-card);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 1px;
+      transition: all 0.15s ease;
+      color: #FFFFFF;
+    }
+    .checklist-item.checked .check-box-custom {
+      background-color: #10B981;
+      border-color: #10B981;
+    }
+    .check-box-custom svg {
+      opacity: 0;
+      transform: scale(0.6);
+      transition: all 0.15s ease;
+    }
+    .checklist-item.checked .check-box-custom svg {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .check-item-content {
+      flex: 1;
+      min-width: 0;
+    }
+    .check-item-label {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-main);
+      line-height: 1.35;
+      transition: color 0.15s ease;
+    }
+    .checklist-item.checked .check-item-label {
+      text-decoration: line-through;
+      color: var(--text-muted);
+      opacity: 0.85;
+    }
+    .check-item-sub {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 2px;
+      line-height: 1.3;
+    }
+
+    /* ==========================================================================
+       PAGE 3: ANNUAIRE D'URGENCE & ÉCLUSES VNF (SURESNES -> ALFORTVILLE)
+       ========================================================================== */
+
+    .directory-banner {
+      background: linear-gradient(135deg, var(--pc-blue) 0%, #001E4D 100%);
+      color: #FFFFFF;
+      border-radius: 16px;
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      box-shadow: 0 4px 12px rgba(0, 45, 114, 0.2);
+    }
+    body.dark .directory-banner {
+      background: linear-gradient(135deg, #101c34 0%, #080E1B 100%);
+      border: 1px solid #1E2942;
+    }
+    .directory-banner-text h2 {
+      font-size: 16px;
+      font-weight: 900;
+      letter-spacing: -0.01em;
+    }
+    .directory-banner-text p {
+      font-size: 11.5px;
+      color: #BFDBFE;
+      margin-top: 2px;
+    }
+    body.dark .directory-banner-text p {
+      color: #94A3B8;
+    }
+
+    .directory-filters {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      overflow-x: auto;
+      padding-bottom: 2px;
+      scrollbar-width: none;
+    }
+    .directory-filters::-webkit-scrollbar {
+      display: none;
+    }
+    .dir-filter-chip {
+      padding: 6px 12px;
+      border-radius: 9999px;
+      font-size: 12px;
+      font-weight: 800;
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-card);
+      color: var(--text-muted);
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.15s ease;
+      flex-shrink: 0;
+    }
+    .dir-filter-chip:hover {
+      background-color: var(--bg-subtle);
+      color: var(--text-main);
+    }
+    .dir-filter-chip.active {
+      background-color: var(--pc-blue);
+      border-color: var(--pc-blue);
+      color: #FFFFFF;
+      box-shadow: 0 2px 5px rgba(0, 45, 114, 0.25);
+    }
+    body.dark .dir-filter-chip.active {
+      background-color: var(--pc-orange);
+      border-color: var(--pc-orange);
+      color: #FFFFFF;
+      box-shadow: 0 2px 5px rgba(243, 112, 33, 0.3);
+    }
+
+    .contact-card {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-card);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+      display: flex;
+      flex-direction: column;
+    }
+    .contact-card.emergency-card {
+      border-left: 4px solid #DC2626;
+    }
+    .contact-card.vnf-card {
+      border-left: 4px solid var(--pc-blue);
+    }
+    body.dark .contact-card.vnf-card {
+      border-left-color: #38BDF8;
+    }
+    .contact-card.vhf-card {
+      border-left: 4px solid var(--pc-orange);
+    }
+
+    .contact-card-inner {
+      padding: 13px 15px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .contact-card-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 8px;
+    }
+    .contact-title-group {
+      flex: 1;
+      min-width: 0;
+    }
+    .contact-badge-line {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 2px;
+      flex-wrap: wrap;
+    }
+    .contact-badge {
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      padding: 2px 6px;
+      border-radius: 5px;
+      text-transform: uppercase;
+    }
+    .contact-badge.badge-emergency {
+      background-color: #FEE2E2;
+      color: #B91C1C;
+    }
+    body.dark .contact-badge.badge-emergency {
+      background-color: rgba(239, 68, 68, 0.2);
+      color: #F87171;
+    }
+    .contact-badge.badge-vnf {
+      background-color: #DBEAFE;
+      color: #1E40AF;
+    }
+    body.dark .contact-badge.badge-vnf {
+      background-color: rgba(56, 189, 248, 0.18);
+      color: #38BDF8;
+    }
+    .contact-badge.badge-vhf {
+      background-color: #FFEDD5;
+      color: #C2410C;
+    }
+    body.dark .contact-badge.badge-vhf {
+      background-color: rgba(243, 112, 33, 0.2);
+      color: #FB923C;
+    }
+    .contact-pk-pill {
+      font-size: 10px;
+      font-weight: 800;
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--text-muted);
+    }
+
+    .contact-name {
+      font-size: 14.5px;
+      font-weight: 800;
+      color: var(--text-main);
+      line-height: 1.25;
+    }
+    .contact-loc {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+    .contact-details {
+      font-size: 11.5px;
+      color: var(--text-sub);
+      line-height: 1.4;
+      background-color: var(--bg-subtle);
+      padding: 7px 10px;
+      border-radius: 8px;
+      border: 1px solid var(--card-inner-border);
+    }
+
+    .contact-card-actions {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 8px;
+      align-items: stretch;
+    }
+    .btn-call-direct {
+      background-color: #10B981;
+      color: #FFFFFF;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      padding: 9px 12px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 800;
+      min-height: 42px;
+      transition: all 0.15s ease;
+      box-shadow: 0 2px 4px rgba(16, 185, 129, 0.3);
+    }
+    .btn-call-direct:hover {
+      background-color: #059669;
+    }
+    .btn-call-direct:active {
+      transform: scale(0.96);
+    }
+    .btn-call-direct.btn-call-police {
+      background-color: var(--pc-blue);
+      box-shadow: 0 2px 4px rgba(0, 45, 114, 0.3);
+    }
+    .btn-call-direct.btn-call-police:hover {
+      background-color: #001E4D;
+    }
+    .btn-call-direct.btn-call-pompiers {
+      background-color: #DC2626;
+      box-shadow: 0 2px 4px rgba(220, 38, 38, 0.3);
+    }
+    .btn-call-direct.btn-call-pompiers:hover {
+      background-color: #B91C1C;
+    }
+
+    .btn-copy-num {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-card);
+      color: var(--text-muted);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px 12px;
+      border-radius: 10px;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      min-height: 42px;
+      gap: 5px;
+      transition: all 0.15s ease;
+    }
+    .btn-copy-num:hover {
+      background-color: var(--bg-subtle);
+      color: var(--text-main);
+    }
+    .btn-copy-num:active {
+      transform: scale(0.96);
+    }
+
+    /* VHF QUICK BAR */
+    .vhf-strip-card {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-card);
+      border-radius: 16px;
+      padding: 12px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .vhf-strip-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--pc-orange);
+    }
+    .vhf-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 8px;
+    }
+    .vhf-channel-box {
+      background-color: var(--bg-subtle);
+      border: 1px solid var(--card-inner-border);
+      border-radius: 10px;
+      padding: 8px 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .vhf-ch-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 15px;
+      font-weight: 900;
+      color: var(--pc-orange);
+    }
+    .vhf-ch-label {
+      font-size: 10.5px;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+    .vhf-ch-sub {
+      font-size: 9.5px;
+      color: var(--text-muted);
+    }
 
     /* BOTTOM SHEET DRAWER (SELECTION DES STATIONS) */
     .drawer-overlay {
@@ -1158,10 +1879,10 @@
     /* TOAST */
     .toast {
       position: fixed;
-      bottom: max(20px, calc(env(safe-area-inset-bottom, 16px) + 14px));
+      bottom: calc(72px + max(14px, env(safe-area-inset-bottom, 16px)));
       left: 50%;
       transform: translateX(-50%);
-      z-index: 70;
+      z-index: 90;
       background-color: #0F172A;
       color: #FFFFFF;
       padding: 10px 18px;
@@ -1177,7 +1898,7 @@
     }
     @media (min-width: 640px) {
       .toast {
-        bottom: 24px;
+        bottom: 84px;
       }
     }
     .toast.show {
@@ -1223,8 +1944,8 @@
         <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALQAAAC0CAIAAACyr5FlAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAABmJLR0QA/wD/AP+gvaeTAAAAB3RJTUUH6goTDDUXW+/MgQAAbFVJREFUeNrtvXeAHVd1P/45987M61u16pKtajVXGXcb44KNbZohxgRCJ6GXEL5JIHRCTYAQmqkhEJoxGIwB44YxuOEqWbItWZLVVmX7vj4z957fH1PezLx5q5W0TiD5Xa9Xb+fduXPnnHPPPf0SjrkSM9A48pHAABOISbAkJrAAE5FFqt9yBzJuTuq0EajD70gHZhCBp9e5YwdKzjnxHpT4zGACpvnoKV4K/ojMabPoNBoDVNfyYFOO2qbNgkGaiYkUC2YJJhD8n+hTjroZM0AVxAFNEDQgddbQealP6ame3luZk1OzMk6/pQYybrephYhDkSNv0UJ88HZ8GBP5X98I0IwJRww15LAthhvGgYZx70juoYlCTVsNZUARhABxQNAAHRWJ0JFzDgaICWBN0CQN3WW5fYZzal/1/NmV82ZVeyztMDFDMxjQTIwW6v0hDnst/p9uHncQxAQIAhFM4rGm+N1w7rf78/ePFceUNemYSklIItIMHA2JHBFxMEAsAIC0KwqWu7qrdkZ/5dyB6mm9tayhG0rY2ptaC8OSIAgCLImpncH7V/70yaLzlnTY4/D0mT8zFKCZNENFeCsAQbAE5yTXFe4dydx5MH/3aNfj5WLNNoXJAGsGQEewzxw+cTBALAnKEabQx/XWXrZo9OrFYwWDy66wNYW8wSBkpbYES2IBNBTVlagrqinhagHiKTaYQ0M1eSn1xv8JOosSfQrojnBUgzhv6JzknOSsZM1QTLamhiI3QisZyUVDV1z6/lNd39vdt2Wi5LCUJis+kl3mcIiDATARiEkrWlSqP3fu+OuWjSzKOwebJgUL3xLISZ2TesIRT1Uygw2j7MqyIyYdMdI0xhw53DTqrghWYJxVHAE2Q6HHu3mKPYo4DT2RHtN69KGmmiDyuCSafN+O9yd/56SelXF7M6rf0l2W7jJU0dDzc+6Sottl6rqiuiJbU8DWaE7W3VmRX3+y94YDvXvKeWERg/kw6WPaxMEAWBA0k6lxxeKR1xwzcnp/bdwxHIYkaEbB0CVDH2zILZXslklrczn70Fj+iXKm1jThCAhPRGf/Q0dwHJoWYp3T75t6TG7bHSKE1fbWSVqISs3xrh1foTVyZxUJAfUQJWVzr48n8jOgAVPlM2pVV/PkXntNd3NFyV7Z5czOupOOrLkkCS7DFOg21b1D2a/v6P3lnj7XMIkOjz6mTxwsBZQiQ+h3rdz/18tGTMFlV0pizchKLhnqgbHcHQeKmydzm8uZreM5KAFDQ7AULMEMMAjMTCGXmcbq82Ee7xxDbkJH5alGi17x7qVEl+BTUo9FGs9o3wrbJhAdmSl4EbQoO9rVg0yLqmOdPZx6MqliKCYogksw9Iru5pqe5pru5vkD9fV9zQlXNBUJgmJ0mVx3cc3W7n/bMtsVWSGhtTfWoTe56RAHg2EIuK4YyDU/uHbwefMnakp68qYU6DXdzRPZH+/uvulAaetYnllAsjC0AHt6ircdxYGYRgSpayu6KSTRhrQVnJBtg7WYOnJsHAq2p/Zv06iNkFzZlHZz+8hIJW5gat7TdqensAiC0qyVgCtI6pV9jUvmVl+0qLKm2x6zpSe6SkJG8s925z60ad6IXZAmKc3ToQ+JntWHmApDCqimfMbA5MeO33vpvErZld7ARUOPNuUXt8763NbZv9nbM9SwpKWloUHQ8DXYKeXkCMUQdUSeTx/BwkkxZ00FxEiXeGdCC8FELYnEH5g67FbBnBJPbhdlYiNTq09MNUujhnS2n9KZAa2JiYWANDVJDFXNB4bzd41m9tflqi6719K2JiK4TOv77OO7a09OisFyVlrC02GmJpGpiYPALAR0U161ZOh9a/ef3NuYcKQ3UtHUN+8vvfPhBbfs6z5Qs2BokqwZGv7OFjySwsHSkHcoRZzgA5dCyEyDINp2i6kWCQXzjE7j0ASd8iqJebcWBkVYVOxlacqxE0N3mBMR+0uRhGQmDFXMh8aytw3lF+bdVd22J6g2NK3sck7tr1eU3jSUE5bkcBl0aFMQB3s8Q7v8rtWD7zhuaE7WrbiSAElsCv7G9r5/2rhgfzXDgkmy9ixzHBcDOz44yjPSsBwCNNTRuUPn2Jjc4UOMcxOBCMLjzAKCWFDwGywECWIBEp5qRgARUWeeH9tNohtfOzcCWvJWYp6pLzbldpM0FBEYzGCCMFgzhmrmbQdyBVOd3Gt7gGtoMSenz5hVz0j77gM5aQrmkK+nTKAzcTAMAdWU7147+KYVw5ZAUwsCTMGOxkcfm/fFLbMdLchgZm7JSy1ij/yOkghzaz35fSl9fYQ7SOzL9vUd9KHIo9NGJjBRML4mbv0IVpEfTawEM7Ei1p4t2huQyDPftRFDG64Qm3YoS7XzDGrr3D50yFnbEZnKVogYxASS2nbl7w7mJhw6Z6BuCmgmR1NO8mn9zYxwfz9YNDIykE9TWppvhQGwIeA2xSuWH3jN0lHA16EtoYeb8p0PL7xzqERgCOZwaA7nGF0sbTJ5ax4c4C8hBkY0iJBnhAuX21cPRT5wHOihVkJgZggwSllnbam5smSv7m4szDtFqbMGF6TOSe62NIAJ27fU1V0qK7G3Zj42YT1Rzj46YVVto0WR7UJSVM4IFePWGknjGaHWk27Wi4oFUW7LsS4UNeG0QMRMJFhp8c0ne7aWrc+tH+q3tK3J1mQJfs2yif0N4zvb5xpZ6WpOpY82bSViAD13zsSnTtw7P+c0lM8ztpStN96/eHsl43t3khpXlOqDF2uhM7Ea2rmlp98n8Op9wxH0t90XJ5aIZgTPandid/2Zs6tnzaqt62kMZBUBBrEhWARyJ4GJiAL1gpkZ5OlZmuFqcpkYOFA3No1bd4/k7zhYeGQ8w0yx14qpJJF34UBHTS6UyIJJh1JiG21bSBRAKaa7pUFJY0W3/eXTDiwruo4mBrKSB2vi3Q/N+f3wLGmR0m1MOo04WBC0omWlxudP2X1ST83TTTKCHytbL73r2HHbbEEhxdiQqrK2o7CDbpliWwyImrnzaGjxDyYSbJBaXrLPmVV95uza2bOqs7KKgh0/nC9H1y0RWMN1AcAwQCJEJgULUnjDBzcON+QfhvJ3DOXvPJh/spJxNUEDhJaJL8UO165nHRJKU8sZcTtQeiRAcKem3qz7vbP3r+5ymhoM6jLVAyOZtz4w76l6j5Cs2zSDOHEwiJg1lUz3cyfvunxeedyRBFiChxryL+5esrOSidg3o9ahcBcMOGQnMyIjTWuNWAKm4BYIR9bB9sEEMBM0EXHO0AMZ95K55ZceM3Z6f0MKuOyj0x+b25knExFrBRKi2AeAK6PMGkK2cUTv4RGiIRgEV+POg7lrd3ffdiC/v2E2XMEaEJ6pL2Jti4A8guNUnsERgIQbkKc/R813EeCn8IxQf468v6Zji/aPzts3kNGeF6zHUjcO5t/54PxJXSCBhP00IpCyPyIRv2/tvqsXjY/ZUhAkcVPT6+9ftHki71NGS9xLed1DtE76S2wHjcCuc2+fn7pCEuYX7csXTLx/zcFPn7zvykWTs7PKZVJMzIFEGSiWFPnxKYOZhDDP/Mvc679mnvtKrozqPZvIa8F2E6gtHpK8TZ7YewTo2KJz5aLJ1y4bP7m3QaRHXVlzpFYirh0fEjhRQbuj1hr7wFNAKSGs+prBeFNsmMhcsaBiCDBQV+KEHjsrndsP5iHMgNVRgjgYgBRgRz5/0ejfrTxYU0IQAJiCP/DovJv2d/u0HBoeErJVYt7J1kkf62AdismqSeGciAXASkripd3NFy8e/8L6wTesGDum4LhMTe3JEp7YTlFqaJ8ZSQNOw7r4zZnnv4esHJlZufqZXJtQ2/9IZoZZUxy9Mdoij5EQgxpaMOi4LvvqYyefM6+iGGOKJm1DKxIyEB2Iou8QB07IMyIqDIIlEOKXIx/AEXC2vRm1w9zjPdhbNccceeHcmmYiQlPT2m5n+6TYOlaQpuAU4mAiglZids5+28qDq0p2QxEDOUN/fXv/17cNqPB50Tec2kQztcEn5U2i6h916igFtCtY04qe+quWjv3ryYOvWjaWE6i6gkECEOTpnZ1H8WfHJE2ul831L8i84L1kZZk1wCQNuXS92r9V79lEVo51jD6Ss/Yf5AXgkGKquaIvwy9cPHnJ3GpO6oO2HKmaAEmhO1vwpsMzUkF+ONwo8vmJiUzO1GfMaja1YKDX0gT+w0i+5pokWszDIw72BS5Nz1kw9pblw+OOBNBjqhv3df/zo/NrSrTu4bZnp87b+zuFfkPkBJejlq4UYm/dIAkaxE05p9R86bFjnzxx/yuXj2UFVVxBBEMETJbo0EBjJiHZbYo5y7Iv/6zoGmCtSQhP/iArJxef4G68CY0KkWyj8jYMBLydAClYM1Vd0Wvx5YvKZ82qa+K9DaNcsyAhBXcw5KVBKQRLTPAM+QclpSJKHY1i3IhBBKVp42hmWbezrrtpa6orWtvjPDYhH5/IC0MEo5JEz2qPbbArFhcb/7hm36yMdpkEoeaK92yYv7OSkYbWTPFnU2I6ba8atXRNvRq45cjosIMSIAjaMYTQly+a+NC6A3+3ZqjX4knbiJAFJSxkU9EGEUkDzWrmLz5qrDiDWSOkKA/VxT4yc+5Dv6BsgbWaBrn5ew0zEWB4JOLIBXn3ykXl40p2WePJsqVtIQ0N7sw/2oXgpH7j72eHnE7rd5s8JwXXbbm7Lq9YUPVGMgRmZ9w/DOcmmhmSPtYkelaHtsUXLBh7zdLRccdgYCDjfmVb/08He5jAiBiwo/M9tDQ0DY9aa1vlVJ4hiQmklThzTvkf1g59cO2BE3qbY7ahQaZHFnQYZIFwQ6mOGic/17zg9WTlPQ24tU8wExGV+vWeTfrgNrKyU2wu6SQCn0QcproSJ/baly+oLiw4Y47YNZGRkgVx1NjXAkdCmU/KGXGekcKzO5n5Y1TisaSRpui29LPm1iuusDWt7Ha3TMgNkwUIHxQSPasIgCuWlBofP35QCgLDEry3bv3bltmD5YyQOm6Bj843RTOMW7o684zQhhOFa1szhGYlM5L/dvXBj55w4JL5ZZdlzRUGQfhInI6OlMCft1gymee/Vy5cy8olEewdrUAbLfI9MDLuI78iw6IkrA/1CB+DJAgCqCsyBJ89p37eQM2y9IOjWVdJKVlr6rDAOuE+DiWKiGst5ZZSB4sYyghEQkDZosp0zkCjYGgwuUwru+zbDuQmmhnP0ONvKxD8ogVjVy0en3QFgD5LfWXbrJ/u6SWDI2wjQpjUCViHwzMO5YU3BLtNY2V38xOnDL5t5UiPpScd6e3rhxY4OzRmJsPSEwets19mnv9qEobHeqLaVjA4ie45eugp/dSDlClOc3OJwcJnRRDEmqnmitlZdeHc2jFFZ9N4ZqhmGqbWLNKsPvHFT4G1NN16RIe4kqAtghcxCIl9Vdlj6Yvm1SuucBnHFtWWCXqkXAQEyCcO0Ztx3rxsaHZOKaa85M0T2S9vnXWwbgmp48FScdqMzWF6PAMRZTgqjbb1MYhdR1y8aPLfTx28dF6lqamphOkbl448H4OIwJryXdaz3yLnHRdjGxEKIhKsXMoWAHY3334E/CkOGhLEktBUgoH1fc0zBuo7asa2saxhcHuCV4o0hmnqJnEExYzOSeVRCGZX1BSd1NccyGqXiRkSfPtQqaFMEAQB0Ogy3DMHqk1FDOoy3VsPFjeOFqSptJ++Fq7sBBBTXigw5HHsa47vnRy8M6d1BgTguuIvl43+x+m7T+mtV12hmQzBzHRE/CKED0MYXBmVay+Uq84DACFS4O6rpwKAsfYCY91FXBmFMJgPb3OJg4aYyQh0mVP6Gt8+c/9Ll4+5ikQ7lBDRDT0QeTxjKh8Cxe9P4iRCMR7NsWZISz88nL11f77HUgw0NZ0x2+42mtAgkGAmCF7fU8tLZsAS+kDD3DyRQ8s7HddN2qk4ZqAOJ9XJwsHJCwnZm5jAWtFfrxz+yql7+yxdVYIAQcx8uHy9DUkkWNnUM9c44Tlk5Vg55BuN26HtMQ+HsiXj5Cuoa47f+aie7kkhTEDVFf0Zdc1pB/5m5ajW6MCMEwBsA2PowY6yCv9De+e20RgEhhabJ6yDDWkJaEaXqU/qqkIEXuysoc+fXW4oASAneWs581g5A6k1R13hkQkhTsItnssRjSPiK2FO4RkhmScWBAtmetuqg/92yqAgNDVJMM0EZTAzhEBtQq5+pnHy5cwMIf35p2ISgJDMbJx0hVz9TNTGIcQRM48ofRCxADc1CcLn1h98++pRSvAMeDtvgmfEvb4+gqOoCQU4TrqIKRBcwpGZQdBMkHrzhLV10spKDaCh6Jlz6hnhgCHAlJfqmbOrTU0AclI/Uc5sHc8JQ+tO75dKkulAi1rJ4rpbal8mCf33aw7+60n7PeeIJA7M4EeDlIATOA3qW2Sc/DwSEtrtyDYit0C7JKVxynOpbyE7zUPcMo3my0xEklgxuUyfPnnoH9YOGQToAEq++Su6p8cgmhBWY1em4BlhxGhgQdAAGfzEhPVk2cxJBmArumBOvUBNMASI1xZrszJKMwzCpCOeKGfhSomEA6UFMrTNNOINiU8oag/kqTszNJlCv3/dgY+dsL+mhMeBo12PqhFBCDRrcvkZ5smXs1YQRgCvzrcAEAZrZZ58hVx+JppVCHGU2cmRNydvr6wr8dETRz5wwkFTAjomJgQ3MJKX22gi2jnsGcLc3/rZ/xy50SCGLR+ftLyEF8WYnVMrizUQC5Be3VP3YtgzUu+sWo+MZ2EozQHjCgXGTh41bttK0OZRa2nCaVuJTwD8N8tH37/u4KQrCSA6lNV6+o0ZILZr1L/YPP0vvCtRXuRtFhxEPEb3Dgq0R/P0v6D+xWzXIsz8qJpvmiAmYNIR/7Ru9I0rR1sWoCjP4NAsFKKfU+QMRMwxra2cQwnUz4lCIO0SwNAgGPrhMeupipmVDMDVtKa7CSghgAHL9VLgM4J31cyNE1lIT7/i2LM7QWQqN2xcBW7RS1tfjVcvG/3MyYMTjjSmrbpNGw8EAlxXLjnVOP5iVk4QrtGigJAgktINM4Rk5RjHXyyXngrXxVEpTPF5Bb8M4glH/svJQ69ZNg6N9DQfjlJDB5dKy26WphBEOVAwsmZA8sZxa1fNyAhmQAOzM4rgCiF4TtbPxTWJxx2jUbdM4WVmU9qToqN34BkxfSyqsqaoW0SAopccO/bFUwZrSkiPYcwYXYRso059C8zzXw0AJKJWr5AsKnW7UrcTF32bGAkA5nmvor4FbDdminmEEGCQJK4p8YVTDzx/8SRUGshDYbMd5lEuEl3MLZ6B1g/F8MAMQ3C1bozbwhAe48RATgmwEMxzssqTPTVQdwlePi6n8YwkRKbkGZiic7BzEtgRF84vX/OMQYc91+8M0kXwDDBAcukzjBVnsWsnhEoKdKFPfP3WT3z9VmpXjZhBgl3HWHm2XHKqP/+ZpF9/RAG4LL52xsEL5lfYFckntKSN9uvTMVinPxWAAOBSXfmKugbmZDziIAxkXK3h2e8mHAnRooU2M3lUiGjnGWmWrqScEeUZzIqO6W58+dQ9BnnmLZ5hsHsyhNOkrtnWxW8GkJBD2W8Ynah95dq7vnLtXaMTNY7IH15nAjy917r4TdQ1wE4zHHxGGvkCCAPIS/2V0w8e291gHebLJGAeleESqRvtckY0d4bSeDczAEGTjp9hy4zZWSWhhQDPyToaJICmpkknbufh+KeWhtHZo+b1iHkH0pUrAqTUnz9lcGHe9eTfGd5QEDgjpCFXniUXn8DK8U2ire9JMwtBn/zmbaNjtdGx2ie/eZsg0m12FRKClSOPOUmuOAvSOGSQxxHNlABopkV599/WDxlSt2EeEUElwTPSlnFS4It0TnbnSYdsTQLQTHNyLrEWeUMVDM0MQdxUNOlKUKqlp92jlsYzQmpoCdhpZl3AFKwd8d41By6ZWw7SNnmmOTUDYOVSvjtz2bsAQBhRHShkD0Ojle/+4gFoDa2/e+MDo+NVtDEPBEazzGXvonwPKzd8xEw18uMOoRiXzK+9d+2odrywhCgYQ8gn/BjkzyfKMxLYQRQprS88Spl0ZFN75gN0mZyTrpiXdTR8D2dTi0lHgsBTWbo684youtW6mjKOJHZs+aJjx96+ckSBlBfn+zRIG8xM0pDrLhazl7a7VYlIKS2F+MQ3bx0cmvRyI/cPlT/3X3dKIVRbDAeRYK3EnGVy3YUkDZ5p5oFAuVVMivG248ZetGTSsYUUKf0iRsXOMKf2bxI8o2WwmHTI31YAAHOyrsiJ0KDBitnWlM6gEM6mM88gtDTp0N7SFuBPxIrFoq7Ge9YeLJna1b4taKZJw5uF5kw+c/m7PaESbWyDiMbL9Z/e+iiaDgmCELph//DXD41P1j3JNMk8SIA5c9m7OVMA6yOeV6dG8P0vrqaSqd+zbmRRl61iwkcb1gMvfLqckVBPErpKYE4BoanI1S2WUjR0pMoOx9S7FoJbuJ4SfcSxeXTgGQAbBDj07lVDx3c3vVw6zKRNI/IkZhCZp71Y9MxloJ1tuEpLKT77nTt2Do7BlIHJUD65c/iz371DCuGqduZBDIjeeeYzrgTRUbpa0gEZCBUNJY7vsd+9ehQOGWmGj3Se0bbnJO9M+OpSxvGJLRJpQjwlz+COPGN6XnivSYJjy4sWTjx3Qdkf4OnYUMIXMHPWJW9vgSDCNrRmQ4rhseqPf7NB15okhbf4yBC6bv/4NxuGx6qGFFq3MQ8AgHXp28nKP03T9jYXzyz93IXVixaWHVvKMDUkhH+bF76V9JbOM4LOSU0zHf7CFx7bnR1JKfhovPDBqxA0YJjqDctHjy3YNVfQ02ExQLAUlGue/1ovj82XqsIZEblKEdHnv3/n5m37kTH9fA0PJxlz87b9n//+nWE3RO/0AFfsN897FfTMi6UINhcC11w6tui+8bgJ03JVbOdNXcahIkPpnDvKMxJiJbcjEYHZiduIaCa98AiNxNw0Xr9s5DnzylVXCHoaNBR/8gRmKvab578OcV+J17TWlmnsG5r8+W2PomYLw2cb3o8wBGr2z297dN/QpGUaus0/7Q1oPuv1lOtuA/SMvQERBKHq0qXzaq9dNoGmNEQETR288C3mnc4zAjQlYOKlI8WNriIeGUDJjSNt2kCUdKboGaNEQey4Yn53/cpFk3lDO4EcOuNgZc+g6TSsi98kCj2Rlw++BRylAXztunseeWwP8pZ2FZT24au0dhXy1iOP7fnadfeEnWObi/dG+R7r2W9huw462jiPDi9CgtjRlDf4RYsq87ubjpssD97uhY/jrp1nxPWDlpbbRi4RmSPURGbQCx+zoQkCHPG8BeVnDlQmHSk9Rj/jtMF+7h71LzJOezHaHGlEpLTOmMaufWM3/HYT6o4ALNM4Yc3CN1599huvPvvENQst0xAA6s4Nv920a99YxjQSaq3vqCMyTruKeuaBFdFMeluCpwAgSZh0xHlz6lcsrMDxc1R9RIRGsKgCEW4pHMdaCx+R6xTomEjuKSAYPs9ouRui+0uClKjl1ktYTtsdUfFceAG4jljcW79ywYQpUHVbCWoz2xggIbk2nr3kI560EfuWGYBn2/jujQ/cv2En8pkVS2Z/88MvOeukJWG3ux7e8Zr3//CJ7Qfv37Dzuzc+8J7XXaSUFpRCzqLUl3nOOxvf/Vsq9LJyno4tkoiVJkvgRYsrv9pb2F2xhBek55eIiRjUw6IxQFuWfSDdJSgmTNVvZ+EclTnaNZwUyIcYOKQXPmKG88bWdOGcyoVzq+O2lPQ0ONjgMWLBri0WrJHrLkYa29CaLdPYvmfkxjs2Y7J2xomLb/7qG846acn+4cmtO4e27hzaP1w+66QlN3/1DacdvxgTtd/8/ok9+8ct09BtQ/nx/esupnkr0ebPm7F3AknCuC0umls/f14digRFHeYpXngAMaJJyhytd2hhMA0borVRJXapI/bCx+bq2xeUEvNLzRctmghSOZ4WOZQBCAPNqnXxm0X3nOCFwn8ZYKUZwI2/23zXA9vRW3z/Gy9ZNLfnht8+esWbv7Hy0n9eeek/P++t3/jFHZsWze153xuejZ78HQ9s+/lvNwFQyvfHJQAteuZmLnk7NyuQxsyThrcMyXON4cqFlTkl23WFX/uDI7BP9VIkivu2IBWRTL0PaZaHiJM8hq5Exym9O4mvWkaYkBcRXJwxq/rsuZUJW8jAwzTDzcuNblblstPlynMAwCug0MqBJaXZMuWeA+M33L4JY9XLzltz/PJ5AN756Z8/8MetRsY0MuYf793yrn/5OYATVs675Nw1GC5ff+vGPQfGLVMqHWEeRETErAHI486Ry07nZpXiMUQz+GYe87hsQe2sgTq0X1zkEBETQErQUKtqWTsGk020+cwQI79US1dnL3zbNAlgrZHPus8aqJrSsyY8LaZyJoKQcBrm+a8RvfO9UnZRtuEZvgD88s7Hbr7rCeSsZQv7583u2rh1X3myDtNQrBVrWOZkpfnIlsH5A11LF/Yhb9181xO/vPMxAJ5BLM48iFmL3vnmM18DpwEhn453C+0vlqEvmFPPZ5SfR+ltGWle+BZSp/J2xS+3fSNim0UMr4nRpuWFb10JhCBBgBLLivalC8oV5+liG+yxjdq4XHeRXHF2ANMY22Bm05C79o/94MYH4SoIAlgpvXBO95v/8txsMcceYyBSmm3HlVKYhgQDrvrBjQ/u2j9mGjImxESKPciVZ8t1F3FtnIR8mtRaSajY8pIF1WUlB26YQhNh6iketTamn+6rS28Rf19i6CRHObQXPjJQS6XRDBCf0l9f3tW0dUyWmsFGng1HSPPMl4qeuaxVO9vw/rr1nq233/lYobeIWjNrSM3o7cqvWzmXWMNRrDQadjFvnbpm8f7h8vY9oxCU68rffudjt96zFQhqDSaYh1aiZ6555ktBYnrlQY7gBUGArbCi2zmhtwniViZUCylIeNQ6YIdbek3CrR9vAlPQ0OF44ZPfINgTtejPOZfNLbtKTPmwI29BkuOIPOFSedy5Hizb2AakFLv3j33rp/dCiupkbcVJS666/JSsZTBz1jIXL+gvdeeLhcxx6xZ98h2XE2Hn4Ngd9z+JfMZRCkTf+um9u/ePSa/8SoJ5eHVwVp4jT3wOl0eOJnFyiuYZTLWiS+ZVe3LKT2Lo6IWPAah1mUP+T/G9JEWCMdBJNIl64cNJtJZjqgyMGNvwHq0xP+dcMq9cdYV8evxrfm50rmSe8jxR7GPlRiO1onj63QPb7/zDE/m+Ym2y/vZXnHfqmkXX37Zx/ZqFl527euGc7rHJOoC+rvzxK+cNDk3+/Wd/UR6vmvmMq3SmO3/nH5743QPbX3b5+nDMVuFSEqxcUeo3T3mu3nQreLrFPA6rMUMSyq64bEHt05ud8ZpB1F5cMg0v8WzTVreYRNE+YY5UMI6N6Vlkg1x4xNXlZO+Emht+YNYEwaf117qzarRhyKfB8OVXYikPGaf/hbHuYgDwrIgRtqE1C0F7Dkz8+3fvhCFrE7W1qxeef+rycqXxkWtuHp+sf+ztl7342SdKIQAopf/rxgc+/rVbNj22lzKmY7sAOXAh6N+/e+czT12+cE63N2AIegLYy7ped7F7/LPd+35MpQFWzsySiEfqSlN/Tp0+q7FxLBMat9LCJHzotCiDw3puaTJiGwWgsyob96hN6YVvDx6JzqBouefMqrquEHhaRFEignKoa7Zx4mWULbTnRjP7iLx3w86n9o2tXb2gf3b3M5+xbO3yuTfe+Vit7kxUGp/59h0HRipe/33D5U9/6/bh8dqKFfOWLOxbunjW0sWzjl3Qd9yqBU/tG7t3w04AQsQjOVpZ10XjpMueDsoInyMAV4mzBxpFS0O3vkiXMyi6awQdovkvHdkGAN98HnRtR3r0j6jzloIJ+Xte1IgbzotZo8vgM2bVG9qz6804sJikwZNDxhkvMU55bhjm2S70MvOFZ6y47/vvMA3pKl3MWwCec86qc09ZakjRsN3ZfUWv59xZpev/7TXZjKnizlgCXKW7itmUnO4g6xrMxinPdR/5lXvPj9A1e+ZJhOAdpXjGrHqXoSsNGStbHLWOR+0ZLf4RZRuRnaXDsjc62lJi0ugRVKT3vUBzss6qruaYLY2jq3+S0vzc6Cb1LzJPvoKEZOWQNBNx4WGZnp5SrqeUC2HFzF3FbHcpl4SIFMcu6Dvkw5NYD5mHNI2TLldb7uL6JEkTrGcycw8A4Gis6nG6LT3YEvJCS3lrfvHPkW6tKtPtY8daxHyeBP2UE5y6+ayIIPTp/TVEbMAz2fzc6IpcfqY85bmpudHMKcEcRC2fi1Las4whEDOnqWhE9dnWQ4XBWhnrny+Xn4FGJZEGMUMv7SP25N4GJLPu4IVvJ5fIGOGveHHtZDPSB/BGb8kv6V741pPSng7mnMlnzaraWhxlraa0GTJIsF2n/mPM015Mvh0sBqmAAuiWe7Z8/bp7j1sy23EUEQlBtbp9xXlrnnX68t8/uO22+54s15ofetMlpUIWQKVmf+yrt0gjJUSDGaYht+4aeu0LT7/wjBWRR/jfExFrJsA8/cVqx/1cHiYjM7PMg0GC4Cg6e6Dx411F209TazdaBm5YX8eME0RCyeggCxodscuH8MLH0vsRbEBxIraEXlG0vZjmGd5T/NxoWyxdb5zwbFaOzzZalOF3bNjOez//y/se3EHSx7cQpB31g189+J1PvOyC01Y8tuPg5z9347teeb5PHPXmJ75ykzQNlVaghIhY6W27h+845c1Zy0RMIfAlD1aOccKl4p5r1UM/h5md2Vf3IOkw1nY3s5JtFf86nE1CzgiNHBTXYD1tQ6DTttKJc7RfjHnhW/2imI9pu2QKLC857oz7G/zc6Ab1LbTOfRUAPzc63sm7cstdW+67fxtlTJYChoQhtRAynxncO/qWj1x3+x+ffMNVZ2258T1z+kv+bZrhKGFJMqXXP/rDUlDGvO/+bbfctQWBGhtDXpB1bZ33SupbyHY9RWI7ukaA0rS85JjUnrhGkQ/tYmY86KLtcqKJzvvCVF74mBCa6BQxyuaFmpV1dbgFzhh4fJTIJeuN485h10Gb+upRhqv0B79yEywzsUcoV1HOemzb/ue9+WsfuebmyUojtFtkMuaxK+Y61Sa8iN6UzYVhmR/8yk2u0ogEdoRf+1nXq86TS9ZHzNUz2FgxFhRU0dIR01KqFz5ESuegi06VErkj54hrt21e+PTBItgDAOJjizaHOVMzBhkGgtzoi94IAEJGrV6IIOyG3256YMMutOPYi68yZc1W7//YTy541Rc886hm7u/O//4/33bx+WsNU0Kxn1mcmADhgQ27bvjtJiTFjkCNEQKAdeEbqWs2uzOcdR2sXVqUcyE899UhvfCcFDiinTvYMtIS7abK8osYW3x+0Gb0jLCVVaWm8j3OMwgZLzdayhVnyGNPac+NDt1szPyRa36TXkwSABFr1pqzA127Bsds2wUgiBxX5bPmzz//mje/9Gy/xHAiui4oRPmRa36jNSddcT5cJStHLlkvl5+JaZTWP0wIgAiasaTodnZ/eoiIZL+FV33WHgm66EBXHXStFDKPnptE8YE6KEzEiwuOntl4wFZudI/1HC83WlKbYYMZQtC1v3lk42ODUyGGCIDtKsiWyDI6UfubD187PF796Fsve/WLz9T1ppRtdcCIwLzx8cGf3rpRiLZyM/4MJADr0ndQvodnNL3Fe5JiWlZ0WsUvpxicooanxDDt3Vqt3VFKaTe2e0/avm8pzBwoSZyVeiY3FMDPQJSGsfZCOXc5a5WoDRoE9WgAn/jmba7WkNMwNujWCyilr/3RXW//xPWFnPXuV51/8knHqlozEvQdNClcpf/l278FoKMxAa2ZCtZKzj/OWHuBV7JyZq1hDJRM1RL0Onnhow7UMOgiXVxNttT8bYrNIvHl9F+AUHw6Al9YUyZvpeVGA369DcOQN9yx6Ykn9/uQOpxJSClQyN78u83XXHvX6qVzrjh3DSZqhowHDwfDbnhszw2/3WRIodskj3B61mXvoqcj65pRMMK89VQvfMTMzdFvOgglfMhtJaFZtHvhp5IzYvKKAHosd2Zpw88WWf9C0Tuf22zY0VjAT37ztlqtCaNzGdopHmGIcrl+3c0bASxbPAs9BdfVbQZpwJC1WvOT37oN7RGEfi9isOhfZKx//oxnXTNQMHWYqxXYMziZZU9xByoCNCVbRDINntBGHJTolLahTKGatgwvACEvZ55xkJW3nvOOYCZJtqE0m4a87pYNGx4f9EXRI5uC5pGxCoD+nny+K6eVbjOjMAAIseHxwetu2WAa8fBjhG4wgp91XZhpSMCaIog/wTNaV9Na1J8aaellQYIP6V74WEBaODpHdzL2iDg7g8ThjaRd67xXidIsfxbxWqLh2v38f91ZHikTsyBK0UWn04IwaJFiXgMA8r5gLo+UP/9fdyYmEA7i3Sm65pjnvHxms6410GPq4AD7NKQleMYhgi7aBFJCWwWw8KSL9gjVqUVLivcnAAiLgcxA85yruW6jQ260V6bHNOQPf/3wQ5t2z1nY/+F3XJ5h5oZzJPShubcrB2D/yGR1tOKffOa/IAPghpNh/tDbL++d0/Pw5j0//PVDpiGVSokBe5qyrgmoK2JQ0sLh8+52GYJSdsZgjikyByeIww/OiIsanVz+STkj8oDgY13NEG0Ebjbr2W+hQm/a6yFUB751/X3lPSOveeHp//jaC7/w4Ze86PL1XHeStoopgE4E2y31F192+SkA7t24C01HijhYlX7R5ev//YNX/ePrLnz1C06b3D38zev/6H2VpNrQ71Lsty58g5d1PSPMg4CqCs75bSEiBEdUzoiYNKIgTYx3aM7RET0d/khz3AIAMYO8QtVH2zysa0U9c43Tr2qvE+q9pqu0IcX3fvng/Y/ugmVedcmJUopXP/8ZP/7XV/zqW29CrSmno9MCSmswXnLZKa954ekPPbb3zge2I59R2oesFIRa87ZvvunHn3nla154miHFXz13PSzzgUd3fe+XDxpSuCqplYQTNs64mnrm+U7amaAPW1FgfErzwncMukh1q7RzDm7nHJ1GjI4W+P2irrhoBwJAmnnCkUfPRBmAkNysWJe+k4opYThE0Mze4v7+rx4a2X7wootPWDS3xwcU0UnHzYdlTPNxWvMLLjv5ax+8ynbc7//qwcc27DRyltZBuDKAnLV62dwQC4vm9lx08QkjOw5+/1cPwXP5dkA8dc2ynv1WbpQh5NGTBhEmHBFUIW/zwodIodYXweU2R0e6zEGdOUdoHU/wjCgHS0irUZccGEBT0eEenZdskdxo44RLqM2X4SfOu1oI8V83PvCHh3ZA0FWXntTfU0AAGSlEV3dBeWs6FXOt6ANeMLv7p//2GgBf/uFdn/7ir42eghuU7iCCdvWs3oIRceb09xSuuvQkAPdu2HntTY9IIVSinkfIPADjxEvFnBXsOkeZde1BetwWHKWGmBMubSuZokx5u4EiTeaIEEHyYuQPoiQ3a4M3M2pusNqOAgoQBhoV66I3ie45KY8h0poNQ7hK//SWjWM7h+etnHfOyUsAhBV5+rrz7/yr81CzJVE7SyfEKIaIRidq//i5G9/x0etkKecqHYjYJADUmn/3qmf19fh6qRfzccYJi0uLZg09NXT97RsBSCE6nR0keuZZz34LGuWjz7omoOwEMgfabU+phuwpTeyJAIDOMkfcldqynyAufnKr6DolDpFkBu2oWiLYgo6g+UmOjYpYcaZ3JFvicHmfbWhNRD+77dHb798GwhuvOmvVktkemr0lK6X4u1ed/9qXn6tc5RWbigErogoSUaVuv/z/fecTn7tR5iyf2RBAJIiU5te94plvvvpsEYgRXtGONUvnvvOvzgPzzXdv+dltjwpBbjrz0ADkqvPEkvVe1vWRmcUCWuWRpkzEC7e88AkxsBPPCAWDUFGNfNmZc8SJpcUkqI2JJSgrZHQaW8sZw6+BcyRQIC832m1az3q96JmXyI32mmY2DKE133DHptE9I8iYrtJ33L/t4cf36iD1qN5w7tmw8xnrFgtTJuwQQpBy1MtfcFp30Y80nizXf3XrxsysknJjZxdo5lzWPP34xfdu2Flv+GHlWvNDj+2588HtICBjDu0a/ultGz1OlpQ8wqzrvoXWBX/jZV0fWWw6eVZcwmOTZuTApBQsxp8eR1MAgeADt3OOVDEtzTqOeCgAt8kvbdoKIAbrhqs9tn3YcPDTDrzc6GWnB+8SYxtE5LrKNOSNv9983c0bUMySIT/y6Z99eKJ23hXrb/jK33QVMgDGyrWLn/dJaRm6NzBTEoHZNA1nsvaKq8760vtenMuaXqqSEISs6cQpwwNuveG84W3fVMx7H/nXXNYEUGnYb/rwtff8+hHqylFfkV113c0bXnzxiVc8c42rVCzx2gsa81SeFWfK1c9ST9xJuRIr93BB4w1Zd2lPzQCH0XyBfSmpSydQE5VPKbakExjkTi77jna0gAUdUq9hACi7YnfNmJ4K2TaMJx8QmWde3Z4b7TXNbBqyabvX37KxMjhqmga7yuwrWUvn7B+vOo7rdctlzHXnrKKBLhL+mGCWhnQma888Z9W//N3zGrZjO27L9aq5fTbwdpHZ3SedvSqXMb3LjqMOjFczy+YY/SV2lWkalcHR62/d2LRd05DpzEMr0TvfPPNq/yWPiHlI4j11IzAjTRnmwymf2jqnx4N1iARDqnU8aebqEDcc3smOpifLlkGHvbX6udHlEeOE5xgrU3KjvRXp+dh++8cnv3PjA6Kv5LoKRLarXKW3bD/guH70bSFnPeu05W7dDjHh3ZvtKXzwzZcO9BXf+cmfDY/XDjkrInJrzWedtryYs7wrtuPueGrIcZXHaVxXib7Sd2584Ld/fBKA1hwLIvRJgQDIVefJ4y8+suNqGZCEnWXp6CDTbFpe+Ajb5ygKEUQAtftWppuiSMlHTDF3+Db4pqZNE1mPOA4LAl5uNLJF45TnUqmfVcpJjprZkKJat6/7zSP20KQMgsv9rMu68/iOgwCY2TKNF114AmpNIyhTLA3B49WrLj7h3PVLf3bbo9/5+f2Oow4xJ2ZDCjSdKy863gxkl01P7ofthvqOJ/zaQ5PX/eaRWt32XPmJQSAEK1d0DZjrnw8rf7g7rrdODcKjE1azVah+6hESbnZKEy5T0CM6nkqfsI6H0kpCN0laTiPCCLGtxB+Gc6ZkfTgyaVhSwTj+2cbxzwaS50ZHs4/u3bjzaz+9T/aVWlICkWZG1vzyD+9yXL/+8Nrlc885f61daXhhXcxAxrjorOOkEJ/+j9tRa+ayxtRzkoa0y40LLjxh9dK5AIjIcdSXf3g3MqYOncNEjqtkX+nr1993z4adkamGUG1FmBrrLjbWXcSV4cNiHkSsAVPqPwxlbYeCjBCecvHFzWIpXCJdl2mPPk/bbr37082uHebhgUthw3iu4ZWxnnYWNRFBu9Q1YJx0GWWL7bnRHoSlEJVa83u/eACTdRIx1sQMGPLHN2/YPzwJQDPP6i3889svz5RyAKQUynb75vQsWzSrWrcPjpTBHCapaG6L92cWQjBzrif/4bdc2t+d9/jBngPj19+2EUbc9cxMAjxR+9FND1frthRtSUdh4mS+2zjpcioNQB+GTOodL9FwxYaxTJB9McW9bTyj9XkKbcJvovP9CY9aJITkEDzDZ3TMgMCYLR4YzWTkdAOhvIOiuTImVz/LODk9Nzp0jD/8+N5vXHeP0dsWjMMMQDed937+l+Ernbd+6cfedpmqNAwiEPIZM5sxxiZqSjNk60A1kRDNmIUUkqCrjX/52+eeffKScMD3fP6X7LR54YlcV8uewtd+cu9j2w8kvmy9iJAAjFOukKvO5eoYpm3z0EBG8gMj1pgtQKH1qVOL8oyIyz4ZdJFOXlNyjoRJI5UPta4nxF1/Z5l05T3DuYzgQ3C+1jMFu03qX2icdBlJgzucGy0E1Rr2f/78fjScOOMOZs4MU37nFw/+4FcPeeInM//tK5755Y+/zCBA88hkbWi0snBuT19PHrXmrn3j3q1bnhqC0/ImkxS66ViGvObjL3/T1Wd7kWZE9N1f3P+DXz8MIy2y3BOWJ+vf/tkfG00nJf40ZB5GxjjpcuqZ7x9LeKjmwTAj+J7hzKTTpl90Yu0tCuiE6+lwDo9HtbL329QTBB8SiozXox35hKYt7hkpeEV3Dyl2MAASaFTk8jOM9c/vkBvtD/LkruGvXXePLOWU6pCMSgRHvemfr9tzYNzDkNb8hr8487Zvv+Xic1bVdw498sQggNe84LTMnJ5nvfZL8y/80PwLPvjct34DGUMpDc2kNDed88867o5vv+WvX3yG1syAELRjz+hbP349XNXpua7Ssiv3hR/8fuvO4cS0W6/jZV0/40q54kzUyxDikIuHiDVDGHzPULbpiKTZKsWjhoBnpLvOA/lwOpzD24rCSMFOxo5ESFg6kgEv3lnT5glrtC6lAPOU1MFMIHbq1L/YeMaLWraztLiepu1+6Qd/SGcbUQQYYmy4/Ir3fK/RdDjw3566ZuFvvvqGm3/292OT9e17Rt74krMvO39tdbSyb9fwvj0jk+P+meQL5/a88srT7/jO227/xptOXr1Qe7s9o2m7r/qn742PTPpx7an04U2p7nzxB79v2mkiRfBqBBinvpD6F7HdmLqAOgOayRDYX5GPTliIOhIOwTPaPndCaLx1yLKP7kyI20NbhMaR6mNtVjnvH2JIHmyYv95XvPqY8qQjjFbduzR0EuDacsmp5omXtnKj09jG9t0j11x7l8hnQmd6OoaIYBm3/+Hxs1/x7z/6l1cuW9TP2pcuLzpj5QWnrfDKMVz7r6+4+UVnbNq2TwrZ31Po684tXzzruGNn60CKFoK0ZhK0bc/wVe/69kMbdsIyW49IexelWeQz11x719tfdt7qZXOQ8CcHkgcrxzz5cvePP3Yf/AXMzBTSJYFdph5L/2RncbAqEZVSOvKMCIKSMRUhTVCnoOBO+lvEi0aREcMdhOAbUqI7UezBPiZJ6PGacePe0l8undCO6KjV+7FeDepbaJ77CgDoFLxJ5Cr96f+4HY7mzJTJZH5+AJFlPvjQjvNe/cX//OeXnrd+qbe7e8fK+WHCRJees+qSs4+joMZc6GQPKVJpfdu92175T98f3D1MWYunoIzw9Yng6E//x+1f/eBVhhSpoY1epKp5zivUUw9xeYiMbKeSDczkAemmfbnJpkGG9qJVpspAS5Y+IHjljzly1TPApxHl4ZjPY7pMm8M2fHoUNz7ToofHs5vHslnR2RoWiDhyyXpj1XmsnPZwuhC423YNf+tn98GaxvmMYUHBnDU4OPqc137pFe/9/n0bd9UadihZCUFh9Z8QZ+EHzVyp2fdu2PVX7/neZa//8uD+ceQsbollUz2amWEZ3/rZfdt2pUke8MhLsusYa54ljzkZWre29SRlgIGs5M2j1oaxTMsw0GkbiupcMZNXQBmhHatz6+x44wBhHG5Lnp2H2zyB0W7hO/tUqQkw9LaKdev+wltXj4w2DKu9pqDnt3Vt6ppjXfgGAKBYRUDEefJHvnozFGP6IYheaqkhlaAfXHfPDb9+6OIL1j3vvLXrVsydO6urmM+YhjANaRoSgOMq11W2qyq15v7h8oYt+35y28bb79hcbziikIFm6ENRZKIp/shXb/7ux18WHDcZjQgmYvYqEVoXvVE99SBXRsiw2nkSETuKuvL6l0/ktpRNGOhgGuAW4kLUILoJBGQdlS8PhzhaEmXkzzaekeidGigEzx7IzYb87cH8G1eMhdYwSvAYZpCQy0+XS9azcuCV9ko8hpmIHt9+4Ae/fgjicNATPEJryGK2Dlz/q4evv/YeUcqecMKxKxf3l/KZUiFbKmQAlKvNcrVRrjYf3zW0ccMurjZQyIqsKQtBJOnhusoE/eDXD73/by5eeezsAFwJH4Zk5chlp4mlp6mNv25/RBB6AOXSHQeybkPKjFIxj1qk/yFslZRy0d9lkteNlBs7Kj4RxYnSd57W15E4QgZg8J0H8z/fU7zymPJYU5pR5uGxDe1Svjdz6Ts8YCVyo0M3GxHe/6WblHNEKQ9BETAQyawp8xnF/PCGnQ8/sA3MPksAIAie89Y0ZM6S+YyrtQ7J4oicqMrVH/v6rf/x0ZcyIBIB0j7z8M66fmd92z1cG0+UvSNiR1NvRv/kqfy9I1mYiZpDqV74NgxRRBsNoy98mSt11jw9mcMfKGJFObQ5q9WZASn1UMW6YbBou15YQ8RR6x+JJY01zxLzV7FWSDMHeeVEH92674Y7Nh1VRQOPRDTbjquUFhlDlnJGV97oLZj9RbO/aPQWjK68LOVExlBK246r9TQkjKmfqPknt27csWeU2sUOv4tgreSCNXLVeYms6yB6FU0XP99bGCqbEXfelF74dpxSKMC2W8Pa347azOeUyhU48pOIIYh2CD+G/n0KzGMEyTfvL/72YL7HUm7CIMaaskXr8nd5m0sq2/AO0fnAl25q1J3D3lM64QzQmpXSrtKuqx1XO652Xe0q3aoyOCM5SILK5caHvnJTwP8oaRMLsq4zV7ybzFw065qIXUZPRt80mLtxbw4G6xRRs90Ln+D9gRzJQegGR9DdwfE2RcG4OOoRFqkNzB2dDRZRx6z3lwYbBu+dzNywt3Te7JqgluThKbzmKc8T/Ys5zerlJ85LsXNw7A8P7yBJljndPIM/nWY76jd3b9k5OHbM/F7NLNpozgsyFbOONU65wrn32kCd9oAEW+GmwfzwhGnmlJMoLxk6ySPYOsyWbvGMG8HSPWpIFzHa3i5md29ZQfzZawYEX7+79KJFk+fPrY03pSHYN5hkiqYnbQBp4hgrpYUhX/vBHx14dDeEaM7EYv7vbsz7Bkdf+8Ef3fLVv1FKk4xbcaJZ1895l/vADew2vHOpHU29GfWbvflrdxVgsZsso8UpukkUR1GtJPTvh99FTVltGI1zjnRm0CZndOQZ0bcNdxl/ZpphGHpPOfO9p7pP7Gla0j/7hpnNs66m7tn+/Wls3HN8/9NfX/SOl50rpTiixfE/3kgpXSxkwtdp+z5gFD1zjbOudu74lmdeNwWPNeSPnioMTZpmVjmtc1YCntH6nOD2IUFQBBFTONtStJU2zoFQt8GheEbEyhaScNTWThGVGlAaZKhvbOu+aG71qmMmJxwpQWA2z3u1J6mlklwYZ3n+qcv+R7A64010lpm83cQ8/3XO7V+HMBRzj8XX7sl9c1uRMtqL1m4Bv91P3uIEIS4iHJ052TN2c7KlcY6WTEopwkfHvS3V/hGbPgNSsLLlNVt7Tu1vLCq4dVsZK86kroGgS7pxEGAvif7PkWMkYBSEM6b5BgL8idKAXHa6u/3+giW3Txpf2dLFrpSWUlHDdEuQTMUQt8znbeP7U4lZxlIgnypzRGrDHYIAEnJGRIH1fS5IcCClYVrqtr2ln+6uvOW4CWIlFh3vh/N0AmgAhWlmQv/pt0PHfUlDLFxL2+7VLH+2J3/bnoKZ8eRQr3GLN7SNHVnYoaXbuylq0ow05g6Mo91lfygvfOwxCOXk+J0pAUqtP1wmmPypzf2PT2YK0qXuuTQlcfxfbCTQPbco1WOT1scf7YGh3VRRYSovfHxVJr22nNKzrYk0mWNKL3xqwEfoy0EgJbWIKaqUe24wSNIHq9a/Pt432pSmajwdJ6L9eTdmy60N2/Izm7qGKoaUoaONY7tJ1Avf+tTJFRftHIwQutnTWluuLCFIgmh/cOCyj4WkcyzH0ldOo7OMnPgSjKyYpKm+s6Xnuzt7aHyQWE9lNPm/1AILhtIju77+ZPd3tpSkpb3EWx/UYXhe9I5QHvBWoKe5EGJR6RzlGYnzZtNrIbTlynK8liXavfCcvBoGDUQ1q2ifKIMJRlZMwlTvemThHXfeB90Mvvw/zUJaBcVU86Zb7nrPw7OFqVUoahy9Fz7pQKUUJhRp7ZwjYmNJ8oxInyjPYERINW5FJWrNps1bqJk1xOtuqA0/eIdnym7B5/8UlbTScBisCRj83Q2vu82AhH+mQIv5p1rHOXCnUZt1PKCnqJwR86zGx4y3dq8st+7v7IUPPiblnOhAQAfyanUmIr2t1vWej371q99YRQNLmBmsWc1gnbk/k8aAECBBQujBx9/9z9/Y38i1Vu4ReOETnaM8IxW4aavRSA41hbskWs2nPQQt3W4WN7+0zZuZyOCv3VVZ9A/ve98/vVUvOFFaWe4QIPi/uPkxCY0K7XrwQ+/71PcedmCJNngejhc+3RKRiFY/hKCXFs/RsUX0HurkeKOUATvuEQSANUTO+MD1g+bI3/7DS8+qdR9jFLr8I6H+L1CIj13hVieyI09+/Ht3fuSuosgauoXjWNfkzd7GnaJ0pJERU+yr2M6Q4pQwDsWRotZx7zK1KIMjxBtOgRCJI6T0V2p9RSBorSmX/cC9ZrF67RuXDo3WOSMxNZ3+72rUVJiVo3/ZMvD+zUuRI60VEIA6CsYYwURFUUp+mwTe1MBM11am43gL7o974ds6p8UBTckzYr3ZtYX8+61rCn0HXr18cqRuWOJpOKL4T68xYGsayLvf2lL84NZ+lzRpHSkVHIfSETTfLhLRgaOwb9HZNF320b+n8sJP4Z/jKeSMFHbCxACRrjXprXf31RruG1ZMTDpCEkSy6Oj/kuates2kSPYa6ksbS//vob6aJmplMHhKiohof1HgTemFJ/LjobxKFq4CaxhmBF9Iel7SIJwa7NNBB2nzwqcPnJAzQoveVNTvz5qErjry7+6fM2qLv1s9bmtSTPJ/HX0wQMwKAoS8W/3Y47M/+nB/szwJoRkSgkDCy7qDEP5PdGeJJYYFRADvugAzlAutoBRcB9k8Zs1FJo/Bp6J2jaRPrsO2kqoaRclzKi98S84IFS+KEgSDNVgH4gUFw4vAnkZg76Q5b74sJBpafODh2ZOO/PAJI5rhaDIEM9P/AgnVBxmzS9JkV7P40KzXfab3WXRSo8Su22zqSplrZa5McK3MlUmuTOjKJMrjsJutagNejG1Yp9EPN9ZgQClkMjR7IfrmUP9cHphHxR5ksiwNPjiIX3wLWoFkW1GW9FgJA1MBfEovfLQeu2ZoB6z9MG4EvwtFs6tH5gsMZsfRjsN2Uzs2Ow6azUD7ouA3gUiTt5eIz2zqe6pqfurk4cV5p+x6eZQ4isDiP4lGYDAUyaKuDxqz/qn/r68tXWBKaRK7RIZmKJf9H3/ps+uycuHYXK9xs8aNOtcqXKug2YQgZPPIZGFlKVtANstWDlYGpgXTgmGSmWEiKE3Q6JnFS9bgyUfTyvWkCpucyjkO5YX3kKrDoh3anDWna83xmYE5RrFkFLuMUpdR6palIpGEICLhmwDD8/K0BqBtWzVqql7TjbpbrbqT4874mFuecCbGVXlclcs/foo2HKQvnDZ0wbxmTcuAjP5M/TBeMBOBUNTV3+VOevfA2x4zjzFZCe/wwZalgkiaMCywzx7IqySvFcCsFLOG1t7yY5IAWBBAJLx6kQStWWuwZqcZ+NGZJOOY43jbo+3z6gTOKSJ1E6pzsAVo7W2HVt+srjXHl1asLq1eZ/UPgEFeRSWQF7zlp6LqwPkT+z+obauh2S8ezaxZae+sJbCG1prZqTfeURn5f/uveVH5VklKsWQKifTPhkTCrCRJrEHf7Hn++wbeUKOswZoY2svT8Zadhl/MUHtMBqHHqbVOSUAKlt5+zsxMDGbNyoMj0DJVCl8mAUEQ7EZcyYDftUNLJY5AN6F2LzyVVq0dOPfCrjXrMrPnsfaOj/fmpsk/SI+9wtLMQWFoZh2qOpEiWX52RvA3gSBlxLBHBMhcnru7P7rgX7cM/vDNT32p3x5RkIokg/705VQOZgnAECyh99m5D5kv/J55RcZhoatMxCSIBAvy5TDh8QlNIaK1psC/ykFJKg4ZggdSz4dC5HtTGOw9WCsv+YJZ4+AefvhOsA4pJoA6AbqTKpvyUjHrJAd6KXP/mecd97fv1bYNBFnqmjlY+jqUTP2yaAYBEMQgyWDWntjAOlgJQSkpz6USsBD/v5DEGbDY+dGCq+/vecbbt3/2jLH7Sm7ZFpYi6Z1T9CdIIuwn5pBmksQZweOOuG1/8T0P9m4bv5vozqaQVOoWXX3U1Su6e6m7TxR7UCyJUi8LASJNAkL6aosQ3kWvUqVHbj5mtWatvcJF0AzWzBpKQbkoT+iDe3FwDx/ci8Ed0ApCxo42a0kO03G8+bgI6KO1gH3m0XfqGbrZDB2nHkmQEDAMEoKk1IqhXO04rJV2He0qdl12XcDbPolFkCFNwmOPAJEUJA0pDRaCvf0SmjWTR3maAW2q5q7swjeu+8LzB3/+ut3fWFJ/Kq8qDZFTJP3c/UPVTvvvoAl4MjMDvhJeMLjm0v0j1sc39vx8ZwESMMGwAHB5UpUnsGe7n1wfCHDI5KhQokI3Fbuo1E3FbhS7KZtHJku5AqThea69UHVu1rlRQ7PBzXrr98QI73sKlQkfyESQso0CKGX2cfbRThwRQ2cYhOizBG4OHRCm5dZrJAQZppCCpFC245bLbqXsVCbdctkpTziTE2550ilPqvKkMznulCcJIMsSliVMiwxTmBaZpshkRS4nMzmRyRrFkuzqlrkCTEuYBkmDDAPSIMP/LDIZMsweVr9cevXvF136up1fu3jo5gX1vQWnXEXGZSHR4uH//ZwkWIrMIFeTIdBl6IpDm8etn+zKfXRDr+MKYWrtOzi8evu+fAppxKVs5soklycC7U8HdMNJg5jnE4noev6YQkBIZHItgxNHXPPMKdoG4p87EEfU1R63dGk9cu8f5lx8Raa/S7uqOTzuTIw7E2O1vbuq27dUd26vb30CjQYMA4I8B3TLhtOK8wi0XPYklODNtYLWAKGn1yh2yULR/8kXZL4oCyVZKMqubrIypiHHDeuD2b/4Tu8zrnZ/co7euMIY7eFqxZGOJuEfBPHfZBeJsgoNaE2WQMlSE7a4Zyjz6725rz9ZGpy0hKWFoTXH4dmCdmgSDZHkYVoGdqCQeUce3PJtRZQGjnxIpFtP4bJPyZ5NJw5q3Z6wdAmqbt+645tf6j7+RLdeq2x5vLprR2PndtSqyOZgmFQoolgKVJPgsHuPJESb9znul2nl5mjljo+6o8O+9Uz5mgu0hlLI5VAoGdmsmTEfzHTdU5i1OL/+KmvjxYXBZ8y2e3PKcanmCu1Ric98nxY+4jNVJgZcTYKQl2waerQh79yTu2Vf7lvbu0bLJpnKyGi3lYl0OF54HcS1KKR3xmF64WOaTOSWkPhiw3MnmaONXOBpUBi+9VfDN14HEshkYZnI5iiX96QhVqo1iTbPWnR78n3HkfiD1lMp4IoUysXhTkGsNZTrlifdSYbeL/TmXVr8C2f/ozT/BceUz5rVOKHXXtfXzEhuOKKmCEwCEIEsf5SU0hLNAc3wUJeXnDV1U9HGUeuRMet3BzM/31UcrRgio42sq5ncZIDsf48XPrWFhqKE8zaNppg6uOxbzpGIF97T1ksldHXB104YfhGRpBceiYdyYuVw6/0TqyjcVsO9uXUf+bDzRG4pNWUFWECPuvLrm/v+w1Br+5tnD9RP72+cOdBY3mMTyFXUUMJW/qNEEEc3HVU4Sg3sq+IAKCM5K5kMZsLOcevuvZl7h7N/GMpuHLaatjCyOltkVwuPKgRF1fc2nvF0eeET90YJglrlmTq7yNDB8RYJ92qbhq96pN+T6D0Fj4t39vX4APfRR0dfNVbn28/618waRMRmTimNR0ayj+zPfyfvrutrnNJnr+1urupyVnfbc4sOM0GTo8nWZGt4Zz5R2pILrxEBTEKQJWCQklCAJu3umJSbxs3N4+ZjY8YfR83NwyZXCEYTVgOC3CZc8o0WvrLg+dIkSSmC+gvMTIGdYhqYTsd9RK4ML3o6b+B19c8yowiPoVAhnbJRquMtmvEWnctheuEjMYWRkX3zJicHaBFiRJdOJSeE2nVLWWeGowCClJoMLiu6e1/h7r3FTNadn3fn59yFeXdtT/PYvDqm6CwtOnOLriHBGuRFC/i8gQJTAoEYSrFWpN1K3dlWNQ+owrDuGkH3Ppo1yvlRkR/pyU925+attk4omd0Fy3F1vek0mk6zaTdtp9m0G02naTv1RqNabVRq9Wqtoao1NB0Y0pfTpYAgCBkWrQuNPAH9RIyC8YUSZAL6bDD4Bc3MrsuugqsgBSzTX2/REC0kGHk7tTAOxTnif3InlpA6QrD8gzKGMTOEz10j0lTIYjnyd/vTUqMFIm+omPydx1IAmpp2TFg7xjJgkKW6Ld1j6h5L9Vj6mIIzP6fyBudMzknkpDahXKUqTV1uckNTsbsnX+ox+ufljlmKbNekI2vI1GA1KN9nyYWmKFgiZwlDSiGlNAytWSmllHKVjnzQrus6rrIdx3Zc13EbtjMyOjE+UR2fLI+OlycmKhOVWrNSQ9MGACF8Xc/74JFreN5XCC1mTy3mwMPFnsCutFHIzVkwZ+7svnmz+0bGJh985Ilmw4Z3lsjUEklMlSUwG+nBWhynKG4fBik8o8XNfLsvM8AaGp4lNXDaRfMvCEArMgWA8OAhEnTC6VTCyVkEPEUFBg8yPPMzFNN4Q443DGgCe+tCEStoBVYGsHBe38J5A/PmDsydO9Df39OUpjItWNlavpg1pcGql3iAIEkjIoUwWDGU43iTEFJYUrTUwAh4SQghCIym7TiOazuubTuO6zqO67qq0bQrtfrERHWiXBmfqEyUq+MT5Wq1UW003VodTScW5JDPZPO5fNbKZTP5fDabyXSV8gvmzZo70NfdVcxlrWw2Yxoyl8nU6o1HHnoM0krnGVFbB0ehzKBOjrcwn5HauU3USkaxTkqz0qwUDCNbyBbz2VIpX8xni/lcsZAtFfP5XJYItuM4jnJd5X2wHadpO42m3WjYjaZdrTUmJypOtQ4pgr0p2KF8C0+EkqJ+WkKETFuyHYOgvdsZIjxySqOu8r3dixbPWzR/YOH8gQXzBrIZK2OZGcvMZkzTNLRS8E8rcgFXGrLRdMartWqtWas3a41mrV6vVhu1RrNaa9TqDQLlctlcxsxmrVwuk8tm8tlMNmMVi7lSMV8q5JjZdTUYhhSGkcnnMogeicFQWruuUkq5rnKVcl2ltNKKldKadVA3lxgshZBSeE0KIQRJQ2ZM0zINIvLkDK05n88CgOZ0iSAqHbb0xxbsjHRWE+pRU/AMLwTN66BUrphfesy8lUsXrFy6qL+3JAQJIfzfFH4mIPQfcWCAZ83sOWU1s/acsY5bqTYmJ6uTlWq5Up+s1CYrtXKlNlmujU9WapPVYNqh4B1Xi9p5DlGhlM9nMz09pcXzBxbNn33s4jldxYIhhWkapikNabDv92HW2rWbhpTVWmPrjr17Bg/u3je0c/fBWqMBhvbnCO8f9oqH+XIfkSBBRCQ8Z4ggCkHR010qFXKlYr6rmC/kc8VCrrurUMhnu4r5vt4u05AMGEIYhsxmENINceAEiaM1dMD6sQAMZnZcJQ1Rqdaf3LFnz76hDZue3L5rHzImx7SVBELDr/hwOEeM3qI8nQBAaytrLTtm3oolC1YvXzRvTp9pGFIK0zDC4iSeUIWAGjhwXYcdgtCwqFwVkKWniXg+/IB0fCrSemKyOjFZrTds11WO6zqO47jKdbXt2EpzPpcpFnL5XKaYzxXy2UI+6y0pIhBISiENaUhBoPApDdf2VtuOXfuf2r1vz76hHbv3D49OgOEq5VvhOFhbLdKMQozBzEorbqdODaaJ0UmQgGjJjz4dEYEon7W6S4VSKd/XU+rpLvX1lHq7S8VCLpfLFHLZjGV6TuwImfhLt1yt12qNSrW2/+DYzj37t+7YMzw6AcB1FZTyNf+W+StqWw20mFCKoNjOYKRpNIEFIiVHLfhoO0uWLnjDK67o6SoCMKTPFlylbcdVSnnsQWk9MVktV2vlSm2yUqtU61qzZZmWIS3LNKS0LMM0jFzWyuWsfDbjsUFP6hDBAiQiUwgySYSJfuCuYn7hvFm+W9vXV1o07IkbIbURxaVhZtfVTdtxXQ1g/8GR7Tv37x48uHPvgd17D/qMMxTAKdjFDMP/KrSmJTh1bKcLZuN3loEOiHC2rBkuh9q7XWuMj5Vb6AmfCwbDMGRXMV8q5i1TKs2NRrNWb05Wqn6MRMgAQgr2LgjRsq+3zBNx2SBYxXHOgTbOEVqoKJrIEDFgRZJj58+dtfzY+aNjZQD1puM4br3R3D04tO2pwe07941NVsrlml1vpgSVtEylwRPDKRLMTKanq9DVle/pKpYKua5SvqtUKBXypWKut6dk+BstBRsu+eJrSDceU2PWrhc4xJpZK2ZorVhrJoFypb5j1/49gwd37j24c+c+17aD8Ey0hD5ihJW7Au4dEhc6traK9PGtrUUxLYAI33sSE7k5qFfgk5TruKOjE6OjEzEpUFBE8w8INKxy3zosPEEHEcMmwuKkSQ4Abs94Q6i1pvlpCAATEYMH9w8/sW1PvWHv2nNgx+4D23bt27f7oHZdGBLh8a1m4G8MSzMkLIQtjPrdHNcdGhkfGh73TaXeZMK41IxZ6ip2l/LdpUJXMZfPZ3NZK5vJZDNmWE6JwY2GXas3a7VGvWHXGo1avVGrNeuNZq3RbFabcB3fhS0IUsA04myAWr+TOlIUdh1IhBLgiqAktiriQnRytISgHR+N0h4XHXAqrTW0zMaZR7s4Qpi6oGeUkFsoZM2wrB1P7XvfJ75FgFtrwDQgBZlSmDIqKMWeGWNFAdl66yzJn4UvhoVbe/A/M5fL1fJkZY/vy+VgR488wJOWWjpOEPgkBAhkSrJkIBIHN+k4gAgRRKZtH6nGwJjk2G4dD6V4tFnHI4bOGNDa5FAgkgYXQVC7Fz6RZBTtHH4bvksq2XHqthKjsghEwj3Ae1UptBfwVcq3ZMXwzRPsLvmIztZxtPZI5shncKCRUiBEhAO1G+O9YTgEdwCfMPgu5P/BjeGCniIlJzq9KLhbIOoIynRMJzoHhsOOjwY6VDagjmO2/xmNHAijPZiSNxEMmmpEJNdB9B0ooAWXW1tsa6lFjWMJu2fECtFinhydVmvebZYuLwWf2mcVHTnY/vyLofrOcT9fqN93WqYdcZmiW0YWfNxQ7VkFQ+9b9O1S7QUz4oVP1VpjRxsk+V/bLNioq5YfRgpYIloENYKr5BQTPBNtR21w6sfYjh6FZjokIuZcQVIKAWE7DjsulApUhpAbHxKXU6OfWwR0aCo5rDEBKWFKyzI1s+uqmPUpARvGDHnhU6cT3eVb/bxFlBGQ1GL4dSWMg7bp5dppRlboXkvFwR1di3H0JchzCi98pFOHtR4OSK15hxsZwzCk0uyOTKLZzC6aM2fRnN5SXkQrTybWAEW413Q5QkRwniZJxMwG6EAorDWPTVYPHBxt7NmPbIZ6SgJCKZXW/VATja3GKEG0eeE53ju2flJFGfRYKiuhGQQIYH/DMCqubGoA0ExZyd2WF9aOyCwQp/ROwGvf+KfnhY9K7+2jMRuWqSeqIpt54csuO//01YvmDczq7+nu6RbRDNI/4aa1nhifGB4e3b1v+PZ7Nv7k+tvZcYyugmu3BT+EdghGymrsCPNpeOFDBTspuQejMHoynJVsawLQUFRTpqFYjNhyIKOUppzUfZaC9ra9tmoe/71eeG8QwzLdofFnXnTG29/44mefe3KhWPDkS9INaIU/iyYki2M8EeiVL7ns6udf8G9f/uHvb7tPzupVjp1gvymc9ZDSGCU4SgLE7ZaDBPyZAGjqs3TO4HqTDIEDDWKSBhONNOXsjNKAIVAydGdajfCPqCZ2qF0xZdaxldFRQTBNw5msvvL1V37yPa+ZM6cfoOot1+gdD6I+jkblT59ntN4oW0SuRyw9tXjh6198xXlnn7r2Hz72tf/89s/MrqLjuK1u4e+WgM8dx8TUTCXek0LzlQ/0hBEGgksmSwIDAjzUMBQJQzMNN6Xn61CMnNQwtYoyH7QRJkXtOTQ9YRCx94htQREGE+UZpuEMjb/4ZZd+9sNv6O3usvc96fzsn/UTd6BeBmv8eRU91gokePMt1SfvNl74gXnzjvncR95Sq9Z+/F83GgN9buDuT96Vop9Oh2e070lTB11AMWDqvGwdPzTSEAxpaIiRhn/OombkDM5auuEK/3yH8PnpFBoSOydnk5AzWtIrHUo3IYCFFG65tva0te99+1/2dnc1t97n/uT9+qkHYeUo3/0/jOkjbawcfvgX7uR+XPnh3mWn/sPbXrbx8R1PbN4m8jmt9GHKGR0f0uoVGnKSYkBiO2etqWDpnMGhLXC4KTSE0BAjtuFZDlymfkstyjto+QEiwlGolXBQizglzSZAcNLm731uK5xLEUGagrwdnwfqV119yUnHr7SbDfWbz+lt91KuRMJg1tDKT1w4mp/pDxL2TN5yGCMwaxIGZUt6693qps/aTXv9SatfdfVlcDUhKNM4BQFwomp0ZCn54IreHCldmu4d5HAZe2xoUd7tz2hHEwGCMNyEJiGYafOE6VW/aChaUnRO7mnC9fKQIs9u6YTkc4WEfhGaGuOkG5GNOxsQW+4uACSE0NXaiaeufc4zTwbg/PIzavNvqdDrZeJT6w2nWD+ewYlZuaycyI/LymWtOMhxDhOUO/UMHbD+LVr536akDnRunqudNcCU71GP3eHc9DkAzzl//br1a1SlLiju5Iu8RQucFMFptGfKOkwYG9qGjtgXBACHTupzji2qpgIASXhs3GI2BFjcO1ZqaiKCrWlOVh3f24gXFgqeyW3PII5LD2k0Ee0c9mx5fSLKVfCSggj15vGrjlm7ZoUzsgfb7oZ2QOIwUqa9Q46IKNdF+R7KdVOui3LdlCtRtkBGBqxZa/J0ds+x2+rZHfQskmF5wSR+UQlmsvKU76FsKQgin958AgphZggJp4kn/6DG9594wqp1q45FrdE6nie2swQaXGuDbjPDhNpvdAdPJYjo0JHCO540emKvMzurbU1EqLv0x7EiIA0QJl3zjv258+fWG4qaio4rOQu6mnurphBBeeVWyamoZ5kjG03QIVXOiBqXwj0vJlu17F1ebiGEmD+7D4Bz8CnUxiCtiDl82q3QV3j/78jKh6eLEzNXRtRTD9q3f11tvQsy449oFfLv+60o9rfOIdcK1TF36932zV/UezbBtCAMnjiQe8v3jROfowYfr3/2hbCroMM7itAP1jFMVMea+3fke+bOm92XosdG40VaQnrE/p0igca98FFFgSPRAhxu8QAgwErR4m53Rbfb0ACQEXzLXqvMBXjlIGravPVAPi8ZQE3RcV32CT02XOnbwmJaaxpJxpy/aSpJlN5TtVaKLQitNfLZ3q4CAB7dw5URSGOa/Ds+x6BsTHmYD2zl/U/q4Z2QhnH8s7Mv/ZRccio3KoHWE/SsjPCBJ/nAkzw5hEzBPOW5mRd/WPQtZNf2Pb2uDQCuM009Mm1WgDS5MsKjewD09xSRzymt4iw5zaM2lVrLSURw6mjJHVkIwKHje53jut26SwByBm7Zn6nrjE8cUOK+sWJTgwBb06K8u7anAdKhu8qXQNvljNb8WwJOOiuLXo7JVmj9BEIZa4Yls1kLANfGuVkjIY/QqiEkAPvmL1beu7764XOqHz6n+bOPcaMiBo4Vc5ez3YjEIhEA5/avV95zUvX9Z9Q/+0Ln998BIBefKFeeCY+MwiV4VOm3TEJwo8rVMQD5bAaWFTlTJL7cg0h+nyuEUOKogTyUMzi+ZSAK9Ei6dkv6ZQYEr+l1FuR1UxMBNRf3jZW8vV0ADIFhx7p7OJuRDKDsigtm11b3NV1HRk6qazelJy6kWccxBbEHnVLgzK1FQLJD/MSRYIUnD+rBx7lZ69gl1yX6FlHvfL1/i3PX93hyiMwMZUs8s9ZYT57wYhcFxY3faTwjAtD0P9u98O2DtBG0ICib1s2yL57XnHSIgIzkuw+Y424OgthPryCMOdYt+/IXzq3Xlay6dGp/86J5lcfGLY5ZxylGqiketSP0wsd30zYQHCn/Dp8oF59onvWXJE3WrnH8s0Wxz3noF+qpBylbTNYpqI3r4R0ws2RkxII1KPRAKziN1BPUj65FOETi9WbOC9+GoADCnmzHDIGL5zdP7neGGoKBoombBzNjbhaSAG349ipX3jbUvXVyYlaGFaPsiKsWl+84kN8wnBOW1jE6SJti+LulQ01p6UoCJNpZtD/gKHFgnPoC8xkvBMCsiQRXRtTG3+jBJ8jMJKApl51uXfoOCIN65hmrziVpql2PuDvup0yhrdzFDLVQjY+CKJQZUwgi8X6RHnxIPt1qgljbdPJs+6ol9QmbCDAFnhgXvx3ugTZIMjMMEDEYBm2vFr62redTJw8fbMiGplVdzsXzahsnMloHAmOSBDv7imJ+v3SPWnIAjmg9ScHlqGAPQD12h3rybkgTri0WrDFOfE7myg8ws/vHn5CVi6recu0FxroLwxQKtW+L/avP6sEnyIqdLz+Trd2wETUlH40XPomgiNxKrDWkqS9ZUF/R5R5oCDC6Lf3hh7ufanTDFAwN8jQx3yBk/PZg9/3Dk6u63YaiUVu+YunkzfsKG4azwlKag7Psj94L334fhdp8px5H2ogAuI/ebN/wSVg5aEWlWdmXfNw8+2XmM67U2+/Xo7vJzIYPVJtucx+92S9LpFy14wG9eyNli6zVf9cRljPjhZ8SjCwJyqV1s5yXL60PN4UAcibfe9D43XAvYPolH/0AY8+8Y/KOSuHbO3o/s/5gXZFiDGTU61eMv2dyoKyirhZvfE6dy3S88B3cRUmz38wxD1CxX8xZBjND0lJ7HlVP3Gme/TIxcAx1z8bB7bByYU+17V7715+DNL0FQNmSRxkzNZO0yQXw9EXUmfHCx3sGF9m3lyuFbku/aXW1L6vHbQEgK/Dd7aWdtaLIkNbaw13EhsMMIe8c7r5j/+S5c5plhyZs8bwF1R1l4/OP97kJ2ecIvPAJYbz9zoT/Lrz3qJkIV0f10A6y8tppiPmrjDOuAsB2A04TiWPlsyXRO98nDoZXufHpqWSZatCcpvXk0F74jkEXBNawBL91XeXSBY0JWxDQZfEtg8Ydw72QJkd2z4A4iJhZGry3mvvJ3u6zZh/wlKymojevnHiqZv5kZynyKkfohZ+SZ8S3oVZYuAZzEoXTb8phI2M966/NU54HIVgpUZpF/YsBqC1/UIObW8KExx60y8rtAGMmr05X2PmIGwXFweHHw0OIKXkGx+EbF91iM40AmkM4coLXXHls/bUrqg1FXi6Vrfgnu7v214oyB6VbSm/U+kuaGab42WDvGf3Vly8pjwZxHh85YWRPzbhvKBfjBy3lalpe+LhDKN6ZYiRFRNy0aw0bABV6kSlys0LCOOyNhgSEQUToXyRmLfZqoZByuFm17/65ffOXwAwSflFfYQAgMzuFbYZZU7YAAJnCYXjd2sfRirIlKvYCqDWacFwyjM71fRLmg0N74Ts81t+rnzFgv/+ksletSzN6M/wfW3M/29eHrKHjQrcRvZkZgrStsx97bO6crHvR3Ma4LVxQXvIXTj145Z3z95RNr0ZfMAdum0yw5KM20NaL8ZQ8w+8qhFC1xvhEFQD1L0ZpFtfGjsSCXhutffT8QPuP2BVYc73MToOk6Vfsa1brn7oUJLlZ8agkpSmH8r31772bzBwrG24TdEQiKgHKodIs6j8GwPBoGeWqLOZd143aBFLkDEY6z6A2ntGCbsIXQ8eUnC+eMZGTbGtiRm+Gf7XH/MRjc5QoEjQzonSWSIckzSyEHrELH9k8Z1Zm37oeu+oKW9PsjL7mGQdedte88YZsHWk5Bc+IJp1y1AkUsZIhyjNCbskkCEoPHhwDYM1dZhf7sXcTrPxhbP++e13z6J4UTZsIQpI0WnWiwTy6F2AIg6SRWnWQmUkIroywViABadLh1ydkZiIJ10ax35q3HMCBodGg5HQUixyBSWA7j/ko2mAe96jFqCq4tSfjXnPm+OycaipioGTxg8PyY5sGxnWPMLwysHHPS9v8STOkwU9MdH/ysVl7azIrGYCtaU238+NzB5d22dAhbUZQPqUX3p9n1E4KJDsEL6aVRiG78fEdj27eanQP8IqzYGahFVF4xNWhWphcb2bIzMZ/MmRYnl5KFNRVCnt2oAwEPl2SJplZMqwjpQzB2oWVo5XnGKW+jY8+/uiWnchldNTCFlstUcC0/xH1QkTt7oEG0IqcoqVd7o/PHzuu27UVAchJ3l2hT27q21rplwbptAPj24iDAJDSMCy6fbDvC1t7ay6ZghlwNC0vuj88Z9+ZsxtgonAZc+Sg7NZuQi2MhynwHPj9feN6sA7iINZai0L+kQcfu+mOhwCYF79Vrj6fa+MAe+Wg2sLPZrR1xneSb02XMnzZk7zjOWvjcs0F5rPfBuDXv31w4wObRDGvvd0tZmCkwNoRfIgJfGketegVr4AzgTQAnDuv8aPzR5d3uY4mBkzBNRdfeqLrjgOzjKyhPMpoexuJntUp9EHQDCNDDx/IFQz71L6GFFBMilEy+YoFlTFHbJ7IaEUkEiCLnI+d7kKKronOaBDEjrvn4NjZ61cvWDBH9y3G0A49vBNgkCDvOIGw2vef+o8ACWYF5cBpyhVnGVf8o9U//4GHH/unT3x9ZHicDCPwYSWg1BlEnb3w4TUCWJEh8FfLq59aP1E0OaQMAF97Iv/lJ+YZxbyrdKxK2yGII8Cx1pCW+P2BrCHUCT123mCHSTMZAhfNrRVN/dCEZbuCNZEMy7NxzENIHV6z5WJu8zn5AXVs5LMHtu4cbzoXn7++MPdYXnMR6mVMHoBTR3UMyoFrw23+Ofw00KzCzFFpljz1hcZLPmHNWz42Xv77D33pzpvuMnq74tlvUXk/uJr0wgcSaExh9LcSjxpZkQBKWf3368rvWFslgsvEQE5yXdFXHi/86+NzZbGkVKQWTQoRHHNlp+Xr8SshSDecly0ZesvK0cUFt+z4QUB5Qz8ymrnmye47D+bHa1IYDME6ITOl+43SPIyx+fkdTFM6E9W//usXf+ZDbyzksww0H71Nb/+j3rOJq6NPl7NjxhsJKvSJhevEstMya88noFqr/+37v/DVr/zI7C46jhsBRvsymsrnFneXAGBBDE3apZ68On9e829W1tb1OlXXW3DosvipMn3x8a7/2j5bFAtaB1aoDvxpSuJA4PKWUDV97pzRv187fGpfc9SWklgx8pJNwb/cW/jOU6X7D2ZrjpSW9o5L1VGlK9VX18klHf2D2bAMd3Ty6pdf/uZXP//U45dn83k/441tKOd/Gu3Ta9JiMj0TWrNe++OGrV/42nU//K9fmP3dju3G4RDqdyF+puWF986KYIZyKG/pZ8y2/2pZ7bKFjaYiz9Ll2TPuG5KferT39wdnyWJOKR3RgY+MOPzJsCHItfnYwuT71x64YmFt0hG2BgEa6LP0uC2u21X4yZ7iIwdzShMkS4M9KvFzDZKWvqnt7jHOKTOmOjAysHjepZeefeFZJ5y8dqlpSBjWjDnnnpYWf0Fl27b70OZtt9294de/unNo56Cc06+aThswEpbQKQYnIqag8JNSBIcMySfNab5gcf3Fx9a7TR5tCknQQEaiaOgbd1sf2Diwu95nZE1fzjiUrX56xOEhSUA5KBq1d6w8+LwF1SVFZ7jpHzkvCP2W2lo2f767+OCY9fiktWvCghYwNARLAUmamQJzcSrBcuKBUQuZZRm27ejxMrLWCSetylpRF0BCteO03wkDQcxOH3N8T51ln4akyAQ6+c2JhKjXmxsffhxNW/R0WaZhOw5FuQJFKmN1ILWwkBgByqvCqwguIPiYHndVt3Nyn/OCxY1lXc5IU+qg1ld/Ru+YFD/dnfv3LQMV7pamUHoqOeMIiMPfEYWAViSVfdqsiRctGH/B4lpO8rgtpIBmZCWXDL2vbmwpG9vK1qZxa8N4ZkvZqDUN2ALCS+7nmJ00KWZE0B0a+CggQCmhNWqN1kEkPMV0A+LoiO92NhaNkg/nAHQyriTnH/d6JJxKRMhnIQSU8uscJLfadmoLnu4nCnkH9REYMHU+q4/rck/oddb0OMtL7spud25Olx1qKBKAYvRkuObg+p3WdXu6/zjcq6y8kNAdtNajI46APoggQMrmnNk8b2D8FceOXzC3UVPUUD4dWoJzkrOSR22xs2Lub8iyI8qumHTESEOM2nK4KerKr57nW0ES5eTa0RN2ZQhJnZlhKnA7kSCj81KdNkQo/aFpTWvF+lCbYayUZQAFQk7yrIzuy6i+DHeZ3GXqoqnn5dQxBdWb5YaLuiKvegIzsgbyhr51r/nt7V2/H+6pq4LMGto/ePEwvNyHQxyt2UMQsQa73JutXTww/jfLx0/ss2uuqCtyA3OoKTgj2BKQgoVf8oEaLtWUcHVUn2nfFzrP9rB9b4eLwT+FljJXQ3Becs7wFh40oBi2oqaGZ70AYBByBuckHhmR12wp3DzUN24XyTBIeof7Tt9qFwLvcIkDCOx9ICLtQEDNzdVO7508d6D+rLn1eTlla2ooUkHiAQBPdJLEgiAPe5L/R1oqFYceSyiGZlJhCcVA/pACWcmW4MGauH3QvPNA7r7J7n31EpMpzLAY2ZEA/YiIw3+XUEoidgHSedPppuaarsoFc2oXzGscW3C999HeoVfB5/+/dW6H4GwCEMSC4P8AknhHRd6217r9YG5zuTihczXXAiQZAkE98SNei0dBHP7rMMj3lEDDqwpkSrcg7H6jtijvLMi5iwpqYc5dkHcXF9y+jP7zYO3/rS1Vw0ruLASMNsWuqtxTk3urYndV7qnK3XVrVBWqnHG0BRYe+dBRk0XwxKMkDv/tOLD5ks8E/VIPGtAELaElKbAuSveYvF0yVEw2TIfXNECaBG5CQZ7K0HaEDz180Ezvm3i3JGHwpCN21bIVbYKEgqEgGBIkwQLwzguLaEqHL16ktv8PhJSwyyN4Ur0AAAAldEVYdGRhdGU6Y3JlYXRlADIwMjYtMTAtMTlUMTI6NDg6MjErMDA6MDD72KkrAAAAJXRFWHRkYXRlOm1vZGlmeQAyMDI2LTEwLTE5VDEyOjQ4OjIxKzAwOjAwioURlwAAAABJRU5ErkJggg==" alt="Protection Civile Nautique BPI" class="brand-logo" width="38" height="38" loading="eager" decoding="sync" />
 
         <div class="brand-text">
-          <div class="brand-sup">Protection Civile Nautique</div>
-          <h1 class="brand-title">Préparation Pilote & Nageur</h1>
+          <div class="brand-sup" id="header-brand-sup">Protection Civile Nautique</div>
+          <h1 class="brand-title" id="header-brand-title">Préparation Pilote & Nageur</h1>
         </div>
       </div>
 
@@ -1259,8 +1980,10 @@
 
   <!-- MAIN VIEWPORT -->
   <main>
-    <!-- STATION BAR (TAP TO OPEN DRAWER) -->
-    <button type="button" class="station-bar-btn" onclick="openStationDrawer()" aria-label="Choisir le point de navigation">
+    <!-- ONGLET 1 : TABLEAU DE BORD (MÉTÉO, VIGICRUES, COURANT, DÉBIT) -->
+    <section id="tab-dashboard" class="tab-pane active" role="tabpanel" aria-labelledby="nav-btn-dashboard">
+      <!-- STATION BAR (TAP TO OPEN DRAWER) -->
+      <button type="button" class="station-bar-btn" onclick="openStationDrawer()" aria-label="Choisir le point de navigation">
       <div class="station-bar-left">
         <div class="station-bar-icon">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
@@ -1547,17 +2270,732 @@
       </div>
     </div>
 
-    <!-- PIED DE PAGE & SÉCURITÉ MOBILE IOS -->
-    <footer class="app-footer">
-      <div class="footer-sync">
-        <span class="footer-pulse-dot"></span>
-        <span id="footer-sync-status">Vigicrues direct & Météo AROME</span>
+      <footer class="app-footer">
+        <div class="footer-sync">
+          <span class="footer-pulse-dot"></span>
+          <span id="footer-sync-status">Vigicrues direct & Météo AROME</span>
+        </div>
+        <div class="footer-meta">
+          Protection Civile · Préparation nautique
+        </div>
+      </footer>
+    </section>
+
+    <!-- ==========================================================================
+         ONGLET 2 : CHECK-LIST INTERACTIVE (BPI & ARMEMENT FLUVIAL)
+         ========================================================================== -->
+    <section id="tab-checklist" class="tab-pane" role="tabpanel" aria-labelledby="nav-btn-checklist">
+      <!-- CARTE DE SYNTHÈSE & PROGRESSION -->
+      <div class="checklist-progress-card">
+        <div class="checklist-header-top">
+          <div class="checklist-title-wrap">
+            <span class="checklist-badge-tag">Armement & Sécurité BPI</span>
+            <h2 class="checklist-main-title">
+              <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="var(--pc-orange)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M9 11l3 3L22 4"></path>
+                <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+              </svg>
+              <span>Contrôle Opérationnel</span>
+            </h2>
+          </div>
+          <span class="checklist-status-pill status-empty" id="checklist-status-pill">
+            <span id="checklist-status-dot">🔴</span>
+            <span id="checklist-status-text">Non vérifié</span>
+          </span>
+        </div>
+
+        <div class="checklist-bar-track">
+          <div class="checklist-bar-fill" id="checklist-bar-fill" style="width: 0%;"></div>
+        </div>
+
+        <div class="checklist-stats-row font-mono">
+          <span id="checklist-count-text">0 / 20 points vérifiés</span>
+          <strong id="checklist-percent-text" style="color:var(--pc-orange);">0%</strong>
+        </div>
+
+        <div class="checklist-actions-bar">
+          <button type="button" class="btn-checklist-action btn-checklist-checkall" onclick="checkAllItems()" aria-label="Tout cocher">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+            <span>Tout cocher</span>
+          </button>
+
+          <button type="button" class="btn-checklist-action btn-checklist-reset" onclick="resetChecklist()" aria-label="Réinitialiser la check-list">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"></path>
+              <path d="M21 3v5h-5"></path>
+              <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"></path>
+              <path d="M8 16H3v5"></path>
+            </svg>
+            <span>Réinitialiser</span>
+          </button>
+        </div>
       </div>
-      <div class="footer-meta">
-        Protection Civile · Préparation nautique
+
+      <!-- CATÉGORIE 1 : BATEAU & MOTORISATION BPI -->
+      <div class="checklist-section-card">
+        <div class="checklist-sec-head">
+          <div class="checklist-sec-title">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--pc-orange)" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <path d="M12 6v6l4 2"></path>
+            </svg>
+            <span>Bateau & Motorisation BPI</span>
+          </div>
+          <span class="checklist-sec-badge" id="cat-badge-moteur">0/7</span>
+        </div>
+        <div class="checklist-items-list" id="list-cat-moteur">
+          <!-- Item 1 -->
+          <div class="checklist-item" id="item-chk-nable" onclick="toggleCheckItem('chk-nable')">
+            <div class="check-box-custom">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+            </div>
+            <div class="check-item-content">
+              <div class="check-item-label">Bouchons intérieur/exterieur en places & vissés</div>
+              <div class="check-item-sub">Joint d'étanchéité vérifié, serrage à fond avant mise à l'eau</div>
+            </div>
+          </div>
+          <!-- Item 2 -->
+          <div class="checklist-item" id="item-chk-carburant" onclick="toggleCheckItem('chk-carburant')">
+            <div class="check-box-custom">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+            </div>
+            <div class="check-item-content">
+              <div class="check-item-label">Niveau de carburant</div>
+              <div class="check-item-sub">Nourrice principale pleine</div>
+            </div>
+          </div>
+          <!-- Item 3 -->
+          <div class="checklist-item" id="item-chk-coupecircuit" onclick="toggleCheckItem('chk-coupecircuit')">
+            <div class="check-box-custom">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+            </div>
+            <div class="check-item-content">
+              <div class="check-item-label">Cordon coupe-circuit (homme à la mer)</div>
+              <div class="check-item-sub">Connecté au tableau / barre franche et attaché au poignet/gilet du pilote</div>
+            </div>
+          </div>
+          <!-- Item 4 -->
+          <div class="checklist-item" id="item-chk-refroidissement" onclick="toggleCheckItem('chk-refroidissement')">
+            <div class="check-box-custom">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+            </div>
+            <div class="check-item-content">
+              <div class="check-item-label">Niveau d'huile moteur & pissette témoin</div>
+              <div class="check-item-sub">Jauge d'huile OK, jet de refroidissement franc dès le ralenti</div>
+            </div>
+          </div>
+          <!-- Item 5 -->
+          <div class="checklist-item" id="item-chk-helice" onclick="toggleCheckItem('chk-helice')">
+            <div class="check-box-custom">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+            </div>
+            <div class="check-item-content">
+              <div class="check-item-label">Hélice, embase & goupille d'arbre</div>
+              <div class="check-item-sub">Absence de bout engagé, pales non ébréchées, goupille verrouillée</div>
+            </div>
+          </div>
+          <!-- Item 6 -->
+          <div class="checklist-item" id="item-chk-batterie" onclick="toggleCheckItem('chk-batterie')">
+            <div class="check-box-custom">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+            </div>
+            <div class="check-item-content">
+              <div class="check-item-label">Batterie, coupe-batterie & démarreur</div>
+              <div class="check-item-sub">Bouton activé, tension nominale > 12.4V, essai de démarrage validé</div>
+            </div>
+          </div>
+          <!-- Item 7 -->
+          <div class="checklist-item" id="item-chk-direction" onclick="toggleCheckItem('chk-direction')">
+            <div class="check-box-custom">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+            </div>
+            <div class="check-item-content">
+              <div class="check-item-label">Direction, barre & commande des gaz</div>
+              <div class="check-item-sub">Débattement fluide bâbord/tribord sans jeu, inversion avant/arrière nette</div>
+            </div>
+          </div>
+        </div>
       </div>
-    </footer>
+
+      <!-- CATÉGORIE 2 : ARMEMENT DE SÉCURITÉ & MATÉRIEL FLUVIAL -->
+      <div class="checklist-section-card">
+        <div class="checklist-sec-head">
+          <div class="checklist-sec-title">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--pc-orange)" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+            </svg>
+            <span>Armement de Sécurité</span>
+          </div>
+          <span class="checklist-sec-badge" id="cat-badge-armement">0/7</span>
+        </div>
+        <div class="checklist-items-list" id="list-cat-armement">
+          <!-- Item 8 -->
+          <div class="checklist-item" id="item-chk-gilets" onclick="toggleCheckItem('chk-gilets')">
+            <div class="check-box-custom">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+            </div>
+            <div class="check-item-content">
+              <div class="check-item-label">Gilets de sauvetage & Flash light </div>
+              <div class="check-item-sub">1 par personne à bord · flash-light</div>
+            </div>
+          </div>
+          <!-- Item 9 -->
+          <div class="checklist-item" id="item-chk-saclancer" onclick="toggleCheckItem('chk-saclancer')">
+            <div class="check-box-custom">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+            </div>
+            <div class="check-item-content">
+              <div class="check-item-label">Plan dur & Rescue</div>
+              <div class="check-item-sub">1 plan dur avec fixation, sangle et collier & 2 rescues</div>
+            </div>
+          </div>
+          <!-- Item 10 -->
+          <div class="checklist-item" id="item-chk-bouee" onclick="toggleCheckItem('chk-bouee')">
+            <div class="check-box-custom">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+            </div>
+            <div class="check-item-content">
+              <div class="check-item-label">Bouée de sauvetage fer à cheval</div>
+              <div class="check-item-sub">Bon état</div>
+            </div>
+          </div>
+          <!-- Item 11 -->
+          <div class="checklist-item" id="item-chk-mouillage" onclick="toggleCheckItem('chk-mouillage')">
+            <div class="check-box-custom">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+            </div>
+            <div class="check-item-content">
+              <div class="check-item-label">2 bouts & 2 par-batages & ancre</div>
+              <div class="check-item-sub">Ancre adaptée au fond fluvial + 5 m chaîne</div>
+            </div>
+          </div>
+          <!-- Item 12 -->
+          <div class="checklist-item" id="item-chk-gaffe" onclick="toggleCheckItem('chk-gaffe')">
+            <div class="check-box-custom">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+            </div>
+            <div class="check-item-content">
+              <div class="check-item-label">Gaffe télescopique & pagaie de secours</div>
+              <div class="check-item-sub">Accessibles immédiatement pour accostage en écluse et manœuvres</div>
+            </div>
+          </div>
+          <!-- Item 13 -->
+          <div class="checklist-item" id="item-chk-amarres" onclick="toggleCheckItem('chk-amarres')">
+            <div class="check-box-custom">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+            </div>
+            <div class="check-item-content">
+              <div class="check-item-label">Amarres d'étrave & de poupe</div>
+              <div class="check-item-sub">Amarres propres, lovées et prêtes pour amarrage </div>
+            </div>
+          </div>
+          <!-- Item 14 -->
+          <div class="checklist-item" id="item-chk-extincteur" onclick="toggleCheckItem('chk-extincteur')">
+            <div class="check-box-custom">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+            </div>
+            <div class="check-item-content">
+              <div class="check-item-label">Extincteur marin conforme & écope</div>
+              <div class="check-item-sub">Jauge dans le vert, goupille scellée + écope manuelle</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CATÉGORIE 3 : ÉQUIPAGE, TRANSMISSION & NAVIGATION -->
+      <div class="checklist-section-card">
+        <div class="checklist-sec-head">
+          <div class="checklist-sec-title">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--pc-orange)" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+              <circle cx="9" cy="7" r="4"></circle>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+            </svg>
+            <span>Équipage, Transmission & Documents</span>
+          </div>
+          <span class="checklist-sec-badge" id="cat-badge-equipage">0/6</span>
+        </div>
+        <div class="checklist-items-list" id="list-cat-equipage">
+          <!-- Item 15 -->
+          <div class="checklist-item" id="item-chk-vhf" onclick="toggleCheckItem('chk-vhf')">
+            <div class="check-box-custom">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+            </div>
+            <div class="check-item-content">
+              <div class="check-item-label">Radio protec étanche chargée & testée</div>
+              <div class="check-item-sub">Batterie 100%, essai radio OK & VHF veille programmée sur Canal 10</div>
+            </div>
+          </div>
+          <!-- Item 16 -->
+          <div class="checklist-item" id="item-chk-secours" onclick="toggleCheckItem('chk-secours')">
+            <div class="check-box-custom">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+            </div>
+            <div class="check-item-content">
+              <div class="check-item-label">Sac de soin nautique & DSA</div>
+              <div class="check-item-sub">Sac de soin et DSA vérifié (conforme et date de péremption OK)</div>
+            </div>
+          </div>
+          <!-- Item 17 -->
+          <div class="checklist-item" id="item-chk-equipage" onclick="toggleCheckItem('chk-equipage')">
+            <div class="check-box-custom">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+            </div>
+            <div class="check-item-content">
+              <div class="check-item-label">Composition d'équipage & qualification</div>
+              <div class="check-item-sub">1 Pilote BPI + 2 Nageurs</div>
+            </div>
+          </div>
+          <!-- Item 18 -->
+          <div class="checklist-item" id="item-chk-documents" onclick="toggleCheckItem('chk-documents')">
+            <div class="check-box-custom">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+            </div>
+            <div class="check-item-content">
+              <div class="check-item-label">Documents de bord & Règlement RGP</div>
+              <div class="check-item-sub">Titre de navigation, attestation d'assurance, carte du bief, registre de bord</div>
+            </div>
+          </div>
+          <!-- Item 19 -->
+          <div class="checklist-item" id="item-chk-feux" onclick="toggleCheckItem('chk-feux')">
+            <div class="check-box-custom">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+            </div>
+            <div class="check-item-content">
+              <div class="check-item-label">Feux de navigation & avertisseur sonore</div>
+              <div class="check-item-sub">Feux bicolore proue + blanc 360° testés</div>
+            </div>
+          </div>
+          <!-- Item 20 -->
+          <div class="checklist-item" id="item-chk-vigicrues" onclick="toggleCheckItem('chk-vigicrues')">
+            <div class="check-box-custom">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+            </div>
+            <div class="check-item-content">
+              <div class="check-item-label">Point Vigicrues & météo validé</div>
+              <div class="check-item-sub">Débit inférieur au seuil de crue préfectoral, vitesse et rafales compatibles</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <footer class="app-footer">
+        <div class="footer-sync">
+          <span class="footer-pulse-dot"></span>
+          <span>Check-list BPI · Protection Civile</span>
+        </div>
+        <div class="footer-meta">
+          Sauvegarde automatique locale
+        </div>
+      </footer>
+    </section>
+
+    <!-- ==========================================================================
+         ONGLET 3 : ANNUAIRE CONTACTS D'URGENCE & ÉCLUSES VNF
+         ========================================================================== -->
+    <section id="tab-directory" class="tab-pane" role="tabpanel" aria-labelledby="nav-btn-directory">
+      <!-- BANNIÈRE DE PRÉSENTATION -->
+      <div class="directory-banner">
+        <div class="directory-banner-text">
+          <span class="checklist-badge-tag" style="color:#FDE047;">Voies Navigables de France</span>
+          <h2>Écluses & Contacts VNF</h2>
+          <p>Liaisons fluviales et écluses de Suresnes à Alfortville</p>
+        </div>
+        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#FDE047" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="5" r="3"></circle>
+          <line x1="12" y1="22" x2="12" y2="8"></line>
+          <path d="M5 12H2a10 10 0 0 0 20 0h-3"></path>
+        </svg>
+      </div>
+
+      <!-- AIDE-MÉMOIRE CANAUX VHF FLUVIALE -->
+      <div class="vhf-strip-card">
+        <div class="vhf-strip-header">
+          <span>Canaux VHF Veille Fluviale</span>
+          <span>Aide-Mémoire</span>
+        </div>
+        <div class="vhf-grid">
+          <div class="vhf-channel-box">
+            <div class="vhf-ch-num">VHF 10</div>
+            <div class="vhf-ch-label">Veille Fluviale Paris</div>
+            <div class="vhf-ch-sub">Bateau à bateau / Sécurité de navigation</div>
+          </div>
+          <div class="vhf-channel-box">
+            <div class="vhf-ch-num">VHF 22</div>
+            <div class="vhf-ch-label">Écluse de Suresnes</div>
+            <div class="vhf-ch-sub">PK 185.0 · Seine Aval Paris</div>
+          </div>
+          <div class="vhf-channel-box">
+            <div class="vhf-ch-num">VHF 20</div>
+            <div class="vhf-ch-label">Port à l'Anglais</div>
+            <div class="vhf-ch-sub">PK 160.5 · Alfortville / Vitry</div>
+          </div>
+          <div class="vhf-channel-box">
+            <div class="vhf-ch-num">VHF 18</div>
+            <div class="vhf-ch-label">Écluse Saint-Maurice</div>
+            <div class="vhf-ch-sub">PK 165.0 · Marne / Confluence</div>
+          </div>
+          <div class="vhf-channel-box">
+            <div class="vhf-ch-num">VHF 09</div>
+            <div class="vhf-ch-label">Écluse Port Arsenal</div>
+            <div class="vhf-ch-sub">PK 168.0 · Bastille / Cale BPI</div>
+          </div>
+          <div class="vhf-channel-box">
+            <div class="vhf-ch-num">VHF 16</div>
+            <div class="vhf-ch-label">Détresse / Sécurité</div>
+            <div class="vhf-ch-sub">Fréquence d'urgence internationale</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FILTRES D'ANNUAIRE -->
+      <div class="directory-filters" role="tablist">
+        <button type="button" class="dir-filter-chip active" onclick="filterDirectory('all')" id="dir-chip-all">Tous les contacts</button>
+        <button type="button" class="dir-filter-chip" onclick="filterDirectory('ecluses')" id="dir-chip-ecluses">⚓ Écluses VNF</button>
+        <button type="button" class="dir-filter-chip" onclick="filterDirectory('vnf')" id="dir-chip-vnf">Direction & PC Nav</button>
+      </div>
+
+      <!-- LISTE DES CONTACTS OPÉRATIONNELS VNF -->
+      <div style="display:flex;flex-direction:column;gap:11px;" id="directory-list">
+        <!-- 1. ÉCLUSE VNF DE SURESNES (AVAL PARIS) -->
+        <div class="contact-card vnf-card" data-cat="ecluses">
+          <div class="contact-card-inner">
+            <div class="contact-card-top">
+              <div class="contact-title-group">
+                <div class="contact-badge-line">
+                  <span class="contact-badge badge-vnf">Écluse VNF</span>
+                  <span class="contact-pk-pill">PK 185.0 · Seine Aval</span>
+                  <span class="contact-badge badge-vhf">VHF 22</span>
+                </div>
+                <h3 class="contact-name">Écluse de Suresnes (VNF)</h3>
+                <div class="contact-loc">Barrage-Écluse de Suresnes · Limite aval du bief de Paris</div>
+              </div>
+            </div>
+            <div class="contact-details">
+              Passage des 3 sas (grand sas 160m, sas moyen 180m, petit sas 60m). Demande d'éclusage ou consignes de franchissement aval.
+            </div>
+            <div class="contact-card-actions">
+              <a href="tel:0147720743" class="btn-call-direct">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                </svg>
+                <span>Appeler 01 47 72 07 43</span>
+              </a>
+              <button type="button" class="btn-copy-num" onclick="copyContactPhone('0147720743', 'Écluse Suresnes')">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                </svg>
+                <span>Copier</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. ÉCLUSE VNF DU PORT À L'ANGLAIS (AMONT PARIS - ALFORTVILLE / VITRY) -->
+        <div class="contact-card vnf-card" data-cat="ecluses">
+          <div class="contact-card-inner">
+            <div class="contact-card-top">
+              <div class="contact-title-group">
+                <div class="contact-badge-line">
+                  <span class="contact-badge badge-vnf">Écluse VNF</span>
+                  <span class="contact-pk-pill">PK 160.5 · Seine Amont</span>
+                  <span class="contact-badge badge-vhf">VHF 20</span>
+                </div>
+                <h3 class="contact-name">Écluse du Port à l'Anglais (VNF)</h3>
+                <div class="contact-loc">Vitry-sur-Seine / Alfortville · Limite amont du bief de Paris</div>
+              </div>
+            </div>
+            <div class="contact-details">
+              Sas d'accès vers la Seine amont (Choisy-le-Roi, Villeneuve-Saint-Georges) et entrée amont du bief parisien face à Alfortville.
+            </div>
+            <div class="contact-card-actions">
+              <a href="tel:0146801528" class="btn-call-direct">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                </svg>
+                <span>Appeler 01 46 80 15 28</span>
+              </a>
+              <button type="button" class="btn-copy-num" onclick="copyContactPhone('0146801528', 'Écluse Port à l\'Anglais')">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                </svg>
+                <span>Copier</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. ÉCLUSE VNF DE SAINT-MAURICE (MARNE / CONFLUENCE ALFORTVILLE) -->
+        <div class="contact-card vnf-card" data-cat="ecluses">
+          <div class="contact-card-inner">
+            <div class="contact-card-top">
+              <div class="contact-title-group">
+                <div class="contact-badge-line">
+                  <span class="contact-badge badge-vnf">Écluse VNF</span>
+                  <span class="contact-pk-pill">PK 165.0 · Marne</span>
+                  <span class="contact-badge badge-vhf">VHF 18 / 20</span>
+                </div>
+                <h3 class="contact-name">Écluse de Saint-Maurice (VNF)</h3>
+                <div class="contact-loc">Confluence Seine-Marne · Face à Alfortville / Charenton-le-Pont</div>
+              </div>
+            </div>
+            <div class="contact-details">
+              Passage fluvial stratégique entre la Seine et le bief de la Marne amont (Saint-Maurice, Joinville-le-Pont, Créteil).
+            </div>
+            <div class="contact-card-actions">
+              <a href="tel:0143785020" class="btn-call-direct">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                </svg>
+                <span>Appeler 01 43 78 50 20</span>
+              </a>
+              <button type="button" class="btn-copy-num" onclick="copyContactPhone('0143785020', 'Écluse Saint-Maurice')">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                </svg>
+                <span>Copier</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4. ÉCLUSE & PORT DE L'ARSENAL (PARIS BASTILLE - CALE BPI) -->
+        <div class="contact-card vnf-card" data-cat="ecluses">
+          <div class="contact-card-inner">
+            <div class="contact-card-top">
+              <div class="contact-title-group">
+                <div class="contact-badge-line">
+                  <span class="contact-badge badge-vnf">Capitainerie & Écluse</span>
+                  <span class="contact-pk-pill">PK 168.0 · Seine Paris</span>
+                  <span class="contact-badge badge-vhf">VHF 09</span>
+                </div>
+                <h3 class="contact-name">Écluse & Port de l'Arsenal</h3>
+                <div class="contact-loc">Port de Paris-Bastille · Cale de mise à l'eau BPI Protection Civile</div>
+              </div>
+            </div>
+            <div class="contact-details">
+              Liaison Seine - Bassin de l'Arsenal / Canal Saint-Martin. Cale d'intervention rapide des embarcations BPI nautique.
+            </div>
+            <div class="contact-card-actions">
+              <a href="tel:0143413932" class="btn-call-direct">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                </svg>
+                <span>Appeler 01 43 41 39 32</span>
+              </a>
+              <button type="button" class="btn-copy-num" onclick="copyContactPhone('0143413932', 'Port Arsenal')">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                </svg>
+                <span>Copier</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 5. BARRAGE D'ALFORTVILLE & SAINT-MAURICE (VNF) -->
+        <div class="contact-card vnf-card" data-cat="ecluses">
+          <div class="contact-card-inner">
+            <div class="contact-card-top">
+              <div class="contact-title-group">
+                <div class="contact-badge-line">
+                  <span class="contact-badge badge-vnf">Barrage VNF</span>
+                  <span class="contact-pk-pill">PK 164.8 · Confluence</span>
+                  <span class="contact-badge badge-vhf">VHF 18</span>
+                </div>
+                <h3 class="contact-name">Barrage d'Alfortville / Saint-Maurice (VNF)</h3>
+                <div class="contact-loc">Confluence Seine-Marne · Alfortville / Charenton</div>
+              </div>
+            </div>
+            <div class="contact-details">
+              Poste de manœuvre et régulation des débits de retenue de la confluence Seine-Marne à hauteur d'Alfortville.
+            </div>
+            <div class="contact-card-actions">
+              <a href="tel:0143785020" class="btn-call-direct">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                </svg>
+                <span>Appeler 01 43 78 50 20</span>
+              </a>
+              <button type="button" class="btn-copy-num" onclick="copyContactPhone('0143785020', 'Barrage Alfortville')">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                </svg>
+                <span>Copier</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 6. PC NAVIGATION VNF - BASSIN DE LA SEINE -->
+        <div class="contact-card vnf-card" data-cat="vnf">
+          <div class="contact-card-inner">
+            <div class="contact-card-top">
+              <div class="contact-title-group">
+                <div class="contact-badge-line">
+                  <span class="contact-badge badge-vnf">Direction VNF</span>
+                  <span class="contact-pk-pill">Bassin Seine Amont & Bief Paris</span>
+                </div>
+                <h3 class="contact-name">PC Navigation VNF — Bassin de la Seine</h3>
+                <div class="contact-loc">Direction Territoriale VNF · Gestion fluviale & avis à la batellerie</div>
+              </div>
+            </div>
+            <div class="contact-details">
+              Informations crues, avis officiels de navigation (AVINAV), chantiers fluviaux et arrêtés préfectoraux de navigation.
+            </div>
+            <div class="contact-card-actions">
+              <a href="tel:0140195100" class="btn-call-direct">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                </svg>
+                <span>Appeler 01 40 19 51 00</span>
+              </a>
+              <button type="button" class="btn-copy-num" onclick="copyContactPhone('0140195100', 'PC Navigation VNF')">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                </svg>
+                <span>Copier</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 7. UTI VNF SEINE PARIS (MAINTENANCE & CHENAL) -->
+        <div class="contact-card vnf-card" data-cat="vnf">
+          <div class="contact-card-inner">
+            <div class="contact-card-top">
+              <div class="contact-title-group">
+                <div class="contact-badge-line">
+                  <span class="contact-badge badge-vnf">UTI VNF</span>
+                  <span class="contact-pk-pill">Bief de Paris</span>
+                </div>
+                <h3 class="contact-name">VNF — Unité Territoriale d'Itinéraire (UTI)</h3>
+                <div class="contact-loc">Gestion du chenal navigable, balisage et surveillance domaniale</div>
+              </div>
+            </div>
+            <div class="contact-details">
+              Surveillance de la voie d'eau, signalements d'obstacles dérivants, entretien des berges et pontons.
+            </div>
+            <div class="contact-card-actions">
+              <a href="tel:0144681800" class="btn-call-direct">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                </svg>
+                <span>Appeler 01 44 68 18 00</span>
+              </a>
+              <button type="button" class="btn-copy-num" onclick="copyContactPhone('0144681800', 'UTI VNF')">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                </svg>
+                <span>Copier</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <footer class="app-footer">
+        <div class="footer-sync">
+          <span class="footer-pulse-dot"></span>
+          <span>Écluses & Voies Navigables · Suresnes ↔ Alfortville</span>
+        </div>
+        <div class="footer-meta">
+          Contacts directs VNF pour équipages BPI
+        </div>
+      </footer>
+    </section>
   </main>
+
+  <!-- ==========================================================================
+       BARRE DE NAVIGATION INFÉRIEURE FIXE (STYLE NATIF iOS & MOBILE)
+       ========================================================================== -->
+  <nav class="bottom-nav" id="bottom-navbar" aria-label="Navigation principale de l'application">
+    <div class="bottom-nav-inner">
+      <!-- ONGLET 1: TABLEAU DE BORD -->
+      <button type="button" class="bottom-nav-btn active" id="nav-btn-dashboard" onclick="switchTab('dashboard')" aria-selected="true" aria-controls="tab-dashboard">
+        <span class="bottom-nav-icon-wrap">
+          <svg class="bottom-nav-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="5" r="3"></circle>
+            <line x1="12" y1="22" x2="12" y2="8"></line>
+            <path d="M5 12H2a10 10 0 0 0 20 0h-3"></path>
+          </svg>
+        </span>
+        <span class="bottom-nav-label">Tableau de bord</span>
+      </button>
+
+      <!-- ONGLET 2: CHECK-LIST -->
+      <button type="button" class="bottom-nav-btn" id="nav-btn-checklist" onclick="switchTab('checklist')" aria-selected="false" aria-controls="tab-checklist">
+        <span class="bottom-nav-icon-wrap">
+          <span class="bottom-nav-badge" id="nav-checklist-badge">0/20</span>
+          <svg class="bottom-nav-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 11l3 3L22 4"></path>
+            <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+          </svg>
+        </span>
+        <span class="bottom-nav-label">Check-list</span>
+      </button>
+
+      <!-- ONGLET 3: ANNUAIRE -->
+      <button type="button" class="bottom-nav-btn" id="nav-btn-directory" onclick="switchTab('directory')" aria-selected="false" aria-controls="tab-directory">
+        <span class="bottom-nav-icon-wrap">
+          <svg class="bottom-nav-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+          </svg>
+        </span>
+        <span class="bottom-nav-label">Annuaire</span>
+      </button>
+    </div>
+  </nav>
 
   <!-- BOTTOM SHEET DRAWER - CHOIX DES STATIONS -->
   <div class="drawer-overlay" id="station-drawer" onclick="if(event.target===this)closeStationDrawer()">
@@ -2349,13 +3787,270 @@
       }, 2600);
     }
 
-    // 6. INITIALIZATION
+    // ==========================================================================
+    // 7. SYSTÈME MULTIPAGES FLUIDE & NAVIGATION INFÉRIEURE
+    // ==========================================================================
+    let currentTab = 'dashboard';
+
+    function switchTab(tabId) {
+      if (!['dashboard', 'checklist', 'directory'].includes(tabId)) return;
+      currentTab = tabId;
+
+      // Afficher l'onglet sélectionné et masquer les autres sans rechargement
+      const panes = document.querySelectorAll('.tab-pane');
+      panes.forEach(pane => {
+        if (pane.id === `tab-${tabId}`) {
+          pane.classList.add('active');
+          pane.style.display = 'flex';
+        } else {
+          pane.classList.remove('active');
+          pane.style.display = 'none';
+        }
+      });
+
+      // Mettre à jour la barre de navigation inférieure fixe
+      const navButtons = document.querySelectorAll('.bottom-nav-btn');
+      navButtons.forEach(btn => {
+        const isActive = btn.id === `nav-btn-${tabId}`;
+        btn.classList.toggle('active', isActive);
+        btn.setAttribute('aria-selected', isActive ? 'true' : 'false');
+      });
+
+      // Adapter le libellé supérieur pour une clarté immédiate
+      const brandSup = document.getElementById('header-brand-sup');
+      const brandTitle = document.getElementById('header-brand-title');
+      if (brandSup && brandTitle) {
+        if (tabId === 'dashboard') {
+          brandSup.textContent = 'Protection Civile Nautique';
+          brandTitle.textContent = 'Préparation Pilote & Nageur';
+        } else if (tabId === 'checklist') {
+          brandSup.textContent = 'Protection Civile Nautique';
+          brandTitle.textContent = 'Check-list BPI & Armement';
+        } else if (tabId === 'directory') {
+          brandSup.textContent = 'Voies Navigables de France';
+          brandTitle.textContent = 'Écluses & Contacts VNF';
+        }
+      }
+
+      // Défilement en haut de page instantané
+      window.scrollTo({ top: 0, behavior: 'instant' });
+
+      try {
+        localStorage.setItem('bpi_active_tab', tabId);
+      } catch (e) {}
+    }
+
+    // ==========================================================================
+    // 8. CHECK-LIST INTERACTIVE BPI & ARMEMENT FLUVIAL
+    // ==========================================================================
+    const CHECKLIST_ITEMS = [
+      // Catégorie Moteur (7)
+      { id: 'chk-nable', cat: 'moteur' },
+      { id: 'chk-carburant', cat: 'moteur' },
+      { id: 'chk-coupecircuit', cat: 'moteur' },
+      { id: 'chk-refroidissement', cat: 'moteur' },
+      { id: 'chk-helice', cat: 'moteur' },
+      { id: 'chk-batterie', cat: 'moteur' },
+      { id: 'chk-direction', cat: 'moteur' },
+      // Catégorie Armement (7)
+      { id: 'chk-gilets', cat: 'armement' },
+      { id: 'chk-saclancer', cat: 'armement' },
+      { id: 'chk-bouee', cat: 'armement' },
+      { id: 'chk-mouillage', cat: 'armement' },
+      { id: 'chk-gaffe', cat: 'armement' },
+      { id: 'chk-amarres', cat: 'armement' },
+      { id: 'chk-extincteur', cat: 'armement' },
+      // Catégorie Équipage & Navigation (6)
+      { id: 'chk-vhf', cat: 'equipage' },
+      { id: 'chk-secours', cat: 'equipage' },
+      { id: 'chk-equipage', cat: 'equipage' },
+      { id: 'chk-documents', cat: 'equipage' },
+      { id: 'chk-feux', cat: 'equipage' },
+      { id: 'chk-vigicrues', cat: 'equipage' }
+    ];
+
+    let checklistCheckedMap = {};
+
+    function loadChecklistState() {
+      try {
+        const stored = localStorage.getItem('bpi_checklist_state');
+        if (stored) {
+          checklistCheckedMap = JSON.parse(stored) || {};
+        }
+      } catch (e) {
+        checklistCheckedMap = {};
+      }
+      updateChecklistUI();
+    }
+
+    function saveChecklistState() {
+      try {
+        localStorage.setItem('bpi_checklist_state', JSON.stringify(checklistCheckedMap));
+      } catch (e) {}
+    }
+
+    function toggleCheckItem(itemId) {
+      checklistCheckedMap[itemId] = !checklistCheckedMap[itemId];
+      saveChecklistState();
+      updateChecklistUI();
+    }
+
+    function checkAllItems() {
+      CHECKLIST_ITEMS.forEach(it => {
+        checklistCheckedMap[it.id] = true;
+      });
+      saveChecklistState();
+      updateChecklistUI();
+      showToast('Tous les points de la check-list sont validés !');
+    }
+
+    function resetChecklist() {
+      checklistCheckedMap = {};
+      saveChecklistState();
+      updateChecklistUI();
+      showToast('Check-list réinitialisée');
+    }
+
+    function updateChecklistUI() {
+      let totalChecked = 0;
+      let catCounts = { moteur: 0, armement: 0, equipage: 0 };
+      const catTotals = { moteur: 7, armement: 7, equipage: 6 };
+
+      CHECKLIST_ITEMS.forEach(it => {
+        const isChecked = !!checklistCheckedMap[it.id];
+        const el = document.getElementById(`item-${it.id}`);
+        if (el) {
+          el.classList.toggle('checked', isChecked);
+        }
+        if (isChecked) {
+          totalChecked++;
+          if (catCounts[it.cat] !== undefined) catCounts[it.cat]++;
+        }
+      });
+
+      const totalItems = CHECKLIST_ITEMS.length;
+      const percent = Math.round((totalChecked / totalItems) * 100);
+
+      // Progression globale
+      const barFill = document.getElementById('checklist-bar-fill');
+      if (barFill) barFill.style.width = `${percent}%`;
+
+      const countText = document.getElementById('checklist-count-text');
+      if (countText) countText.textContent = `${totalChecked} / ${totalItems} points vérifiés`;
+
+      const percentText = document.getElementById('checklist-percent-text');
+      if (percentText) percentText.textContent = `${percent}%`;
+
+      // Badge sur barre inférieure
+      const navBadge = document.getElementById('nav-checklist-badge');
+      if (navBadge) {
+        navBadge.textContent = `${totalChecked}/${totalItems}`;
+        if (totalChecked === totalItems) {
+          navBadge.style.backgroundColor = '#10B981';
+        } else {
+          navBadge.style.backgroundColor = 'var(--pc-orange)';
+        }
+      }
+
+      // Badges par catégorie
+      const bMoteur = document.getElementById('cat-badge-moteur');
+      if (bMoteur) bMoteur.textContent = `${catCounts.moteur}/${catTotals.moteur}`;
+
+      const bArmement = document.getElementById('cat-badge-armement');
+      if (bArmement) bArmement.textContent = `${catCounts.armement}/${catTotals.armement}`;
+
+      const bEquipage = document.getElementById('cat-badge-equipage');
+      if (bEquipage) bEquipage.textContent = `${catCounts.equipage}/${catTotals.equipage}`;
+
+      // Pilule d'état opérationnel
+      const pill = document.getElementById('checklist-status-pill');
+      const dot = document.getElementById('checklist-status-dot');
+      const text = document.getElementById('checklist-status-text');
+
+      if (pill && dot && text) {
+        pill.classList.remove('status-ready', 'status-progress', 'status-empty');
+        if (totalChecked === totalItems) {
+          pill.classList.add('status-ready');
+          dot.textContent = '🟢';
+          text.textContent = 'BPI prêt à appareiller';
+        } else if (totalChecked > 0) {
+          pill.classList.add('status-progress');
+          dot.textContent = '🟡';
+          text.textContent = `En cours (${totalChecked}/${totalItems})`;
+        } else {
+          pill.classList.add('status-empty');
+          dot.textContent = '🔴';
+          text.textContent = 'Non vérifié';
+        }
+      }
+    }
+
+    // ==========================================================================
+    // 9. ANNUAIRE D'URGENCE & ÉCLUSES VNF
+    // ==========================================================================
+    function filterDirectory(cat) {
+      const chips = document.querySelectorAll('.dir-filter-chip');
+      chips.forEach(c => {
+        c.classList.toggle('active', c.id === `dir-chip-${cat}`);
+      });
+
+      const cards = document.querySelectorAll('#directory-list .contact-card');
+      cards.forEach(card => {
+        const cardCat = card.getAttribute('data-cat');
+        if (cat === 'all' || cardCat === cat) {
+          card.style.display = 'flex';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    }
+
+    async function copyContactPhone(phone, name) {
+      let ok = false;
+      try {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          await navigator.clipboard.writeText(phone);
+          ok = true;
+        }
+      } catch (e) {}
+
+      if (!ok) {
+        try {
+          const ta = document.createElement('textarea');
+          ta.value = phone;
+          ta.style.position = 'fixed';
+          ta.style.opacity = '0';
+          document.body.appendChild(ta);
+          ta.focus();
+          ta.select();
+          ok = document.execCommand('copy');
+          document.body.removeChild(ta);
+        } catch (e2) {}
+      }
+
+      showToast(`Numéro ${name} copié : ${phone}`);
+    }
+
+    // ==========================================================================
+    // 10. INITIALIZATION
+    // ==========================================================================
     document.addEventListener('DOMContentLoaded', () => {
       try {
         if (localStorage.getItem('bpi_night_mode') === 'true') {
           toggleNightMode();
         }
       } catch (e) {}
+
+      // Restaurer l'onglet mémorisé si applicable
+      try {
+        const savedTab = localStorage.getItem('bpi_active_tab');
+        if (savedTab && ['dashboard', 'checklist', 'directory'].includes(savedTab)) {
+          switchTab(savedTab);
+        }
+      } catch (e) {}
+
+      // Charger l'état persistant de la check-list
+      loadChecklistState();
 
       updateUI();
       fetchLiveTelemetry();
