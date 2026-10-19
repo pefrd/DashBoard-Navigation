@@ -2262,18 +2262,18 @@
       });
 
       const lines = [
-        `🚤 *POINT NAVIGATION NAUTIQUE PC*`,
-        `📍 Point : ${cur.name} (${cur.pk})`,
+        `*POINT MISSION NAUTIQUE*`,
+        `📍 Lieu : ${cur.name} (${cur.pk})`,
         `📌 Cale/Détail : ${cur.location}`,
         `🕒 ${nowStr}`,
         ``,
-        `🌡️ *MÉTÉO & TEMPÉRATURES LOCALES*`,
+        `*MÉTÉO & TEMPÉRATURES LOCALES*`,
         `• Eau : ${w.estimatedWaterTemp !== null ? w.estimatedWaterTemp.toFixed(1) : '--'}°C`,
         `• Air : ${w.airTemp !== null ? w.airTemp.toFixed(1) : '--'}°C (Ressenti ${w.apparentTemp !== null ? w.apparentTemp.toFixed(1) : '--'}°C)`,
         `• Vent : ${Math.round(w.windSpeedKmh)} km/h (${w.windDirCardinal}) · Rafales ${Math.round(w.windGustsKmh)} km/h`,
         `• Pluie : ${w.precipNow.toFixed(1)} mm/h (Cumul +3h : ${w.precip3h.toFixed(1)} mm)`,
         ``,
-        `🌊 *HYDROMÉTRIE VIGICRUES*`
+        `*HYDROMÉTRIE VIGICRUES*`
       ];
 
       if (cur.isTidal) {
