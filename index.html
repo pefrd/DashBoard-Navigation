@@ -1991,23 +1991,345 @@
     }
     .ponts-view { display: none; flex-direction: column; gap: 12px; }
     .ponts-view.active { display: flex; }
+    .sectors-ribbon {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      padding-bottom: 2px;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+    .sectors-ribbon::-webkit-scrollbar {
+      display: none;
+    }
+    .sector-chip {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      padding: 6px 12px;
+      border-radius: 9999px;
+      font-size: 0.74rem;
+      font-weight: 800;
+      white-space: nowrap;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      flex-shrink: 0;
+    }
+    .sector-chip:hover {
+      background: var(--bg);
+      color: var(--text-main);
+    }
+    .sector-chip:active {
+      transform: scale(0.96);
+    }
+    .sector-chip.active {
+      background: var(--pc-blue);
+      color: #FFFFFF;
+      border-color: var(--pc-blue);
+      box-shadow: 0 2px 5px rgba(0, 45, 114, 0.25);
+    }
+    body.dark .sector-chip.active {
+      background: var(--pc-orange);
+      border-color: var(--pc-orange);
+      box-shadow: 0 2px 5px rgba(243, 112, 33, 0.35);
+    }
+
     .map-box {
       position: relative;
-      background: #070b14;
-      border-radius: 16px;
+      background: #060b14;
+      background: radial-gradient(ellipse at 50% 50%, #0c1833 0%, #050a15 100%);
+      border-radius: 18px;
       border: 1px solid var(--border);
       overflow: hidden;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.28);
+      transition: height 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .map-box.expanded {
+      box-shadow: 0 12px 32px rgba(0,0,0,0.45);
+    }
+    .map-controls-bar {
+      position: absolute;
+      top: 8px;
+      left: 8px;
+      right: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 6px;
+      z-index: 10;
+      pointer-events: none;
+    }
+    .map-controls-group {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      pointer-events: auto;
+    }
+    .map-bottom-bar {
+      position: absolute;
+      bottom: 8px;
+      left: 8px;
+      right: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 6px;
+      z-index: 10;
+      pointer-events: none;
+    }
+    .map-pill-info {
+      pointer-events: auto;
+      background: rgba(11, 17, 32, 0.88);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      color: #CBD5E1;
+      font-size: 0.68rem;
+      font-weight: 800;
+      padding: 4px 9px;
+      border-radius: 6px;
+      font-family: 'JetBrains Mono', monospace;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
     }
     .map-box .btn-changer {
-      background: rgba(18, 26, 45, 0.85);
+      background: rgba(18, 26, 45, 0.92);
       color: #F8FAFC;
-      border: 1px solid rgba(255, 255, 255, 0.25);
-      backdrop-filter: blur(6px);
-      -webkit-backdrop-filter: blur(6px);
-      box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+      border: 1px solid rgba(255, 255, 255, 0.24);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.35);
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 5px 9px;
+      border-radius: 8px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: all 0.15s ease;
     }
-    svg#seine-svg { width: 100%; height: 235px; display: block; }
+    .map-box .btn-changer:hover {
+      background: rgba(30, 41, 59, 0.96);
+      border-color: rgba(255, 255, 255, 0.4);
+    }
+    .map-box .btn-changer:active {
+      transform: scale(0.94);
+    }
+    .map-box .btn-changer.active {
+      background: var(--pc-blue);
+      border-color: #60A5FA;
+      color: #FFFFFF;
+      box-shadow: 0 0 10px rgba(96, 165, 250, 0.4);
+    }
+    body.dark .map-box .btn-changer.active {
+      background: var(--pc-orange);
+      border-color: #FDBA74;
+      color: #FFFFFF;
+      box-shadow: 0 0 10px rgba(243, 112, 33, 0.5);
+    }
+    .btn-zoom {
+      width: 30px;
+      height: 30px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      font-size: 1.05rem;
+      font-weight: 900;
+      line-height: 1;
+    }
+
+    svg#seine-svg {
+      width: 100%;
+      height: 310px;
+      display: block;
+      touch-action: none;
+      cursor: grab;
+      user-select: none;
+      transition: height 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .map-box.expanded svg#seine-svg {
+      height: 480px;
+    }
+    svg#seine-svg:active {
+      cursor: grabbing;
+    }
+
+    /* Carte Tooltip HUD */
+    .map-bridge-tooltip {
+      position: absolute;
+      top: 48px;
+      left: 12px;
+      pointer-events: none;
+      z-index: 15;
+      background: rgba(10, 15, 28, 0.94);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      border-left: 3px solid var(--primary);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      padding: 6px 10px;
+      border-radius: 8px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.4);
+      display: none;
+      flex-direction: column;
+      gap: 2px;
+      max-width: 260px;
+      animation: tabFadeIn 0.15s ease;
+    }
+    .map-bridge-tooltip.visible {
+      display: flex;
+    }
+    .map-tooltip-title {
+      font-size: 0.78rem;
+      font-weight: 800;
+      color: #F8FAFC;
+    }
+    .map-tooltip-sub {
+      font-size: 0.68rem;
+      color: #94A3B8;
+    }
+
+    /* Carousel / Scrubber rapide des 37 ponts */
+    .bridges-carousel-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 8px 10px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    .bridges-carousel-label {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.72rem;
+      font-weight: 800;
+      color: var(--text-muted);
+    }
+    .bridges-carousel {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      padding: 4px 2px;
+      scrollbar-width: thin;
+      -webkit-overflow-scrolling: touch;
+      scroll-snap-type: x proximity;
+    }
+    .bridges-carousel::-webkit-scrollbar {
+      height: 4px;
+    }
+    .bridges-carousel::-webkit-scrollbar-thumb {
+      background: var(--border);
+      border-radius: 4px;
+    }
+    .bridge-chip-pill {
+      flex-shrink: 0;
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      padding: 5px 8px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      color: var(--text-main);
+      font-size: 0.72rem;
+      font-weight: 800;
+      cursor: pointer;
+      scroll-snap-align: center;
+      transition: all 0.15s ease;
+    }
+    .bridge-chip-pill:hover {
+      border-color: var(--primary);
+    }
+    .bridge-chip-pill:active {
+      transform: scale(0.95);
+    }
+    .bridge-chip-pill.active {
+      background: var(--primary);
+      color: #FFFFFF;
+      border-color: var(--primary);
+      box-shadow: 0 2px 6px rgba(243, 112, 33, 0.4);
+    }
+    .bridge-chip-pill.mastered {
+      border-color: #10B981;
+    }
+    .bridge-chip-pill.mastered::after {
+      content: '✓';
+      font-size: 0.65rem;
+      color: #10B981;
+      margin-left: 2px;
+      font-weight: 900;
+    }
+    .bridge-chip-pill.active.mastered::after {
+      color: #FFFFFF;
+    }
+
+    .bridge-quick-select-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 6px 12px;
+    }
+    .bridge-quick-select {
+      flex: 1;
+      background: transparent;
+      border: none;
+      color: var(--text-main);
+      font-size: 0.85rem;
+      font-weight: 700;
+      outline: none;
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    .mastery-progress-strip {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 8px 12px;
+    }
+    .mastery-progress-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.72rem;
+      font-weight: 800;
+      color: var(--text-muted);
+    }
+    .mastery-track {
+      width: 100%;
+      height: 6px;
+      background: var(--border);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+    .mastery-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--primary) 0%, #10B981 100%);
+      border-radius: 999px;
+      transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @keyframes beaconPulse {
+      0% { r: 11px; opacity: 0.9; stroke-width: 3px; }
+      50% { r: 18px; opacity: 0.45; stroke-width: 1.8px; }
+      100% { r: 24px; opacity: 0; stroke-width: 0.5px; }
+    }
+    .beacon-pulse {
+      animation: beaconPulse 1.8s infinite ease-out;
+      pointer-events: none;
+    }
+
     .bridge-card-detail {
       background: var(--card-bg);
       border-radius: 16px;
@@ -3082,24 +3404,107 @@
 
       <!-- SOUS-MODULE 1 : CARTE INTERACTIVE -->
       <div class="ponts-view active" id="subview-explore">
-        <div class="map-box">
-          <div style="position:absolute; top:8px; left:8px; right:8px; display:flex; justify-content:space-between; z-index:5;">
-            <button class="btn-changer" id="btn-cam" style="font-size:0.75rem; padding:4px 8px;">🎯 Suivi auto</button>
-            <button class="btn-changer" id="btn-labels" style="font-size:0.75rem; padding:4px 8px;">👁️ Noms</button>
-          </div>
-          <svg id="seine-svg" viewBox="0 0 1000 560" preserveAspectRatio="xMidYMid meet"></svg>
+        <!-- RUBAN DES 5 SECTEURS DE LA SEINE -->
+        <div class="sectors-ribbon" id="ponts-sectors-ribbon">
+          <button type="button" class="sector-chip active" data-sec="1">Est (1-8)</button>
+          <button type="button" class="sector-chip" data-sec="2">St-Louis (9-13)</button>
+          <button type="button" class="sector-chip" data-sec="3">Cité (14-21)</button>
+          <button type="button" class="sector-chip" data-sec="4">Musées (22-28)</button>
+          <button type="button" class="sector-chip" data-sec="5">Ouest (29-37)</button>
         </div>
+
+        <div class="map-box" id="ponts-map-box">
+          <!-- BARRE DE CONTRÔLES SUPÉRIEURE DE LA CARTE -->
+          <div class="map-controls-bar">
+            <div class="map-controls-group">
+              <button type="button" class="btn-changer active" id="btn-cam" title="Activer / Désactiver le centrage automatique">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/>
+                </svg>
+                <span>Suivi</span>
+              </button>
+              <button type="button" class="btn-changer btn-zoom" id="btn-zoom-in" aria-label="Zoomer" title="Zoomer">+</button>
+              <button type="button" class="btn-changer btn-zoom" id="btn-zoom-out" aria-label="Dézoomer" title="Dézoomer">−</button>
+              <button type="button" class="btn-changer btn-zoom" id="btn-zoom-reset" aria-label="Vue d'ensemble" title="Vue d'ensemble de Paris">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/>
+                </svg>
+              </button>
+            </div>
+            <div class="map-controls-group">
+              <button type="button" class="btn-changer" id="btn-map-expand" title="Agrandir ou réduire la carte">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/>
+                </svg>
+                <span id="btn-expand-txt">Agrandir</span>
+              </button>
+              <button type="button" class="btn-changer" id="btn-labels" title="Afficher ou masquer les noms des ponts">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+                </svg>
+                <span>Noms</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- TOOLTIP HUD FLOTTANT SUR LA CARTE -->
+          <div id="map-bridge-tooltip" class="map-bridge-tooltip" aria-live="polite">
+            <div class="map-tooltip-title" id="map-tt-title">Pont Neuf</div>
+            <div class="map-tooltip-sub" id="map-tt-sub">Secteur 3 · Rives : 6e ↔ Cité ↔ 1er</div>
+          </div>
+
+          <!-- SVG CARTE DE LA SEINE -->
+          <svg id="seine-svg" viewBox="0 0 1000 560" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Carte interactive des 37 ponts de Paris sur la Seine"></svg>
+
+          <!-- BARRE D'ORIENTATION NAUTIQUE INFÉRIEURE -->
+          <div class="map-bottom-bar">
+            <span class="map-pill-info" id="map-nautic-info">🧭 Bief Paris · PK 168</span>
+            <span class="map-pill-info" id="map-zoom-pill" style="color:#94A3B8;">Suivi</span>
+            <span class="map-pill-info" style="color:#38BDF8;">🌊 Amont (Est) &rarr; Aval (Ouest)</span>
+          </div>
+        </div>
+
+        <!-- NAVIGATION RAPIDE / SCRUBBER DES 37 PONTS -->
+        <div class="bridges-carousel-wrap">
+          <div class="bridges-carousel-label">
+            <span>Défilement rapide (37 ponts d'Est en Ouest) :</span>
+            <span id="carousel-cur-sec" style="font-weight:700; color:var(--primary);">Secteur 1</span>
+          </div>
+          <div class="bridges-carousel" id="bridges-carousel" role="toolbar" aria-label="Liste rapide des 37 ponts">
+            <!-- Rempli dynamiquement -->
+          </div>
+        </div>
+
+        <!-- SÉLECTEUR RAPIDE & BARRE DE MAÎTRISE -->
+        <div class="bridge-quick-select-wrap">
+          <span style="font-size:0.85rem;">🌉</span>
+          <select id="bridge-quick-select" class="bridge-quick-select" aria-label="Sélectionner un pont directement">
+            <!-- Rempli dynamiquement -->
+          </select>
+        </div>
+
+        <div class="mastery-progress-strip">
+          <div class="mastery-progress-header">
+            <span>Progression 37 Ponts de Paris</span>
+            <span id="mastery-progress-text" class="font-mono">0 / 37 maîtrisés (0%)</span>
+          </div>
+          <div class="mastery-track">
+            <div class="mastery-fill" id="mastery-progress-bar" style="width: 0%;"></div>
+          </div>
+        </div>
+
+        <!-- CARTE DÉTAIL DU PONT SÉLECTIONNÉ -->
         <div class="bridge-card-detail">
           <div style="display:flex; justify-content:space-between; align-items:center;">
-            <span id="bridge-sec-tag" style="font-size:0.7rem; font-weight:800; padding:2px 8px; border-radius:99px; background:var(--primary); color:#fff;">Secteur 1</span>
-            <button class="btn-changer" id="btn-toggle-done" style="background:var(--success); color:#fff; border:none; padding:4px 8px;">Marquer maîtrisé</button>
+            <span id="bridge-sec-tag" style="font-size:0.72rem; font-weight:800; padding:3px 10px; border-radius:99px; background:var(--primary); color:#fff;">Secteur 1 (Pont 1/37)</span>
+            <button type="button" class="btn-changer" id="btn-toggle-done" style="background:var(--success); color:#fff; border:none; padding:5px 10px;">Marquer maîtrisé</button>
           </div>
           <div class="bridge-name-lg" id="bridge-name">Pont amont</div>
-          <div style="font-size:0.8rem; color:var(--text-muted);" id="bridge-meta">Rives : 13e ↔ 12e | 1969</div>
-          <div style="font-size:0.82rem; background:var(--bg); padding:8px; border-radius:8px;" id="bridge-clue">💡 Périphérique Est : entrée de la Seine dans Paris.</div>
+          <div style="font-size:0.82rem; color:var(--text-muted);" id="bridge-meta">Rives : 13e ↔ 12e | 1969</div>
+          <div style="font-size:0.84rem; background:var(--bg); border:1px solid var(--border); padding:10px 12px; border-radius:10px; line-height:1.4;" id="bridge-clue">💡 <strong>Amont</strong> : Périphérique Est : entrée de la Seine dans Paris.</div>
           <div class="action-row">
-            <button class="btn-action" id="btn-prev">◀ Amont</button>
-            <button class="btn-action primary" id="btn-next">Aval ▶</button>
+            <button type="button" class="btn-action" id="btn-prev">◀ Amont</button>
+            <button type="button" class="btn-action primary" id="btn-next">Aval ▶</button>
           </div>
         </div>
       </div>
@@ -3148,7 +3553,7 @@
       <footer class="app-footer">
         <div class="footer-sync">
           <span class="footer-pulse-dot"></span>
-          <span>37 Ponts de Paris · Ordre Amont ➔ Aval</span>
+          <span>37 Ponts de Paris · Ordre Amont &rarr; Aval</span>
         </div>
         <div class="footer-meta">
           Repères fluviaux stratégiques pour équipages BPI
@@ -4255,50 +4660,52 @@
     };
 
     const BRIDGES = [
-      { id: 1, name: "Pont amont", sector: 1, type: "Routier (Périph.)", banks: "13e (RG) ↔ 12e (RD)", year: 1969, key: "Amont", clue: "Périphérique Est : entrée de la Seine dans Paris.", x: 935, y: 495 },
-      { id: 2, name: "Pont National", sector: 1, type: "Routier & Tram", banks: "13e (RG) ↔ 12e (RD)", year: 1853, key: "Nation", clue: "Boulevard des Maréchaux.", x: 902, y: 465 },
-      { id: 3, name: "Pont de Tolbiac", sector: 1, type: "Routier", banks: "13e (BnF) ↔ 12e (Bercy)", year: 1882, key: "Tolbiac", clue: "Face aux 4 tours de la BnF.", x: 868, y: 432 },
-      { id: 4, name: "Passerelle Simone-de-Beauvoir", sector: 1, type: "Piéton", banks: "Parvis BnF ↔ Parc de Bercy", year: 2006, key: "Simone", clue: "Passerelle piétonne en lentille centrale.", x: 836, y: 400 },
-      { id: 5, name: "Pont de Bercy", sector: 1, type: "Route + Métro 6", banks: "13e ↔ 12e (Bercy)", year: 1864, key: "Boire", clue: "Pont à 2 niveaux portant le Métro 6.", x: 804, y: 368 },
-      { id: 6, name: "Pont Charles-de-Gaulle", sector: 1, type: "Routier", banks: "Austerlitz ↔ Gare de Lyon", year: 1996, key: "Charles", clue: "Tablier blanc profilé comme une aile d'avion.", x: 772, y: 336 },
-      { id: 7, name: "Viaduc d'Austerlitz", sector: 1, type: "Ferroviaire", banks: "Austerlitz ↔ Quai Rapée", year: 1904, key: "Viaduc", clue: "Arche métallique réservée au Métro 5.", x: 742, y: 308 },
-      { id: 8, name: "Pont d'Austerlitz", sector: 1, type: "Routier", banks: "Jardin des Plantes ↔ Bastille", year: 1855, key: "Austerlitz", clue: "Pont routier face au Jardin des Plantes.", x: 712, y: 282 },
-      { id: 9, name: "Pont de Sully", sector: 2, type: "Routier", banks: "5e ↔ Île St-Louis ↔ 4e", year: 1876, key: "Sully", clue: "Traverse toute la Seine sur la pointe est de l'Île St-Louis.", x: 675, y: 258 },
-      { id: 10, name: "Pont de la Tournelle", sector: 2, type: "Routier", banks: "5e (RG) ↔ Île Saint-Louis", year: 1930, key: "tourne", clue: "Bras sud, statue de Sainte Geneviève.", x: 642, y: 274 },
-      { id: 11, name: "Pont Marie", sector: 2, type: "Routier", banks: "Île Saint-Louis ↔ 4e", year: 1635, key: "Marie", clue: "2e plus ancien pont de Paris (1635).", x: 652, y: 222 },
-      { id: 12, name: "Pont Louis-Philippe", sector: 2, type: "Routier", banks: "Île Saint-Louis ↔ Marais", year: 1862, key: "Louis-Philippe", clue: "Relie l'île au quartier du Marais.", x: 622, y: 210 },
-      { id: 13, name: "Pont Saint-Louis", sector: 2, type: "Piéton", banks: "Île St-Louis ↔ Île de la Cité", year: 1970, key: "Saint-Louis", clue: "Passerelle reliant les deux îles.", x: 608, y: 242 },
-      { id: 14, name: "Pont de l'Archevêché", sector: 3, type: "Routier", banks: "5e ↔ Chevet Notre-Dame", year: 1828, key: "Archevêque", clue: "Derrière le chevet de Notre-Dame.", x: 590, y: 266 },
-      { id: 15, name: "Pont au Double", sector: 3, type: "Routier", banks: "5e ↔ Flanc Notre-Dame", year: 1883, key: "Double", clue: "Nom du péage médiéval.", x: 568, y: 256 },
-      { id: 16, name: "Pont d'Arcole", sector: 3, type: "Routier", banks: "Cité ↔ Hôtel de Ville", year: 1855, key: "Arcole", clue: "Débouche face à l'Hôtel de Ville.", x: 578, y: 198 },
-      { id: 17, name: "Petit-Pont-Cardinal-Lustiger", sector: 3, type: "Routier", banks: "Rue St-Jacques ↔ Cité", year: 1853, key: "Petit", clue: "Le plus court de Paris (32 m).", x: 546, y: 246 },
-      { id: 18, name: "Pont Notre-Dame", sector: 3, type: "Routier", banks: "Cité ↔ Quai de Gesvres", year: 1914, key: "Notre-Dame", clue: "Prolonge le Petit-Pont.", x: 556, y: 188 },
-      { id: 19, name: "Pont Saint-Michel", sector: 3, type: "Routier", banks: "Place St-Michel ↔ Cité", year: 1857, key: "Saint-Michel", clue: "Face à la fontaine Saint-Michel.", x: 524, y: 236 },
-      { id: 20, name: "Pont au Change", sector: 3, type: "Routier", banks: "Conciergerie ↔ Châtelet", year: 1860, key: "Changent", clue: "Ancien pont des changeurs.", x: 534, y: 178 },
-      { id: 21, name: "Pont Neuf", sector: 3, type: "Routier", banks: "6e ↔ Pointe Cité ↔ 1er", year: 1607, key: "Neuf", clue: "Le plus ancien pont de Paris (1607).", x: 498, y: 195 },
-      { id: 22, name: "Pont des Arts", sector: 4, type: "Piéton", banks: "Institut de France ↔ Louvre", year: 1804, key: "Arts", clue: "Passerelle piétonne face au Louvre.", x: 462, y: 175 },
-      { id: 23, name: "Pont du Carrousel", sector: 4, type: "Routier", banks: "Quai Voltaire ↔ Louvre", year: 1939, key: "Carrousel", clue: "Face aux guichets du Louvre.", x: 430, y: 160 },
-      { id: 24, name: "Pont Royal", sector: 4, type: "Routier", banks: "Orsay ↔ Tuileries", year: 1689, key: "Royal", clue: "Financé par Louis XIV en 1689.", x: 398, y: 146 },
-      { id: 25, name: "Passerelle Léopold-Sédar-Senghor", sector: 4, type: "Piéton", banks: "Orsay ↔ Tuileries", year: 1999, key: "Senghor", clue: "Ancienne passerelle de Solférino.", x: 366, y: 135 },
-      { id: 26, name: "Pont de la Concorde", sector: 4, type: "Routier", banks: "Assemblée nat. ↔ Concorde", year: 1791, key: "Concorde", clue: "Pierres issues de la Bastille.", x: 332, y: 128 },
-      { id: 27, name: "Pont Alexandre-III", sector: 4, type: "Routier", banks: "Invalides ↔ Grand Palais", year: 1900, key: "Alexandre", clue: "4 pylônes à Pégases dorés.", x: 298, y: 138 },
-      { id: 28, name: "Pont des Invalides", sector: 4, type: "Routier", banks: "7e ↔ 8e", year: 1856, key: "Invalides", clue: "Le pont le plus bas de Paris.", x: 266, y: 155 },
-      { id: 29, name: "Pont de l'Alma", sector: 5, type: "Routier", banks: "7e ↔ 8e/16e", year: 1974, key: "Alma", clue: "Statue du Zouave (crues).", x: 236, y: 182 },
-      { id: 30, name: "Passerelle Debilly", sector: 5, type: "Piéton", banks: "Quai Branly ↔ Palais de Tokyo", year: 1900, key: "Debilly", clue: "Passerelle métallique de 1900.", x: 212, y: 214 },
-      { id: 31, name: "Pont d'Iéna", sector: 5, type: "Routier", banks: "Tour Eiffel ↔ Trocadéro", year: 1814, key: "Iéna", clue: "Entre Tour Eiffel et Trocadéro.", x: 188, y: 250 },
-      { id: 32, name: "Pont de Bir-Hakeim", sector: 5, type: "Route + Métro", banks: "15e ↔ Île aux Cygnes ↔ 16e", year: 1905, key: "Bir-Hakeim", clue: "Viaduc du Métro 6.", x: 166, y: 292 },
-      { id: 33, name: "Pont Rouelle", sector: 5, type: "Ferroviaire", banks: "15e ↔ Île aux Cygnes ↔ 16e", year: 1900, key: "Rouelle", clue: "Pont RER C sur l'Île aux Cygnes.", x: 146, y: 334 },
-      { id: 34, name: "Pont de Grenelle", sector: 5, type: "Routier", banks: "15e ↔ Île aux Cygnes ↔ 16e", year: 1968, key: "Grenelle", clue: "Statue de la Liberté.", x: 126, y: 376 },
-      { id: 35, name: "Pont Mirabeau", sector: 5, type: "Routier", banks: "15e ↔ 16e", year: 1896, key: "Mirabeau", clue: "Poème de Guillaume Apollinaire.", x: 106, y: 418 },
-      { id: 36, name: "Pont du Garigliano", sector: 5, type: "Routier", banks: "15e ↔ 16e", year: 1966, key: "Garigliano", clue: "Pont le plus haut de Paris.", x: 86, y: 460 },
-      { id: 37, name: "Pont aval", sector: 5, type: "Routier (Périph.)", banks: "15e ↔ 16e", year: 1968, key: "Aval", clue: "Périphérique Ouest (sortie).", x: 65, y: 502 }
+      { id: 1, name: "Pont amont", sector: 1, type: "Routier (Périph.)", banks: "13e (RG) ↔ 12e (RD)", year: 1969, key: "Amont", clue: "Périphérique Est : entrée de la Seine dans Paris.", x: 935, y: 495, angle: 45 },
+      { id: 2, name: "Pont National", sector: 1, type: "Routier & Tram", banks: "13e (RG) ↔ 12e (RD)", year: 1853, key: "Nation", clue: "Boulevard des Maréchaux.", x: 902, y: 465, angle: 45 },
+      { id: 3, name: "Pont de Tolbiac", sector: 1, type: "Routier", banks: "13e (BnF) ↔ 12e (Bercy)", year: 1882, key: "Tolbiac", clue: "Face aux 4 tours de la BnF.", x: 868, y: 432, angle: 45 },
+      { id: 4, name: "Passerelle Simone-de-Beauvoir", sector: 1, type: "Piéton", banks: "Parvis BnF ↔ Parc de Bercy", year: 2006, key: "Simone", clue: "Passerelle piétonne en lentille centrale.", x: 836, y: 400, angle: 45 },
+      { id: 5, name: "Pont de Bercy", sector: 1, type: "Route + Métro 6", banks: "13e ↔ 12e (Bercy)", year: 1864, key: "Boire", clue: "Pont à 2 niveaux portant le Métro 6.", x: 804, y: 368, angle: 45 },
+      { id: 6, name: "Pont Charles-de-Gaulle", sector: 1, type: "Routier", banks: "Austerlitz ↔ Gare de Lyon", year: 1996, key: "Charles", clue: "Tablier blanc profilé comme une aile d'avion.", x: 772, y: 336, angle: 45 },
+      { id: 7, name: "Viaduc d'Austerlitz", sector: 1, type: "Ferroviaire", banks: "Austerlitz ↔ Quai Rapée", year: 1904, key: "Viaduc", clue: "Arche métallique réservée au Métro 5.", x: 742, y: 308, angle: 45 },
+      { id: 8, name: "Pont d'Austerlitz", sector: 1, type: "Routier", banks: "Jardin des Plantes ↔ Bastille", year: 1855, key: "Austerlitz", clue: "Pont routier face au Jardin des Plantes.", x: 712, y: 282, angle: 45 },
+      { id: 9, name: "Pont de Sully", sector: 2, type: "Routier", banks: "5e ↔ Île St-Louis ↔ 4e", year: 1876, key: "Sully", clue: "Traverse toute la Seine sur la pointe est de l'Île St-Louis.", x: 675, y: 258, angle: 60 },
+      { id: 10, name: "Pont de la Tournelle", sector: 2, type: "Routier", banks: "5e (RG) ↔ Île Saint-Louis", year: 1930, key: "tourne", clue: "Bras sud, statue de Sainte Geneviève.", x: 642, y: 274, angle: 10 },
+      { id: 11, name: "Pont Marie", sector: 2, type: "Routier", banks: "Île Saint-Louis ↔ 4e", year: 1635, key: "Marie", clue: "2e plus ancien pont de Paris (1635).", x: 652, y: 222, angle: 10 },
+      { id: 12, name: "Pont Louis-Philippe", sector: 2, type: "Routier", banks: "Île Saint-Louis ↔ Marais", year: 1862, key: "Louis-Philippe", clue: "Relie l'île au quartier du Marais.", x: 622, y: 210, angle: 15 },
+      { id: 13, name: "Pont Saint-Louis", sector: 2, type: "Piéton", banks: "Île St-Louis ↔ Île de la Cité", year: 1970, key: "Saint-Louis", clue: "Passerelle reliant les deux îles.", x: 608, y: 242, angle: 100 },
+      { id: 14, name: "Pont de l'Archevêché", sector: 3, type: "Routier", banks: "5e ↔ Chevet Notre-Dame", year: 1828, key: "Archevêque", clue: "Derrière le chevet de Notre-Dame.", x: 590, y: 266, angle: 20 },
+      { id: 15, name: "Pont au Double", sector: 3, type: "Routier", banks: "5e ↔ Flanc Notre-Dame", year: 1883, key: "Double", clue: "Nom du péage médiéval.", x: 568, y: 256, angle: 25 },
+      { id: 16, name: "Pont d'Arcole", sector: 3, type: "Routier", banks: "Cité ↔ Hôtel de Ville", year: 1855, key: "Arcole", clue: "Débouche face à l'Hôtel de Ville.", x: 578, y: 198, angle: 20 },
+      { id: 17, name: "Petit-Pont-Cardinal-Lustiger", sector: 3, type: "Routier", banks: "Rue St-Jacques ↔ Cité", year: 1853, key: "Petit", clue: "Le plus court de Paris (32 m).", x: 546, y: 246, angle: 25 },
+      { id: 18, name: "Pont Notre-Dame", sector: 3, type: "Routier", banks: "Cité ↔ Quai de Gesvres", year: 1914, key: "Notre-Dame", clue: "Prolonge le Petit-Pont.", x: 556, y: 188, angle: 25 },
+      { id: 19, name: "Pont Saint-Michel", sector: 3, type: "Routier", banks: "Place St-Michel ↔ Cité", year: 1857, key: "Saint-Michel", clue: "Face à la fontaine Saint-Michel.", x: 524, y: 236, angle: 30 },
+      { id: 20, name: "Pont au Change", sector: 3, type: "Routier", banks: "Conciergerie ↔ Châtelet", year: 1860, key: "Changent", clue: "Ancien pont des changeurs.", x: 534, y: 178, angle: 30 },
+      { id: 21, name: "Pont Neuf", sector: 3, type: "Routier", banks: "6e ↔ Pointe Cité ↔ 1er", year: 1607, key: "Neuf", clue: "Le plus ancien pont de Paris (1607).", x: 498, y: 195, angle: 25 },
+      { id: 22, name: "Pont des Arts", sector: 4, type: "Piéton", banks: "Institut de France ↔ Louvre", year: 1804, key: "Arts", clue: "Passerelle piétonne face au Louvre.", x: 462, y: 175, angle: 15 },
+      { id: 23, name: "Pont du Carrousel", sector: 4, type: "Routier", banks: "Quai Voltaire ↔ Louvre", year: 1939, key: "Carrousel", clue: "Face aux guichets du Louvre.", x: 430, y: 160, angle: 10 },
+      { id: 24, name: "Pont Royal", sector: 4, type: "Routier", banks: "Orsay ↔ Tuileries", year: 1689, key: "Royal", clue: "Financé par Louis XIV en 1689.", x: 398, y: 146, angle: 5 },
+      { id: 25, name: "Passerelle Léopold-Sédar-Senghor", sector: 4, type: "Piéton", banks: "Orsay ↔ Tuileries", year: 1999, key: "Senghor", clue: "Ancienne passerelle de Solférino.", x: 366, y: 135, angle: 0 },
+      { id: 26, name: "Pont de la Concorde", sector: 4, type: "Routier", banks: "Assemblée nat. ↔ Concorde", year: 1791, key: "Concorde", clue: "Pierres issues de la Bastille.", x: 332, y: 128, angle: -10 },
+      { id: 27, name: "Pont Alexandre-III", sector: 4, type: "Routier", banks: "Invalides ↔ Grand Palais", year: 1900, key: "Alexandre", clue: "4 pylônes à Pégases dorés.", x: 298, y: 138, angle: -25 },
+      { id: 28, name: "Pont des Invalides", sector: 4, type: "Routier", banks: "7e ↔ 8e", year: 1856, key: "Invalides", clue: "Le pont le plus bas de Paris.", x: 266, y: 155, angle: -40 },
+      { id: 29, name: "Pont de l'Alma", sector: 5, type: "Routier", banks: "7e ↔ 8e/16e", year: 1974, key: "Alma", clue: "Statue du Zouave (crues).", x: 236, y: 182, angle: -50 },
+      { id: 30, name: "Passerelle Debilly", sector: 5, type: "Piéton", banks: "Quai Branly ↔ Palais de Tokyo", year: 1900, key: "Debilly", clue: "Passerelle métallique de 1900.", x: 212, y: 214, angle: -55 },
+      { id: 31, name: "Pont d'Iéna", sector: 5, type: "Routier", banks: "Tour Eiffel ↔ Trocadéro", year: 1814, key: "Iéna", clue: "Entre Tour Eiffel et Trocadéro.", x: 188, y: 250, angle: -60 },
+      { id: 32, name: "Pont de Bir-Hakeim", sector: 5, type: "Route + Métro", banks: "15e ↔ Île aux Cygnes ↔ 16e", year: 1905, key: "Bir-Hakeim", clue: "Viaduc du Métro 6.", x: 166, y: 292, angle: -65 },
+      { id: 33, name: "Pont Rouelle", sector: 5, type: "Ferroviaire", banks: "15e ↔ Île aux Cygnes ↔ 16e", year: 1900, key: "Rouelle", clue: "Pont RER C sur l'Île aux Cygnes.", x: 146, y: 334, angle: -70 },
+      { id: 34, name: "Pont de Grenelle", sector: 5, type: "Routier", banks: "15e ↔ Île aux Cygnes ↔ 16e", year: 1968, key: "Grenelle", clue: "Statue de la Liberté.", x: 126, y: 376, angle: -70 },
+      { id: 35, name: "Pont Mirabeau", sector: 5, type: "Routier", banks: "15e ↔ 16e", year: 1896, key: "Mirabeau", clue: "Poème de Guillaume Apollinaire.", x: 106, y: 418, angle: -70 },
+      { id: 36, name: "Pont du Garigliano", sector: 5, type: "Routier", banks: "15e ↔ 16e", year: 1966, key: "Garigliano", clue: "Pont le plus haut de Paris.", x: 86, y: 460, angle: -70 },
+      { id: 37, name: "Pont aval", sector: 5, type: "Routier (Périph.)", banks: "15e ↔ 16e", year: 1968, key: "Aval", clue: "Périphérique Ouest (sortie).", x: 65, y: 502, angle: -70 }
     ];
 
     let pontsState = {
       subModule: "explore",
       selectedId: 1,
-      camMode: "follow",
+      camMode: "follow", // "follow", "sector", "full", "free"
       showLabels: false,
+      mapExpanded: false,
+      viewBox: { x: 35, y: 95, w: 935, h: 440 },
       fcFlipped: false,
       quizSubMode: "qcm",
       quizTarget: 1,
@@ -4321,13 +4728,88 @@
       try {
         localStorage.setItem("bpi_ponts_mastered", JSON.stringify([...pontsState.mastered]));
       } catch (e) {}
+      updateMasteryProgressUI();
+      updateBridgesCarousel();
+      updateQuickSelectUI();
+    }
+
+    function updateMasteryProgressUI() {
+      const count = pontsState.mastered.size;
+      const pct = Math.round((count / 37) * 100);
+      const bar = document.getElementById("mastery-progress-bar");
+      if (bar) bar.style.width = `${pct}%`;
+      const txt = document.getElementById("mastery-progress-text");
+      if (txt) {
+        txt.textContent = `${count} / 37 maîtrisés (${pct}%)`;
+        if (count === 37) {
+          txt.style.color = "var(--success)";
+        }
+      }
     }
 
     function renderPontsSubModule() {
-      if (pontsState.subModule === "explore") renderMapAndDetails();
-      else if (pontsState.subModule === "flashcard") renderFlashcard();
-      else if (pontsState.subModule === "quiz") initQuiz();
-      else if (pontsState.subModule === "chain") renderChain();
+      if (pontsState.subModule === "explore") {
+        renderMapAndDetails();
+        updateBridgesCarousel();
+        updateQuickSelectUI();
+        updateMasteryProgressUI();
+      } else if (pontsState.subModule === "flashcard") {
+        renderFlashcard();
+      } else if (pontsState.subModule === "quiz") {
+        initQuiz();
+      } else if (pontsState.subModule === "chain") {
+        renderChain();
+      }
+    }
+
+    // Calcul de la viewBox cible selon le mode de caméra
+    function getTargetViewBox() {
+      const b = BRIDGES.find(x => x.id === pontsState.selectedId) || BRIDGES[0];
+      const sec = SECTORS[b.sector];
+
+      if (pontsState.camMode === "follow") {
+        const isIslands = b.sector === 2 || b.sector === 3;
+        const w = isIslands ? 230 : 300;
+        const h = isIslands ? 150 : 200;
+        return {
+          x: Math.max(10, Math.min(1000 - w, b.x - w / 2)),
+          y: Math.max(20, Math.min(560 - h, b.y - h / 2 - 12)),
+          w,
+          h
+        };
+      } else if (pontsState.camMode === "sector") {
+        const p = sec.box.split(" ").map(Number);
+        return { x: p[0], y: p[1], w: p[2], h: p[3] };
+      } else if (pontsState.camMode === "full") {
+        return { x: 35, y: 95, w: 935, h: 440 };
+      }
+      return pontsState.viewBox;
+    }
+
+    function applyViewBox(vb, smooth = true) {
+      const svg = document.getElementById("seine-svg");
+      if (!svg) return;
+      pontsState.viewBox = { ...vb };
+      svg.setAttribute("viewBox", `${Math.round(vb.x)} ${Math.round(vb.y)} ${Math.round(vb.w)} ${Math.round(vb.h)}`);
+
+      // Mettre à jour l'indicateur de zoom
+      const zoomPill = document.getElementById("map-zoom-pill");
+      if (zoomPill) {
+        const zoomRatio = (935 / vb.w).toFixed(1);
+        if (pontsState.camMode === "follow") {
+          zoomPill.textContent = `🎯 Suivi · ${zoomRatio}x`;
+          zoomPill.style.color = "#38BDF8";
+        } else if (pontsState.camMode === "sector") {
+          zoomPill.textContent = `Secteur ${BRIDGES.find(x => x.id === pontsState.selectedId)?.sector || 1}`;
+          zoomPill.style.color = "#FCD34D";
+        } else if (pontsState.camMode === "full") {
+          zoomPill.textContent = `Vue d'ensemble`;
+          zoomPill.style.color = "#94A3B8";
+        } else {
+          zoomPill.textContent = `Manuel · ${zoomRatio}x`;
+          zoomPill.style.color = "#A7F3D0";
+        }
+      }
     }
 
     function renderMapAndDetails() {
@@ -4336,55 +4818,433 @@
       const b = BRIDGES.find(x => x.id === pontsState.selectedId) || BRIDGES[0];
       const sec = SECTORS[b.sector];
 
-      let vb = "35 95 935 440";
-      if (pontsState.camMode === "follow") {
-        const w = (b.sector === 2 || b.sector === 3) ? 185 : 250;
-        const h = (b.sector === 2 || b.sector === 3) ? 115 : 155;
-        vb = `${Math.max(20, b.x - w/2)} ${Math.max(80, b.y - h/2)} ${w} ${h}`;
-      } else if (pontsState.camMode === "sector") {
-        vb = sec.box;
+      // Mise à jour de la viewBox
+      if (pontsState.camMode !== "free") {
+        applyViewBox(getTargetViewBox());
+      } else {
+        applyViewBox(pontsState.viewBox);
       }
-      svg.setAttribute("viewBox", vb);
 
+      // Construction SVG cartographique avancée de la Seine avec îles et repères
       svg.innerHTML = `
-        <path d="M 955 515 Q 820 385 685 262 C 620 225 560 205 495 194 C 415 150 355 125 320 128 C 250 132 195 225 150 325 Q 105 420 50 520" fill="none" stroke="#0284c7" stroke-width="26" stroke-linecap="round" opacity="0.85" />
-        <path d="M 680 260 C 645 205 565 170 498 195" fill="none" stroke="#0284c7" stroke-width="14" stroke-linecap="round" />
-        <path d="M 680 260 C 635 280 560 265 498 195" fill="none" stroke="#0284c7" stroke-width="14" stroke-linecap="round" />
-        <ellipse cx="644" cy="244" rx="27" ry="10" transform="rotate(-14 644 244)" fill="#fde68a" stroke="#0b1120" stroke-width="1.5" />
-        <ellipse cx="554" cy="218" rx="43" ry="14" transform="rotate(-17 554 218)" fill="#fde68a" stroke="#0b1120" stroke-width="1.5" />
+        <defs>
+          <linearGradient id="seineWaterGrad" x1="100%" y1="100%" x2="0%" y2="0%">
+            <stop offset="0%" stop-color="#0284c7" />
+            <stop offset="45%" stop-color="#0369a1" />
+            <stop offset="100%" stop-color="#075985" />
+          </linearGradient>
+
+          <filter id="glowFilter" x="-20%" y="-20%" width="140%" height="140%">
+            <feGaussianBlur stdDeviation="3" result="blur" />
+            <feComposite in="SourceGraphic" in2="blur" operator="over" />
+          </filter>
+
+          <pattern id="nauticGrid" width="60" height="60" patternUnits="userSpaceOnUse">
+            <path d="M 60 0 L 0 0 0 60" fill="none" stroke="rgba(255,255,255,0.03)" stroke-width="1" />
+          </pattern>
+        </defs>
+
+        <!-- Fond grille cartographique nautique -->
+        <rect x="0" y="0" width="1000" height="560" fill="url(#nauticGrid)" />
+
+        <!-- Rose des vents / Boussole Nord -->
+        <g transform="translate(940, 130)" opacity="0.35" pointer-events="none">
+          <circle cx="0" cy="0" r="16" fill="none" stroke="#64748B" stroke-width="1" />
+          <path d="M 0 -15 L 4 -3 L 0 0 L -4 -3 Z" fill="#EF4444" />
+          <path d="M 0 15 L 4 3 L 0 0 L -4 3 Z" fill="#94A3B8" />
+          <text x="0" y="-18" text-anchor="middle" fill="#EF4444" font-size="8" font-weight="900">N</text>
+        </g>
+
+        <!-- Tracé berges / contours terrestres -->
+        <!-- Rive Droite (Nord) & Rive Gauche (Sud) repères textuels discrets -->
+        <text x="650" y="150" fill="rgba(255,255,255,0.18)" font-size="9" font-weight="800" letter-spacing="2">RIVE DROITE (RD · NORD)</text>
+        <text x="630" y="360" fill="rgba(255,255,255,0.18)" font-size="9" font-weight="800" letter-spacing="2">RIVE GAUCHE (RG · SUD)</text>
+
+        <!-- Berges ombrées de la Seine -->
+        <path d="M 955 515 Q 820 385 685 262 C 620 225 560 205 495 194 C 415 150 355 125 320 128 C 250 132 195 225 150 325 Q 105 420 50 520"
+              fill="none" stroke="rgba(2, 132, 199, 0.18)" stroke-width="38" stroke-linecap="round" />
+
+        <!-- Lit principal de la Seine (courant majestueux) -->
+        <path id="seine-main-channel"
+              d="M 955 515 Q 820 385 685 262 C 620 225 560 205 495 194 C 415 150 355 125 320 128 C 250 132 195 225 150 325 Q 105 420 50 520"
+              fill="none" stroke="url(#seineWaterGrad)" stroke-width="26" stroke-linecap="round" />
+
+        <!-- Flèches subtiles de courant d'eau (Amont vers Aval) -->
+        <path d="M 930 490 Q 820 385 685 262 C 620 225 560 205 495 194 C 415 150 355 125 320 128 C 250 132 195 225 150 325 Q 105 420 70 495"
+              fill="none" stroke="rgba(255, 255, 255, 0.35)" stroke-width="1.8" stroke-dasharray="8 36" stroke-linecap="round" />
+
+        <!-- Bras Nord et Sud autour des Îles de la Cité et Saint-Louis -->
+        <path d="M 680 260 C 645 205 565 170 498 195" fill="none" stroke="url(#seineWaterGrad)" stroke-width="15" stroke-linecap="round" />
+        <path d="M 680 260 C 635 280 560 265 498 195" fill="none" stroke="url(#seineWaterGrad)" stroke-width="15" stroke-linecap="round" />
+
+        <!-- 1. ÎLE SAINT-LOUIS (Secteur 2) -->
+        <g id="ile-saint-louis" pointer-events="none">
+          <ellipse cx="644" cy="244" rx="28" ry="11" transform="rotate(-14 644 244)" fill="#1e293b" stroke="#334155" stroke-width="1.5" />
+          <ellipse cx="644" cy="244" rx="26" ry="9" transform="rotate(-14 644 244)" fill="#0f172a" />
+          <text x="644" y="246" text-anchor="middle" fill="#94a3b8" font-size="5" font-weight="800" letter-spacing="0.5">ÎLE ST-LOUIS</text>
+        </g>
+
+        <!-- 2. ÎLE DE LA CITÉ (Secteur 3) -->
+        <g id="ile-de-la-cite" pointer-events="none">
+          <ellipse cx="554" cy="218" rx="46" ry="15" transform="rotate(-17 554 218)" fill="#1e293b" stroke="#334155" stroke-width="1.5" />
+          <ellipse cx="554" cy="218" rx="44" ry="13" transform="rotate(-17 554 218)" fill="#0f172a" />
+          <!-- Silhouette de Notre-Dame -->
+          <g transform="translate(580, 222) scale(0.6)">
+            <path d="M-4 3 L-4 -4 L0 -7 L4 -4 L4 3 Z" fill="#64748b" />
+            <line x1="0" y1="-7" x2="0" y2="-11" stroke="#e2e8f0" stroke-width="1" />
+          </g>
+          <text x="548" y="220" text-anchor="middle" fill="#cbd5e1" font-size="5.5" font-weight="900" letter-spacing="0.5">ÎLE DE LA CITÉ</text>
+        </g>
+
+        <!-- 3. ÎLE AUX CYGNES (Secteur 5 - Ponts 32-34) -->
+        <g id="ile-aux-cygnes" pointer-events="none">
+          <line x1="170" y1="285" x2="124" y2="385" stroke="#1e293b" stroke-width="8" stroke-linecap="round" />
+          <line x1="170" y1="285" x2="124" y2="385" stroke="#0f172a" stroke-width="5" stroke-linecap="round" />
+          <circle cx="123" cy="387" r="3" fill="#f59e0b" /> <!-- Étoile Statue Liberté -->
+          <text x="144" y="338" transform="rotate(-66 144 338)" text-anchor="middle" fill="#94a3b8" font-size="4.5" font-weight="800">ÎLE AUX CYGNES</text>
+        </g>
+
+        <!-- Repères emblématiques de Paris -->
+        <!-- Tour Eiffel (près du Pont d'Iéna #31) -->
+        <g id="landmark-eiffel" transform="translate(195, 275)" pointer-events="none" opacity="0.85">
+          <path d="M-6 10 L-2 -6 L-1 -10 L1 -10 L2 -6 L6 10 M-4 4 L4 4 M-2 -1 L2 -1" fill="none" stroke="#FBBF24" stroke-width="1.2" stroke-linecap="round" />
+          <circle cx="0" cy="-11" r="1.5" fill="#FEF08A" />
+          <text x="0" y="17" text-anchor="middle" fill="#FDE68A" font-size="4.5" font-weight="800">Tour Eiffel</text>
+        </g>
+
+        <!-- Grand Palais (près d'Alexandre III #27) -->
+        <g id="landmark-grandpalais" transform="translate(305, 118)" pointer-events="none" opacity="0.75">
+          <rect x="-8" y="-4" width="16" height="8" rx="2" fill="none" stroke="#94A3B8" stroke-width="0.8" />
+          <path d="M-6 -4 C-6 -8 6 -8 6 -4" fill="none" stroke="#94A3B8" stroke-width="0.8" />
+          <text x="0" y="-9" text-anchor="middle" fill="#CBD5E1" font-size="4.2" font-weight="700">Grand Palais</text>
+        </g>
+
+        <!-- Musée du Louvre (près de #22-#23) -->
+        <g id="landmark-louvre" transform="translate(450, 150)" pointer-events="none" opacity="0.75">
+          <polygon points="0,-6 -6,3 6,3" fill="none" stroke="#94A3B8" stroke-width="0.8" />
+          <text x="0" y="-8" text-anchor="middle" fill="#CBD5E1" font-size="4.2" font-weight="700">Louvre</text>
+        </g>
+
+        <!-- BnF François Mitterrand (près de #3 Tolbiac) -->
+        <g id="landmark-bnf" transform="translate(885, 415)" pointer-events="none" opacity="0.75">
+          <rect x="-6" y="-5" width="4" height="10" fill="#94A3B8" />
+          <rect x="2" y="-5" width="4" height="10" fill="#94A3B8" />
+          <text x="0" y="13" text-anchor="middle" fill="#CBD5E1" font-size="4.2" font-weight="700">BnF</text>
+        </g>
+
+        <!-- CONTENEUR DES 37 PONTS -->
+        <g id="bridges-layer"></g>
       `;
+
+      const bridgesLayer = svg.querySelector("#bridges-layer");
 
       BRIDGES.forEach(br => {
         const isCur = (br.id === pontsState.selectedId);
         const isDone = pontsState.mastered.has(br.id);
-        const r = 9;
+        const secColor = SECTORS[br.sector].color;
+        const rad = ((br.angle || 45) * Math.PI) / 180;
+        const spanLen = 14;
+        const x1 = Math.round(br.x - Math.cos(rad) * spanLen);
+        const y1 = Math.round(br.y - Math.sin(rad) * spanLen);
+        const x2 = Math.round(br.x + Math.cos(rad) * spanLen);
+        const y2 = Math.round(br.y + Math.sin(rad) * spanLen);
+
         const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
+        g.setAttribute("class", `bridge-node ${isCur ? 'active' : ''} ${isDone ? 'mastered' : ''}`);
+        g.setAttribute("tabindex", "0");
+        g.setAttribute("role", "button");
+        g.setAttribute("aria-label", `Pont ${br.id} : ${br.name}`);
         g.style.cursor = "pointer";
+
+        // Tablier du pont traversant la Seine
+        const deckStroke = isCur ? "#FFFFFF" : isDone ? "#10B981" : secColor;
+        const deckWidth = isCur ? 4.5 : 3.2;
+
         g.innerHTML = `
-          <circle cx="${br.x}" cy="${br.y}" r="18" fill="transparent" />
-          ${isCur ? `<circle cx="${br.x}" cy="${br.y}" r="${r+5}" fill="none" stroke="#ffffff" stroke-width="2.5" />` : ""}
-          <circle cx="${br.x}" cy="${br.y}" r="${r}" fill="${SECTORS[br.sector].color}" stroke="${isDone ? '#10b981' : '#0b1120'}" stroke-width="${isDone ? 2.5 : 1.5}" />
-          <text x="${br.x}" y="${br.y + 3}" text-anchor="middle" fill="#0b1120" font-size="7" font-weight="800">${br.id}</text>
-          ${pontsState.showLabels ? `<text x="${br.x}" y="${br.y - 12}" text-anchor="middle" fill="#fff" font-size="6" font-weight="700" style="paint-order:stroke;stroke:#000;stroke-width:2px;">${br.name}</text>` : ""}
+          <!-- Zone tactile élargie invisible -->
+          <circle cx="${br.x}" cy="${br.y}" r="22" fill="transparent" />
+
+          <!-- Tablier transversal du pont -->
+          <line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}"
+                stroke="${deckStroke}" stroke-width="${deckWidth}" stroke-linecap="round" />
+
+          <!-- Anneau radar d'impulsion si pont sélectionné -->
+          ${isCur ? `
+            <circle cx="${br.x}" cy="${br.y}" r="15" fill="none" stroke="${secColor}" stroke-width="2.5" class="beacon-pulse" />
+            <circle cx="${br.x}" cy="${br.y}" r="13" fill="none" stroke="#FFFFFF" stroke-width="2.2" />
+          ` : ""}
+
+          <!-- Pastille de centre avec numéro -->
+          <circle cx="${br.x}" cy="${br.y}" r="${isCur ? 9.5 : 8}"
+                  fill="${secColor}"
+                  stroke="${isCur ? '#FFFFFF' : isDone ? '#10B981' : '#0B1120'}"
+                  stroke-width="${isCur ? 2.5 : isDone ? 2.2 : 1.5}" />
+
+          <text x="${br.x}" y="${br.y + 3}" text-anchor="middle"
+                fill="#0B1120" font-size="${isCur ? 7.5 : 6.8}" font-weight="900" font-family="'JetBrains Mono', monospace">
+            ${br.id}
+          </text>
+
+          <!-- Pastille de validation maîtrisée -->
+          ${isDone ? `
+            <circle cx="${br.x + 6}" cy="${br.y - 6}" r="3.2" fill="#10B981" stroke="#0B1120" stroke-width="0.8" />
+            <path d="M ${br.x + 4.8} ${br.y - 6} L ${br.x + 5.8} ${br.y - 5} L ${br.x + 7.5} ${br.y - 7.2}" fill="none" stroke="#FFFFFF" stroke-width="0.8" stroke-linecap="round" stroke-linejoin="round" />
+          ` : ""}
+
+          <!-- Label du nom du pont si activé ou si sélectionné -->
+          ${(pontsState.showLabels || isCur) ? `
+            <g transform="translate(${br.x}, ${br.y - (isCur ? 16 : 13)})" pointer-events="none">
+              <rect x="-40" y="-8" width="80" height="12" rx="4"
+                    fill="rgba(11, 17, 32, 0.92)" stroke="${isCur ? '#FFFFFF' : secColor}" stroke-width="${isCur ? 1.2 : 0.8}" />
+              <text x="0" y="1" text-anchor="middle" fill="#FFFFFF" font-size="5.8" font-weight="800">
+                ${br.name}
+              </text>
+            </g>
+          ` : ""}
         `;
-        g.onclick = () => { pontsState.selectedId = br.id; renderMapAndDetails(); };
-        svg.appendChild(g);
+
+        // Interactivité pont : clic, survol, focus
+        g.onclick = (e) => {
+          e.stopPropagation();
+          selectBridge(br.id);
+        };
+
+        g.onpointerenter = () => showMapTooltip(br, g);
+        g.onpointerleave = () => hideMapTooltip();
+
+        if (bridgesLayer) bridgesLayer.appendChild(g);
       });
 
+      // Synchroniser la carte détail du pont sélectionné
       const secTag = document.getElementById("bridge-sec-tag");
-      if (secTag) secTag.textContent = `Secteur ${b.sector} (Pont ${b.id}/37)`;
+      if (secTag) {
+        secTag.textContent = `Secteur ${b.sector} (Pont ${b.id}/37)`;
+        secTag.style.background = sec.color;
+      }
       const nameEl = document.getElementById("bridge-name");
       if (nameEl) nameEl.textContent = b.name;
       const metaEl = document.getElementById("bridge-meta");
-      if (metaEl) metaEl.textContent = `Rives : ${b.banks} | An : ${b.year}`;
+      if (metaEl) metaEl.textContent = `Rives : ${b.banks} · Année : ${b.year} · Type : ${b.type}`;
       const clueEl = document.getElementById("bridge-clue");
       if (clueEl) clueEl.innerHTML = `💡 <strong>${b.key}</strong> : ${b.clue}`;
       const btnDone = document.getElementById("btn-toggle-done");
       if (btnDone) {
         const isMastered = pontsState.mastered.has(b.id);
-        btnDone.textContent = isMastered ? "✓ Maîtrisé" : "Marquer maîtrisé";
+        btnDone.textContent = isMastered ? "✓ Pont maîtrisé" : "Marquer maîtrisé";
         btnDone.style.background = isMastered ? "var(--success)" : "var(--primary)";
       }
+
+      // Synchroniser les puces de secteurs
+      document.querySelectorAll(".sector-chip").forEach(chip => {
+        const secNum = parseInt(chip.dataset.sec, 10);
+        chip.classList.toggle("active", secNum === b.sector);
+      });
+
+      // Synchroniser le label du carrousel
+      const curSecLbl = document.getElementById("carousel-cur-sec");
+      if (curSecLbl) curSecLbl.textContent = sec.name.split(" : ")[1] || `Secteur ${b.sector}`;
+
+      // Synchroniser l'orientation nautique
+      const nauticInfo = document.getElementById("map-nautic-info");
+      if (nauticInfo) {
+        nauticInfo.textContent = `🧭 Pont ${b.id}/37 · Secteur ${b.sector}`;
+      }
+    }
+
+    // Sélection d'un pont avec fluidité et synchronisation générale
+    function selectBridge(bridgeId, modeOverride) {
+      pontsState.selectedId = bridgeId;
+      if (modeOverride) {
+        pontsState.camMode = modeOverride;
+      }
+      renderMapAndDetails();
+      updateBridgesCarousel();
+      updateQuickSelectUI();
+      hideMapTooltip();
+    }
+
+    // Affichage HUD Tooltip sur la carte
+    function showMapTooltip(bridge, element) {
+      const tt = document.getElementById("map-bridge-tooltip");
+      const title = document.getElementById("map-tt-title");
+      const sub = document.getElementById("map-tt-sub");
+      if (!tt || !title || !sub) return;
+
+      title.textContent = `${bridge.id}. ${bridge.name}`;
+      sub.textContent = `${SECTORS[bridge.sector].name.split(" : ")[1]} · ${bridge.banks}`;
+      tt.style.borderLeftColor = SECTORS[bridge.sector].color;
+      tt.classList.add("visible");
+    }
+
+    function hideMapTooltip() {
+      const tt = document.getElementById("map-bridge-tooltip");
+      if (tt) tt.classList.remove("visible");
+    }
+
+    // Carousel rapide des 37 ponts (scrubber)
+    function updateBridgesCarousel() {
+      const carousel = document.getElementById("bridges-carousel");
+      if (!carousel) return;
+
+      // Construction ou mise à jour
+      if (carousel.children.length !== BRIDGES.length) {
+        carousel.innerHTML = "";
+        BRIDGES.forEach(br => {
+          const pill = document.createElement("button");
+          pill.type = "button";
+          pill.id = `pill-bridge-${br.id}`;
+          pill.className = `bridge-chip-pill`;
+          pill.setAttribute("aria-label", `Pont ${br.id} : ${br.name}`);
+          pill.innerHTML = `<span>${br.id}</span>`;
+          pill.onclick = () => selectBridge(br.id);
+          carousel.appendChild(pill);
+        });
+      }
+
+      BRIDGES.forEach(br => {
+        const pill = document.getElementById(`pill-bridge-${br.id}`);
+        if (!pill) return;
+        const isCur = (br.id === pontsState.selectedId);
+        const isDone = pontsState.mastered.has(br.id);
+        pill.classList.toggle("active", isCur);
+        pill.classList.toggle("mastered", isDone);
+        pill.style.borderLeft = isCur ? `3px solid #FFFFFF` : `3px solid ${SECTORS[br.sector].color}`;
+
+        if (isCur) {
+          const targetLeft = pill.offsetLeft - (carousel.clientWidth / 2) + (pill.clientWidth / 2);
+          carousel.scrollTo({ left: targetLeft, behavior: "smooth" });
+        }
+      });
+    }
+
+    // Sélecteur déroulant complet des 37 ponts
+    function updateQuickSelectUI() {
+      const sel = document.getElementById("bridge-quick-select");
+      if (!sel) return;
+
+      if (sel.options.length !== BRIDGES.length) {
+        sel.innerHTML = "";
+        BRIDGES.forEach(br => {
+          const opt = document.createElement("option");
+          opt.value = br.id;
+          sel.appendChild(opt);
+        });
+      }
+
+      BRIDGES.forEach((br, i) => {
+        const opt = sel.options[i];
+        if (!opt) return;
+        const isDone = pontsState.mastered.has(br.id);
+        opt.value = br.id;
+        opt.textContent = `${String(br.id).padStart(2, '0')}. ${br.name} (${SECTORS[br.sector].name.split(" : ")[1]})${isDone ? ' ✓' : ''}`;
+      });
+
+      sel.value = String(pontsState.selectedId);
+    }
+
+    // Zoom interactif & Gestes tactiles / Souris sur Seine SVG
+    function initMapGestures() {
+      const svg = document.getElementById("seine-svg");
+      if (!svg) return;
+
+      let isDragging = false;
+      let startPoint = { x: 0, y: 0 };
+      let startViewBox = { ...pontsState.viewBox };
+      let touchDistance = 0;
+
+      svg.addEventListener("pointerdown", (e) => {
+        if (e.target.closest(".bridge-node")) return;
+        isDragging = true;
+        svg.setPointerCapture(e.pointerId);
+        startPoint = { x: e.clientX, y: e.clientY };
+        startViewBox = { ...pontsState.viewBox };
+        pontsState.camMode = "free";
+        const btnCam = document.getElementById("btn-cam");
+        if (btnCam) btnCam.classList.remove("active");
+      });
+
+      svg.addEventListener("pointermove", (e) => {
+        if (!isDragging) return;
+        const rect = svg.getBoundingClientRect();
+        const scaleX = pontsState.viewBox.w / rect.width;
+        const scaleY = pontsState.viewBox.h / rect.height;
+
+        const dx = (e.clientX - startPoint.x) * scaleX;
+        const dy = (e.clientY - startPoint.y) * scaleY;
+
+        applyViewBox({
+          x: Math.max(0, Math.min(900, startViewBox.x - dx)),
+          y: Math.max(40, Math.min(480, startViewBox.y - dy)),
+          w: startViewBox.w,
+          h: startViewBox.h
+        }, false);
+      });
+
+      const stopDrag = (e) => {
+        if (isDragging) {
+          isDragging = false;
+          try { svg.releasePointerCapture(e.pointerId); } catch (err) {}
+        }
+      };
+
+      svg.addEventListener("pointerup", stopDrag);
+      svg.addEventListener("pointercancel", stopDrag);
+
+      // Molette souris pour zoom centré
+      svg.addEventListener("wheel", (e) => {
+        e.preventDefault();
+        const factor = e.deltaY > 0 ? 1.15 : 0.85;
+        zoomMap(factor);
+      }, { passive: false });
+
+      // Double-clic pour zoomer sur zone
+      svg.addEventListener("dblclick", (e) => {
+        e.preventDefault();
+        zoomMap(0.75);
+      });
+
+      // Pinch to zoom tactile
+      svg.addEventListener("touchstart", (e) => {
+        if (e.touches.length === 2) {
+          touchDistance = Math.hypot(
+            e.touches[0].clientX - e.touches[1].clientX,
+            e.touches[0].clientY - e.touches[1].clientY
+          );
+        }
+      }, { passive: true });
+
+      svg.addEventListener("touchmove", (e) => {
+        if (e.touches.length === 2 && touchDistance > 0) {
+          const currentDist = Math.hypot(
+            e.touches[0].clientX - e.touches[1].clientX,
+            e.touches[0].clientY - e.touches[1].clientY
+          );
+          const factor = touchDistance / currentDist;
+          if (Math.abs(factor - 1) > 0.05) {
+            zoomMap(factor > 1 ? 1.05 : 0.95);
+            touchDistance = currentDist;
+          }
+        }
+      }, { passive: true });
+    }
+
+    function zoomMap(factor) {
+      pontsState.camMode = "free";
+      const btnCam = document.getElementById("btn-cam");
+      if (btnCam) btnCam.classList.remove("active");
+
+      const cur = pontsState.viewBox;
+      const newW = Math.max(120, Math.min(950, cur.w * factor));
+      const newH = newW * (cur.h / cur.w);
+      const dx = (newW - cur.w) / 2;
+      const dy = (newH - cur.h) / 2;
+
+      applyViewBox({
+        x: Math.max(0, Math.min(950 - newW, cur.x - dx)),
+        y: Math.max(40, Math.min(520 - newH, cur.y - dy)),
+        w: newW,
+        h: newH
+      });
     }
 
     function renderFlashcard() {
@@ -4482,7 +5342,7 @@
     function initPonts() {
       loadPontsMastered();
 
-      // Gestion sous-menu ponts
+      // Gestion sous-menu ponts (Carte / Flashcards / Quiz / Récitation)
       document.querySelectorAll(".ponts-submenu .sub-tab").forEach(tab => {
         tab.onclick = () => {
           document.querySelectorAll(".ponts-submenu .sub-tab").forEach(t => t.classList.remove("active"));
@@ -4495,50 +5355,119 @@
         };
       });
 
+      // Gestion des puces de secteurs (Est, St-Louis, Cité, Musées, Ouest)
+      document.querySelectorAll(".sector-chip").forEach(chip => {
+        chip.onclick = () => {
+          const secId = parseInt(chip.dataset.sec, 10);
+          const firstBridge = BRIDGES.find(br => br.sector === secId);
+          if (firstBridge) {
+            selectBridge(firstBridge.id, "sector");
+          }
+        };
+      });
+
+      // Bouton caméra Suivi automatique
       const btnCam = document.getElementById("btn-cam");
       if (btnCam) {
         btnCam.onclick = () => {
-          const modes = ["follow", "sector", "full"];
-          pontsState.camMode = modes[(modes.indexOf(pontsState.camMode) + 1) % modes.length];
-          btnCam.textContent = `🎯 ${pontsState.camMode}`;
+          if (pontsState.camMode === "follow") {
+            pontsState.camMode = "full";
+            btnCam.classList.remove("active");
+          } else {
+            pontsState.camMode = "follow";
+            btnCam.classList.add("active");
+          }
           renderMapAndDetails();
         };
       }
 
+      // Boutons Zoom In / Zoom Out / Reset
+      const btnZoomIn = document.getElementById("btn-zoom-in");
+      if (btnZoomIn) {
+        btnZoomIn.onclick = () => zoomMap(0.75);
+      }
+
+      const btnZoomOut = document.getElementById("btn-zoom-out");
+      if (btnZoomOut) {
+        btnZoomOut.onclick = () => zoomMap(1.33);
+      }
+
+      const btnZoomReset = document.getElementById("btn-zoom-reset");
+      if (btnZoomReset) {
+        btnZoomReset.onclick = () => {
+          pontsState.camMode = "full";
+          const btnC = document.getElementById("btn-cam");
+          if (btnC) btnC.classList.remove("active");
+          applyViewBox({ x: 35, y: 95, w: 935, h: 440 });
+        };
+      }
+
+      // Bouton Agrandir / Réduire la carte
+      const btnMapExpand = document.getElementById("btn-map-expand");
+      const mapBox = document.getElementById("ponts-map-box");
+      const expandTxt = document.getElementById("btn-expand-txt");
+      if (btnMapExpand && mapBox) {
+        btnMapExpand.onclick = () => {
+          pontsState.mapExpanded = !pontsState.mapExpanded;
+          mapBox.classList.toggle("expanded", pontsState.mapExpanded);
+          if (expandTxt) expandTxt.textContent = pontsState.mapExpanded ? "Réduire" : "Agrandir";
+          renderMapAndDetails();
+        };
+      }
+
+      // Bouton Noms de ponts
       const btnLabels = document.getElementById("btn-labels");
       if (btnLabels) {
         btnLabels.onclick = () => {
           pontsState.showLabels = !pontsState.showLabels;
+          btnLabels.classList.toggle("active", pontsState.showLabels);
           renderMapAndDetails();
         };
       }
 
+      // Sélecteur rapide dropdown
+      const bridgeSelect = document.getElementById("bridge-quick-select");
+      if (bridgeSelect) {
+        bridgeSelect.onchange = (e) => {
+          const id = parseInt(e.target.value, 10);
+          if (!isNaN(id)) selectBridge(id, "follow");
+        };
+      }
+
+      // Navigation Amont / Aval
       const btnPrev = document.getElementById("btn-prev");
       if (btnPrev) {
         btnPrev.onclick = () => {
-          pontsState.selectedId = pontsState.selectedId > 1 ? pontsState.selectedId - 1 : 37;
-          renderMapAndDetails();
+          const prevId = pontsState.selectedId > 1 ? pontsState.selectedId - 1 : 37;
+          selectBridge(prevId);
         };
       }
 
       const btnNext = document.getElementById("btn-next");
       if (btnNext) {
         btnNext.onclick = () => {
-          pontsState.selectedId = pontsState.selectedId < 37 ? pontsState.selectedId + 1 : 1;
-          renderMapAndDetails();
+          const nextId = pontsState.selectedId < 37 ? pontsState.selectedId + 1 : 1;
+          selectBridge(nextId);
         };
       }
 
+      // Bouton Marquer maîtrisé
       const btnToggleDone = document.getElementById("btn-toggle-done");
       if (btnToggleDone) {
         btnToggleDone.onclick = () => {
-          if (pontsState.mastered.has(pontsState.selectedId)) pontsState.mastered.delete(pontsState.selectedId);
-          else pontsState.mastered.add(pontsState.selectedId);
+          if (pontsState.mastered.has(pontsState.selectedId)) {
+            pontsState.mastered.delete(pontsState.selectedId);
+            showToast(`Pont ${pontsState.selectedId} marqué non-maîtrisé`);
+          } else {
+            pontsState.mastered.add(pontsState.selectedId);
+            showToast(`Pont ${pontsState.selectedId} marqué comme maîtrisé ! ✓`);
+          }
           savePontsMastered();
           renderMapAndDetails();
         };
       }
 
+      // Flashcards
       const fcBox = document.getElementById("fc-box");
       if (fcBox) {
         fcBox.onclick = () => {
@@ -4567,6 +5496,7 @@
         };
       }
 
+      // Quiz & Récitation
       const btnQMode = document.getElementById("btn-qmode");
       if (btnQMode) btnQMode.onclick = initQuiz;
 
@@ -4583,6 +5513,24 @@
           if (t) t.textContent = BRIDGES[chainIdx].name;
         };
       }
+
+      // Initialiser les interactions tactiles et souris sur la carte
+      initMapGestures();
+
+      // Navigation au clavier pour le confort nautique
+      document.addEventListener("keydown", (e) => {
+        if (currentTab !== "ponts") return;
+        if (document.activeElement && ['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement.tagName)) return;
+        if (e.key === "ArrowLeft") {
+          e.preventDefault();
+          const prevId = pontsState.selectedId > 1 ? pontsState.selectedId - 1 : 37;
+          selectBridge(prevId);
+        } else if (e.key === "ArrowRight") {
+          e.preventDefault();
+          const nextId = pontsState.selectedId < 37 ? pontsState.selectedId + 1 : 1;
+          selectBridge(nextId);
+        }
+      });
     }
 
     // ==========================================================================
