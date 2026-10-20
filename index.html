@@ -78,6 +78,14 @@
       --speed-bg: #EFF6FF;
       --speed-border: #BFDBFE;
       --speed-text: #002D72;
+      /* PONTS VARIABLES */
+      --primary: var(--pc-orange);
+      --card-bg: var(--bg-card);
+      --border: var(--border-card);
+      --bg: var(--bg-subtle);
+      --navy-card: #EFF6FF;
+      --success: #10B981;
+      --danger: #EF4444;
     }
 
     body.dark {
@@ -93,6 +101,14 @@
       --speed-bg: #17233D;
       --speed-border: #25365A;
       --speed-text: #38BDF8;
+      /* PONTS VARIABLES DARK */
+      --primary: #F37021;
+      --card-bg: #121A2D;
+      --border: #1E2942;
+      --bg: #0E1626;
+      --navy-card: #152238;
+      --success: #10B981;
+      --danger: #F87171;
     }
 
     body {
@@ -861,7 +877,7 @@
        SYSTÈME MULTIPAGES FLUIDE & NAVIGATION INFÉRIEURE NATIVE (iOS & MOBILE)
        ========================================================================== */
 
-    .tab-pane {
+    .tab-pane, .page {
       display: none;
       width: 100%;
       flex-direction: column;
@@ -869,11 +885,11 @@
       animation: tabFadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
     }
     @media (min-width: 640px) {
-      .tab-pane {
+      .tab-pane, .page {
         gap: 18px;
       }
     }
-    .tab-pane.active {
+    .tab-pane.active, .page.active {
       display: flex;
     }
 
@@ -914,7 +930,7 @@
       max-width: 680px;
       margin: 0 auto;
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(4, 1fr);
       padding: 0 10px;
       gap: 6px;
     }
@@ -1939,6 +1955,170 @@
     @media (min-width: 640px) {
       .visible-sm { display: inline-flex !important; }
     }
+
+    /* ==========================================================================
+       PAGE 4 : 37 PONTS DE PARIS
+       ========================================================================== */
+    .ponts-submenu {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
+      background: var(--card-bg);
+      padding: 6px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    .sub-tab {
+      background: none;
+      border: none;
+      padding: 9px 4px;
+      border-radius: 9px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .sub-tab:active {
+      transform: scale(0.96);
+    }
+    .sub-tab.active {
+      background: var(--primary);
+      color: #fff;
+      box-shadow: 0 2px 5px rgba(243, 112, 33, 0.35);
+    }
+    .ponts-view { display: none; flex-direction: column; gap: 12px; }
+    .ponts-view.active { display: flex; }
+    .map-box {
+      position: relative;
+      background: #070b14;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+    .map-box .btn-changer {
+      background: rgba(18, 26, 45, 0.85);
+      color: #F8FAFC;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    }
+    svg#seine-svg { width: 100%; height: 235px; display: block; }
+    .bridge-card-detail {
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 16px;
+      border: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    .bridge-name-lg { font-size: 1.25rem; font-weight: 800; color: var(--text-main); }
+    .flashcard-box {
+      background: linear-gradient(135deg, var(--card-bg), var(--navy-card));
+      border: 2px solid var(--primary);
+      border-radius: 16px;
+      padding: 24px 16px;
+      text-align: center;
+      min-height: 180px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+    .flashcard-box:active {
+      transform: scale(0.98);
+    }
+    .action-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    .btn-action {
+      background: var(--card-bg);
+      color: var(--text-main);
+      border: 1px solid var(--border);
+      padding: 11px;
+      border-radius: 12px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.15s ease;
+    }
+    .btn-action:active {
+      transform: scale(0.96);
+    }
+    .btn-action.primary {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+      box-shadow: 0 2px 6px rgba(243, 112, 33, 0.35);
+    }
+    .btn-action.ok {
+      background: rgba(16, 185, 129, 0.15);
+      color: var(--success);
+      border-color: var(--success);
+    }
+    .btn-action.err {
+      background: rgba(239, 68, 68, 0.15);
+      color: var(--danger);
+      border-color: var(--danger);
+    }
+    .btn-changer {
+      background: var(--card-bg);
+      color: var(--text-main);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 700;
+      transition: all 0.15s ease;
+    }
+    .btn-changer:active {
+      transform: scale(0.96);
+    }
+    .qcm-btn {
+      background: var(--bg);
+      color: var(--text-main);
+      border: 1px solid var(--border);
+      padding: 12px 14px;
+      border-radius: 12px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      text-align: left;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .qcm-btn:active {
+      transform: scale(0.98);
+    }
+    .qcm-btn.correct { background: rgba(16,185,129,0.22); border-color: var(--success); color: var(--success); }
+    .qcm-btn.wrong { background: rgba(239,68,68,0.22); border-color: var(--danger); color: var(--danger); }
+    .mobile-inp {
+      width: 100%;
+      background: var(--bg);
+      color: var(--text-main);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px 14px;
+      font-size: 0.95rem;
+      font-family: inherit;
+      outline: none;
+      transition: border-color 0.15s ease;
+    }
+    .mobile-inp:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 2px rgba(243, 112, 33, 0.25);
+    }
   </style>
 </head>
 <body>
@@ -2887,6 +3067,94 @@
         </div>
       </footer>
     </section>
+
+    <!-- ==========================================================================
+         PAGE 4 : 37 PONTS DE PARIS (CARTE, FLASHCARDS, QUIZ, RÉCITATION)
+         ========================================================================== -->
+    <section class="page" id="page-ponts" role="tabpanel" aria-labelledby="nav-btn-ponts">
+      <!-- SOUS-MENU POUR LES 4 MODULES DE PONTS -->
+      <nav class="ponts-submenu">
+        <button class="sub-tab active" data-sub="explore">🗺️ Carte</button>
+        <button class="sub-tab" data-sub="flashcard">🎴 Flashcards</button>
+        <button class="sub-tab" data-sub="quiz">🎯 Quiz</button>
+        <button class="sub-tab" data-sub="chain">⌨️ Récitation</button>
+      </nav>
+
+      <!-- SOUS-MODULE 1 : CARTE INTERACTIVE -->
+      <div class="ponts-view active" id="subview-explore">
+        <div class="map-box">
+          <div style="position:absolute; top:8px; left:8px; right:8px; display:flex; justify-content:space-between; z-index:5;">
+            <button class="btn-changer" id="btn-cam" style="font-size:0.75rem; padding:4px 8px;">🎯 Suivi auto</button>
+            <button class="btn-changer" id="btn-labels" style="font-size:0.75rem; padding:4px 8px;">👁️ Noms</button>
+          </div>
+          <svg id="seine-svg" viewBox="0 0 1000 560" preserveAspectRatio="xMidYMid meet"></svg>
+        </div>
+        <div class="bridge-card-detail">
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <span id="bridge-sec-tag" style="font-size:0.7rem; font-weight:800; padding:2px 8px; border-radius:99px; background:var(--primary); color:#fff;">Secteur 1</span>
+            <button class="btn-changer" id="btn-toggle-done" style="background:var(--success); color:#fff; border:none; padding:4px 8px;">Marquer maîtrisé</button>
+          </div>
+          <div class="bridge-name-lg" id="bridge-name">Pont amont</div>
+          <div style="font-size:0.8rem; color:var(--text-muted);" id="bridge-meta">Rives : 13e ↔ 12e | 1969</div>
+          <div style="font-size:0.82rem; background:var(--bg); padding:8px; border-radius:8px;" id="bridge-clue">💡 Périphérique Est : entrée de la Seine dans Paris.</div>
+          <div class="action-row">
+            <button class="btn-action" id="btn-prev">◀ Amont</button>
+            <button class="btn-action primary" id="btn-next">Aval ▶</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- SOUS-MODULE 2 : FLASHCARDS -->
+      <div class="ponts-view" id="subview-flashcard">
+        <div class="flashcard-box" id="fc-box">
+          <div style="font-size:0.75rem; color:var(--primary); font-weight:700;" id="fc-top-lbl">PONT N°1</div>
+          <div style="font-size:1.1rem; font-weight:800;" id="fc-main-txt">13e (RG) ↔ 12e (RD)</div>
+          <div style="font-size:0.8rem; color:var(--text-muted);" id="fc-sub-txt">Touchez pour retourner</div>
+        </div>
+        <div class="action-row">
+          <button class="btn-action err" id="fc-again">❌ À revoir</button>
+          <button class="btn-action ok" id="fc-known">✅ Connu</button>
+        </div>
+      </div>
+
+      <!-- SOUS-MODULE 3 : QUIZ -->
+      <div class="ponts-view" id="subview-quiz">
+        <div class="bridge-card-detail">
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <span style="font-size:0.75rem; font-weight:800; color:var(--primary);" id="quiz-score-lbl">Score : 0/0</span>
+            <button class="btn-changer" id="btn-qmode" style="font-size:0.7rem; padding:4px 8px;">QCM / Carte</button>
+          </div>
+          <div class="bridge-name-lg" id="quiz-question-title" style="font-size:1.05rem;">Quel est ce pont ?</div>
+          <div style="font-size:0.78rem; color:var(--text-muted);" id="quiz-hint">Indice</div>
+          <div style="display:flex; flex-direction:column; gap:6px; margin-top:4px;" id="quiz-options-box"></div>
+        </div>
+      </div>
+
+      <!-- SOUS-MODULE 4 : RÉCITATION 1-37 -->
+      <div class="ponts-view" id="subview-chain">
+        <div class="bridge-card-detail">
+          <div style="font-size:0.75rem; font-weight:800; color:var(--primary);" id="chain-prog-lbl">Pont n°1 / 37</div>
+          <div class="bridge-name-lg" id="chain-title">❓ Quel est le pont n°1 ?</div>
+          <div style="font-size:0.8rem; color:var(--text-muted);" id="chain-hint">Indice</div>
+          <input type="text" class="mobile-inp" id="chain-input" placeholder="Tapez le nom (ex: Sully, Bir-Hakeim...)" autocomplete="off">
+          <div id="chain-feedback" style="font-size:0.84rem; font-weight:700; min-height:1.3em;"></div>
+          <div class="action-row">
+            <button class="btn-action" id="chain-reveal">👁️ Voir</button>
+            <button class="btn-action primary" id="chain-submit">Valider</button>
+          </div>
+        </div>
+      </div>
+
+      <footer class="app-footer">
+        <div class="footer-sync">
+          <span class="footer-pulse-dot"></span>
+          <span>37 Ponts de Paris · Ordre Amont ➔ Aval</span>
+        </div>
+        <div class="footer-meta">
+          Repères fluviaux stratégiques pour équipages BPI
+        </div>
+      </footer>
+    </section>
   </main>
 
   <!-- ==========================================================================
@@ -2895,7 +3163,7 @@
   <nav class="bottom-nav" id="bottom-navbar" aria-label="Navigation principale de l'application">
     <div class="bottom-nav-inner">
       <!-- ONGLET 1: TABLEAU DE BORD -->
-      <button type="button" class="bottom-nav-btn active" id="nav-btn-dashboard" onclick="switchTab('dashboard')" aria-selected="true" aria-controls="tab-dashboard">
+      <button type="button" class="bottom-nav-btn active" id="nav-btn-dashboard" onclick="switchTab('dashboard')" aria-selected="true" aria-controls="tab-dashboard" data-page="dashboard">
         <span class="bottom-nav-icon-wrap">
           <svg class="bottom-nav-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="12" cy="5" r="3"></circle>
@@ -2907,7 +3175,7 @@
       </button>
 
       <!-- ONGLET 2: CHECK-LIST -->
-      <button type="button" class="bottom-nav-btn" id="nav-btn-checklist" onclick="switchTab('checklist')" aria-selected="false" aria-controls="tab-checklist">
+      <button type="button" class="bottom-nav-btn" id="nav-btn-checklist" onclick="switchTab('checklist')" aria-selected="false" aria-controls="tab-checklist" data-page="checklist">
         <span class="bottom-nav-icon-wrap">
           <svg class="bottom-nav-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
             <path d="M9 11l3 3L22 4"></path>
@@ -2917,14 +3185,28 @@
         <span class="bottom-nav-label">Check-list</span>
       </button>
 
-      <!-- ONGLET 3: ÉCLUSES -->
-      <button type="button" class="bottom-nav-btn" id="nav-btn-directory" onclick="switchTab('directory')" aria-selected="false" aria-controls="tab-directory">
+      <!-- ONGLET 3: ÉCLUSES / ANNUAIRE -->
+      <button type="button" class="bottom-nav-btn" id="nav-btn-directory" onclick="switchTab('directory')" aria-selected="false" aria-controls="tab-directory" data-page="directory">
         <span class="bottom-nav-icon-wrap">
           <svg class="bottom-nav-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
             <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
           </svg>
         </span>
         <span class="bottom-nav-label">Écluses</span>
+      </button>
+
+      <!-- ONGLET 4: PONTS (NOUVELLE PAGE) -->
+      <button type="button" class="bottom-nav-btn nav-item" id="nav-btn-ponts" onclick="switchTab('ponts')" aria-selected="false" aria-controls="page-ponts" data-page="ponts">
+        <span class="bottom-nav-icon-wrap">
+          <svg class="bottom-nav-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 19h18"></path>
+            <path d="M5 19V9a1 1 0 0 1 1-1h1a1 1 0 0 1 1 1v10"></path>
+            <path d="M16 19V9a1 1 0 0 1 1-1h1a1 1 0 0 1 1 1v10"></path>
+            <path d="M4 13c4-4 12-4 16 0"></path>
+            <path d="M12 9v10"></path>
+          </svg>
+        </span>
+        <span class="bottom-nav-label">Ponts</span>
       </button>
     </div>
   </nav>
@@ -3725,13 +4007,14 @@
     let currentTab = 'dashboard';
 
     function switchTab(tabId) {
-      if (!['dashboard', 'checklist', 'directory'].includes(tabId)) return;
+      if (!['dashboard', 'checklist', 'directory', 'ponts'].includes(tabId)) return;
       currentTab = tabId;
 
       // Afficher l'onglet sélectionné et masquer les autres sans rechargement
-      const panes = document.querySelectorAll('.tab-pane');
+      const targetId = tabId === 'ponts' ? 'page-ponts' : `tab-${tabId}`;
+      const panes = document.querySelectorAll('.tab-pane, .page');
       panes.forEach(pane => {
-        if (pane.id === `tab-${tabId}`) {
+        if (pane.id === targetId || pane.id === `tab-${tabId}`) {
           pane.classList.add('active');
           pane.style.display = 'flex';
         } else {
@@ -3743,7 +4026,7 @@
       // Mettre à jour la barre de navigation inférieure fixe
       const navButtons = document.querySelectorAll('.bottom-nav-btn');
       navButtons.forEach(btn => {
-        const isActive = btn.id === `nav-btn-${tabId}`;
+        const isActive = btn.id === `nav-btn-${tabId}` || (btn.dataset && btn.dataset.page === tabId);
         btn.classList.toggle('active', isActive);
         btn.setAttribute('aria-selected', isActive ? 'true' : 'false');
       });
@@ -3761,7 +4044,15 @@
         } else if (tabId === 'directory') {
           brandSup.textContent = 'Voies Navigables de France';
           brandTitle.textContent = 'Écluses Suresnes ↔ Alfortville';
+        } else if (tabId === 'ponts') {
+          brandSup.textContent = 'Navigation & Repères fluviaux';
+          brandTitle.textContent = '37 Ponts de Paris';
         }
+      }
+
+      // Initialiser le rendu si onglet Ponts
+      if (tabId === 'ponts') {
+        renderPontsSubModule();
       }
 
       // Défilement en haut de page instantané
@@ -3953,7 +4244,349 @@
     }
 
     // ==========================================================================
-    // 10. INITIALIZATION
+    // 10. MODULE 37 PONTS DE PARIS (CARTE, FLASHCARDS, QUIZ, RÉCITATION)
+    // ==========================================================================
+    const SECTORS = {
+      1: { name: "Secteur 1 : Est (1-8)", color: "#f97316", box: "670 240 310 290" },
+      2: { name: "Secteur 2 : St-Louis (9-13)", color: "#10b981", box: "575 180 140 130" },
+      3: { name: "Secteur 3 : Cité (14-21)", color: "#a855f7", box: "475 150 145 145" },
+      4: { name: "Secteur 4 : Musées (22-28)", color: "#eab308", box: "235 95 260 115" },
+      5: { name: "Secteur 5 : Ouest (29-37)", color: "#ec4899", box: "35 155 240 375" }
+    };
+
+    const BRIDGES = [
+      { id: 1, name: "Pont amont", sector: 1, type: "Routier (Périph.)", banks: "13e (RG) ↔ 12e (RD)", year: 1969, key: "Amont", clue: "Périphérique Est : entrée de la Seine dans Paris.", x: 935, y: 495 },
+      { id: 2, name: "Pont National", sector: 1, type: "Routier & Tram", banks: "13e (RG) ↔ 12e (RD)", year: 1853, key: "Nation", clue: "Boulevard des Maréchaux.", x: 902, y: 465 },
+      { id: 3, name: "Pont de Tolbiac", sector: 1, type: "Routier", banks: "13e (BnF) ↔ 12e (Bercy)", year: 1882, key: "Tolbiac", clue: "Face aux 4 tours de la BnF.", x: 868, y: 432 },
+      { id: 4, name: "Passerelle Simone-de-Beauvoir", sector: 1, type: "Piéton", banks: "Parvis BnF ↔ Parc de Bercy", year: 2006, key: "Simone", clue: "Passerelle piétonne en lentille centrale.", x: 836, y: 400 },
+      { id: 5, name: "Pont de Bercy", sector: 1, type: "Route + Métro 6", banks: "13e ↔ 12e (Bercy)", year: 1864, key: "Boire", clue: "Pont à 2 niveaux portant le Métro 6.", x: 804, y: 368 },
+      { id: 6, name: "Pont Charles-de-Gaulle", sector: 1, type: "Routier", banks: "Austerlitz ↔ Gare de Lyon", year: 1996, key: "Charles", clue: "Tablier blanc profilé comme une aile d'avion.", x: 772, y: 336 },
+      { id: 7, name: "Viaduc d'Austerlitz", sector: 1, type: "Ferroviaire", banks: "Austerlitz ↔ Quai Rapée", year: 1904, key: "Viaduc", clue: "Arche métallique réservée au Métro 5.", x: 742, y: 308 },
+      { id: 8, name: "Pont d'Austerlitz", sector: 1, type: "Routier", banks: "Jardin des Plantes ↔ Bastille", year: 1855, key: "Austerlitz", clue: "Pont routier face au Jardin des Plantes.", x: 712, y: 282 },
+      { id: 9, name: "Pont de Sully", sector: 2, type: "Routier", banks: "5e ↔ Île St-Louis ↔ 4e", year: 1876, key: "Sully", clue: "Traverse toute la Seine sur la pointe est de l'Île St-Louis.", x: 675, y: 258 },
+      { id: 10, name: "Pont de la Tournelle", sector: 2, type: "Routier", banks: "5e (RG) ↔ Île Saint-Louis", year: 1930, key: "tourne", clue: "Bras sud, statue de Sainte Geneviève.", x: 642, y: 274 },
+      { id: 11, name: "Pont Marie", sector: 2, type: "Routier", banks: "Île Saint-Louis ↔ 4e", year: 1635, key: "Marie", clue: "2e plus ancien pont de Paris (1635).", x: 652, y: 222 },
+      { id: 12, name: "Pont Louis-Philippe", sector: 2, type: "Routier", banks: "Île Saint-Louis ↔ Marais", year: 1862, key: "Louis-Philippe", clue: "Relie l'île au quartier du Marais.", x: 622, y: 210 },
+      { id: 13, name: "Pont Saint-Louis", sector: 2, type: "Piéton", banks: "Île St-Louis ↔ Île de la Cité", year: 1970, key: "Saint-Louis", clue: "Passerelle reliant les deux îles.", x: 608, y: 242 },
+      { id: 14, name: "Pont de l'Archevêché", sector: 3, type: "Routier", banks: "5e ↔ Chevet Notre-Dame", year: 1828, key: "Archevêque", clue: "Derrière le chevet de Notre-Dame.", x: 590, y: 266 },
+      { id: 15, name: "Pont au Double", sector: 3, type: "Routier", banks: "5e ↔ Flanc Notre-Dame", year: 1883, key: "Double", clue: "Nom du péage médiéval.", x: 568, y: 256 },
+      { id: 16, name: "Pont d'Arcole", sector: 3, type: "Routier", banks: "Cité ↔ Hôtel de Ville", year: 1855, key: "Arcole", clue: "Débouche face à l'Hôtel de Ville.", x: 578, y: 198 },
+      { id: 17, name: "Petit-Pont-Cardinal-Lustiger", sector: 3, type: "Routier", banks: "Rue St-Jacques ↔ Cité", year: 1853, key: "Petit", clue: "Le plus court de Paris (32 m).", x: 546, y: 246 },
+      { id: 18, name: "Pont Notre-Dame", sector: 3, type: "Routier", banks: "Cité ↔ Quai de Gesvres", year: 1914, key: "Notre-Dame", clue: "Prolonge le Petit-Pont.", x: 556, y: 188 },
+      { id: 19, name: "Pont Saint-Michel", sector: 3, type: "Routier", banks: "Place St-Michel ↔ Cité", year: 1857, key: "Saint-Michel", clue: "Face à la fontaine Saint-Michel.", x: 524, y: 236 },
+      { id: 20, name: "Pont au Change", sector: 3, type: "Routier", banks: "Conciergerie ↔ Châtelet", year: 1860, key: "Changent", clue: "Ancien pont des changeurs.", x: 534, y: 178 },
+      { id: 21, name: "Pont Neuf", sector: 3, type: "Routier", banks: "6e ↔ Pointe Cité ↔ 1er", year: 1607, key: "Neuf", clue: "Le plus ancien pont de Paris (1607).", x: 498, y: 195 },
+      { id: 22, name: "Pont des Arts", sector: 4, type: "Piéton", banks: "Institut de France ↔ Louvre", year: 1804, key: "Arts", clue: "Passerelle piétonne face au Louvre.", x: 462, y: 175 },
+      { id: 23, name: "Pont du Carrousel", sector: 4, type: "Routier", banks: "Quai Voltaire ↔ Louvre", year: 1939, key: "Carrousel", clue: "Face aux guichets du Louvre.", x: 430, y: 160 },
+      { id: 24, name: "Pont Royal", sector: 4, type: "Routier", banks: "Orsay ↔ Tuileries", year: 1689, key: "Royal", clue: "Financé par Louis XIV en 1689.", x: 398, y: 146 },
+      { id: 25, name: "Passerelle Léopold-Sédar-Senghor", sector: 4, type: "Piéton", banks: "Orsay ↔ Tuileries", year: 1999, key: "Senghor", clue: "Ancienne passerelle de Solférino.", x: 366, y: 135 },
+      { id: 26, name: "Pont de la Concorde", sector: 4, type: "Routier", banks: "Assemblée nat. ↔ Concorde", year: 1791, key: "Concorde", clue: "Pierres issues de la Bastille.", x: 332, y: 128 },
+      { id: 27, name: "Pont Alexandre-III", sector: 4, type: "Routier", banks: "Invalides ↔ Grand Palais", year: 1900, key: "Alexandre", clue: "4 pylônes à Pégases dorés.", x: 298, y: 138 },
+      { id: 28, name: "Pont des Invalides", sector: 4, type: "Routier", banks: "7e ↔ 8e", year: 1856, key: "Invalides", clue: "Le pont le plus bas de Paris.", x: 266, y: 155 },
+      { id: 29, name: "Pont de l'Alma", sector: 5, type: "Routier", banks: "7e ↔ 8e/16e", year: 1974, key: "Alma", clue: "Statue du Zouave (crues).", x: 236, y: 182 },
+      { id: 30, name: "Passerelle Debilly", sector: 5, type: "Piéton", banks: "Quai Branly ↔ Palais de Tokyo", year: 1900, key: "Debilly", clue: "Passerelle métallique de 1900.", x: 212, y: 214 },
+      { id: 31, name: "Pont d'Iéna", sector: 5, type: "Routier", banks: "Tour Eiffel ↔ Trocadéro", year: 1814, key: "Iéna", clue: "Entre Tour Eiffel et Trocadéro.", x: 188, y: 250 },
+      { id: 32, name: "Pont de Bir-Hakeim", sector: 5, type: "Route + Métro", banks: "15e ↔ Île aux Cygnes ↔ 16e", year: 1905, key: "Bir-Hakeim", clue: "Viaduc du Métro 6.", x: 166, y: 292 },
+      { id: 33, name: "Pont Rouelle", sector: 5, type: "Ferroviaire", banks: "15e ↔ Île aux Cygnes ↔ 16e", year: 1900, key: "Rouelle", clue: "Pont RER C sur l'Île aux Cygnes.", x: 146, y: 334 },
+      { id: 34, name: "Pont de Grenelle", sector: 5, type: "Routier", banks: "15e ↔ Île aux Cygnes ↔ 16e", year: 1968, key: "Grenelle", clue: "Statue de la Liberté.", x: 126, y: 376 },
+      { id: 35, name: "Pont Mirabeau", sector: 5, type: "Routier", banks: "15e ↔ 16e", year: 1896, key: "Mirabeau", clue: "Poème de Guillaume Apollinaire.", x: 106, y: 418 },
+      { id: 36, name: "Pont du Garigliano", sector: 5, type: "Routier", banks: "15e ↔ 16e", year: 1966, key: "Garigliano", clue: "Pont le plus haut de Paris.", x: 86, y: 460 },
+      { id: 37, name: "Pont aval", sector: 5, type: "Routier (Périph.)", banks: "15e ↔ 16e", year: 1968, key: "Aval", clue: "Périphérique Ouest (sortie).", x: 65, y: 502 }
+    ];
+
+    let pontsState = {
+      subModule: "explore",
+      selectedId: 1,
+      camMode: "follow",
+      showLabels: false,
+      fcFlipped: false,
+      quizSubMode: "qcm",
+      quizTarget: 1,
+      quizScore: 0,
+      quizTotal: 0,
+      quizOptions: [],
+      mastered: new Set()
+    };
+
+    function loadPontsMastered() {
+      try {
+        const stored = localStorage.getItem("bpi_ponts_mastered");
+        pontsState.mastered = new Set(stored ? JSON.parse(stored) : []);
+      } catch (e) {
+        pontsState.mastered = new Set();
+      }
+    }
+
+    function savePontsMastered() {
+      try {
+        localStorage.setItem("bpi_ponts_mastered", JSON.stringify([...pontsState.mastered]));
+      } catch (e) {}
+    }
+
+    function renderPontsSubModule() {
+      if (pontsState.subModule === "explore") renderMapAndDetails();
+      else if (pontsState.subModule === "flashcard") renderFlashcard();
+      else if (pontsState.subModule === "quiz") initQuiz();
+      else if (pontsState.subModule === "chain") renderChain();
+    }
+
+    function renderMapAndDetails() {
+      const svg = document.getElementById("seine-svg");
+      if (!svg) return;
+      const b = BRIDGES.find(x => x.id === pontsState.selectedId) || BRIDGES[0];
+      const sec = SECTORS[b.sector];
+
+      let vb = "35 95 935 440";
+      if (pontsState.camMode === "follow") {
+        const w = (b.sector === 2 || b.sector === 3) ? 185 : 250;
+        const h = (b.sector === 2 || b.sector === 3) ? 115 : 155;
+        vb = `${Math.max(20, b.x - w/2)} ${Math.max(80, b.y - h/2)} ${w} ${h}`;
+      } else if (pontsState.camMode === "sector") {
+        vb = sec.box;
+      }
+      svg.setAttribute("viewBox", vb);
+
+      svg.innerHTML = `
+        <path d="M 955 515 Q 820 385 685 262 C 620 225 560 205 495 194 C 415 150 355 125 320 128 C 250 132 195 225 150 325 Q 105 420 50 520" fill="none" stroke="#0284c7" stroke-width="26" stroke-linecap="round" opacity="0.85" />
+        <path d="M 680 260 C 645 205 565 170 498 195" fill="none" stroke="#0284c7" stroke-width="14" stroke-linecap="round" />
+        <path d="M 680 260 C 635 280 560 265 498 195" fill="none" stroke="#0284c7" stroke-width="14" stroke-linecap="round" />
+        <ellipse cx="644" cy="244" rx="27" ry="10" transform="rotate(-14 644 244)" fill="#fde68a" stroke="#0b1120" stroke-width="1.5" />
+        <ellipse cx="554" cy="218" rx="43" ry="14" transform="rotate(-17 554 218)" fill="#fde68a" stroke="#0b1120" stroke-width="1.5" />
+      `;
+
+      BRIDGES.forEach(br => {
+        const isCur = (br.id === pontsState.selectedId);
+        const isDone = pontsState.mastered.has(br.id);
+        const r = 9;
+        const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
+        g.style.cursor = "pointer";
+        g.innerHTML = `
+          <circle cx="${br.x}" cy="${br.y}" r="18" fill="transparent" />
+          ${isCur ? `<circle cx="${br.x}" cy="${br.y}" r="${r+5}" fill="none" stroke="#ffffff" stroke-width="2.5" />` : ""}
+          <circle cx="${br.x}" cy="${br.y}" r="${r}" fill="${SECTORS[br.sector].color}" stroke="${isDone ? '#10b981' : '#0b1120'}" stroke-width="${isDone ? 2.5 : 1.5}" />
+          <text x="${br.x}" y="${br.y + 3}" text-anchor="middle" fill="#0b1120" font-size="7" font-weight="800">${br.id}</text>
+          ${pontsState.showLabels ? `<text x="${br.x}" y="${br.y - 12}" text-anchor="middle" fill="#fff" font-size="6" font-weight="700" style="paint-order:stroke;stroke:#000;stroke-width:2px;">${br.name}</text>` : ""}
+        `;
+        g.onclick = () => { pontsState.selectedId = br.id; renderMapAndDetails(); };
+        svg.appendChild(g);
+      });
+
+      const secTag = document.getElementById("bridge-sec-tag");
+      if (secTag) secTag.textContent = `Secteur ${b.sector} (Pont ${b.id}/37)`;
+      const nameEl = document.getElementById("bridge-name");
+      if (nameEl) nameEl.textContent = b.name;
+      const metaEl = document.getElementById("bridge-meta");
+      if (metaEl) metaEl.textContent = `Rives : ${b.banks} | An : ${b.year}`;
+      const clueEl = document.getElementById("bridge-clue");
+      if (clueEl) clueEl.innerHTML = `💡 <strong>${b.key}</strong> : ${b.clue}`;
+      const btnDone = document.getElementById("btn-toggle-done");
+      if (btnDone) {
+        const isMastered = pontsState.mastered.has(b.id);
+        btnDone.textContent = isMastered ? "✓ Maîtrisé" : "Marquer maîtrisé";
+        btnDone.style.background = isMastered ? "var(--success)" : "var(--primary)";
+      }
+    }
+
+    function renderFlashcard() {
+      const b = BRIDGES.find(x => x.id === pontsState.selectedId) || BRIDGES[0];
+      const topLbl = document.getElementById("fc-top-lbl");
+      if (topLbl) topLbl.textContent = `PONT N°${b.id} / 37 (Secteur ${b.sector})`;
+      const box = document.getElementById("fc-box");
+      if (!box) return;
+      box.innerHTML = !pontsState.fcFlipped ? `
+        <div style="font-size:1.15rem; font-weight:800;">${b.banks}</div>
+        <div style="font-size:0.8rem; color:var(--text-muted);">Indice : ${b.clue}</div>
+        <div style="font-size:0.75rem; color:var(--primary); margin-top:4px;">👆 Toucher pour voir le nom</div>
+      ` : `
+        <div style="font-size:0.75rem; color:var(--text-muted);">Mot-clé : « ${b.key} »</div>
+        <div style="font-size:1.35rem; font-weight:800; color:var(--success);">${b.name}</div>
+        <div style="font-size:0.8rem;">${b.type} (${b.year})</div>
+      `;
+    }
+
+    function initQuiz() {
+      const target = BRIDGES[Math.floor(Math.random() * BRIDGES.length)];
+      pontsState.quizTarget = target.id;
+      const distractors = BRIDGES.filter(x => x.id !== target.id).sort(() => Math.random() - 0.5).slice(0, 3);
+      pontsState.quizOptions = [target, ...distractors].sort(() => Math.random() - 0.5);
+
+      const scoreLbl = document.getElementById("quiz-score-lbl");
+      if (scoreLbl) scoreLbl.textContent = `Score : ${pontsState.quizScore}/${pontsState.quizTotal}`;
+      const titleEl = document.getElementById("quiz-question-title");
+      if (titleEl) titleEl.textContent = `Quel est le pont n°${target.id} ?`;
+      const hintEl = document.getElementById("quiz-hint");
+      if (hintEl) hintEl.textContent = `${target.banks} — ${target.clue}`;
+
+      const box = document.getElementById("quiz-options-box");
+      if (!box) return;
+      box.innerHTML = "";
+      pontsState.quizOptions.forEach(opt => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "qcm-btn";
+        btn.textContent = opt.name;
+        btn.onclick = () => {
+          pontsState.quizTotal++;
+          if (opt.id === target.id) {
+            btn.classList.add("correct");
+            pontsState.quizScore++;
+            pontsState.mastered.add(target.id);
+            savePontsMastered();
+          } else {
+            btn.classList.add("wrong");
+            [...box.children].forEach(c => { if (c.textContent === target.name) c.classList.add("correct"); });
+          }
+          const s = document.getElementById("quiz-score-lbl");
+          if (s) s.textContent = `Score : ${pontsState.quizScore}/${pontsState.quizTotal}`;
+          setTimeout(initQuiz, 1200);
+        };
+        box.appendChild(btn);
+      });
+    }
+
+    let chainIdx = 0;
+    function renderChain() {
+      const b = BRIDGES[chainIdx];
+      const progLbl = document.getElementById("chain-prog-lbl");
+      if (progLbl) progLbl.textContent = `Pont n°${b.id} / 37`;
+      const titleEl = document.getElementById("chain-title");
+      if (titleEl) titleEl.textContent = `❓ Quel est le pont n°${b.id} ?`;
+      const hintEl = document.getElementById("chain-hint");
+      if (hintEl) hintEl.textContent = `${b.banks} — ${b.clue}`;
+      const fb = document.getElementById("chain-feedback");
+      if (fb) fb.textContent = "";
+      const inp = document.getElementById("chain-input");
+      if (inp) inp.value = "";
+    }
+
+    function validateChain() {
+      const b = BRIDGES[chainIdx];
+      const inp = document.getElementById("chain-input");
+      if (!inp) return;
+      const val = inp.value.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[’']/g, "'").replace(/[-]/g, " ").trim();
+      const ref = b.name.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[’']/g, "'").replace(/[-]/g, " ").trim();
+      const fb = document.getElementById("chain-feedback");
+      if (!fb) return;
+      if (val.length >= 3 && (ref.includes(val) || val.includes(ref))) {
+        fb.style.color = "var(--success)";
+        fb.textContent = `✓ Bravo ! C'est le ${b.name}.`;
+        pontsState.mastered.add(b.id);
+        savePontsMastered();
+        setTimeout(() => { chainIdx = (chainIdx + 1) % 37; renderChain(); }, 750);
+      } else {
+        fb.style.color = "var(--danger)";
+        fb.textContent = `✗ Indice mot-clé : « ${b.key} »`;
+      }
+    }
+
+    function initPonts() {
+      loadPontsMastered();
+
+      // Gestion sous-menu ponts
+      document.querySelectorAll(".ponts-submenu .sub-tab").forEach(tab => {
+        tab.onclick = () => {
+          document.querySelectorAll(".ponts-submenu .sub-tab").forEach(t => t.classList.remove("active"));
+          document.querySelectorAll(".ponts-view").forEach(v => v.classList.remove("active"));
+          tab.classList.add("active");
+          pontsState.subModule = tab.dataset.sub;
+          const targetView = document.getElementById("subview-" + pontsState.subModule);
+          if (targetView) targetView.classList.add("active");
+          renderPontsSubModule();
+        };
+      });
+
+      const btnCam = document.getElementById("btn-cam");
+      if (btnCam) {
+        btnCam.onclick = () => {
+          const modes = ["follow", "sector", "full"];
+          pontsState.camMode = modes[(modes.indexOf(pontsState.camMode) + 1) % modes.length];
+          btnCam.textContent = `🎯 ${pontsState.camMode}`;
+          renderMapAndDetails();
+        };
+      }
+
+      const btnLabels = document.getElementById("btn-labels");
+      if (btnLabels) {
+        btnLabels.onclick = () => {
+          pontsState.showLabels = !pontsState.showLabels;
+          renderMapAndDetails();
+        };
+      }
+
+      const btnPrev = document.getElementById("btn-prev");
+      if (btnPrev) {
+        btnPrev.onclick = () => {
+          pontsState.selectedId = pontsState.selectedId > 1 ? pontsState.selectedId - 1 : 37;
+          renderMapAndDetails();
+        };
+      }
+
+      const btnNext = document.getElementById("btn-next");
+      if (btnNext) {
+        btnNext.onclick = () => {
+          pontsState.selectedId = pontsState.selectedId < 37 ? pontsState.selectedId + 1 : 1;
+          renderMapAndDetails();
+        };
+      }
+
+      const btnToggleDone = document.getElementById("btn-toggle-done");
+      if (btnToggleDone) {
+        btnToggleDone.onclick = () => {
+          if (pontsState.mastered.has(pontsState.selectedId)) pontsState.mastered.delete(pontsState.selectedId);
+          else pontsState.mastered.add(pontsState.selectedId);
+          savePontsMastered();
+          renderMapAndDetails();
+        };
+      }
+
+      const fcBox = document.getElementById("fc-box");
+      if (fcBox) {
+        fcBox.onclick = () => {
+          pontsState.fcFlipped = !pontsState.fcFlipped;
+          renderFlashcard();
+        };
+      }
+
+      const fcKnown = document.getElementById("fc-known");
+      if (fcKnown) {
+        fcKnown.onclick = () => {
+          pontsState.mastered.add(pontsState.selectedId);
+          savePontsMastered();
+          pontsState.fcFlipped = false;
+          pontsState.selectedId = pontsState.selectedId < 37 ? pontsState.selectedId + 1 : 1;
+          renderFlashcard();
+        };
+      }
+
+      const fcAgain = document.getElementById("fc-again");
+      if (fcAgain) {
+        fcAgain.onclick = () => {
+          pontsState.fcFlipped = false;
+          pontsState.selectedId = pontsState.selectedId < 37 ? pontsState.selectedId + 1 : 1;
+          renderFlashcard();
+        };
+      }
+
+      const btnQMode = document.getElementById("btn-qmode");
+      if (btnQMode) btnQMode.onclick = initQuiz;
+
+      const chainSubmit = document.getElementById("chain-submit");
+      if (chainSubmit) chainSubmit.onclick = validateChain;
+
+      const chainInp = document.getElementById("chain-input");
+      if (chainInp) chainInp.onkeydown = (e) => { if (e.key === "Enter") validateChain(); };
+
+      const chainReveal = document.getElementById("chain-reveal");
+      if (chainReveal) {
+        chainReveal.onclick = () => {
+          const t = document.getElementById("chain-title");
+          if (t) t.textContent = BRIDGES[chainIdx].name;
+        };
+      }
+    }
+
+    // ==========================================================================
+    // 11. INITIALIZATION
     // ==========================================================================
     document.addEventListener('DOMContentLoaded', () => {
       try {
@@ -3962,10 +4595,13 @@
         }
       } catch (e) {}
 
+      // Initialiser le module des 37 ponts
+      initPonts();
+
       // Restaurer l'onglet mémorisé si applicable
       try {
         const savedTab = localStorage.getItem('bpi_active_tab');
-        if (savedTab && ['dashboard', 'checklist', 'directory'].includes(savedTab)) {
+        if (savedTab && ['dashboard', 'checklist', 'directory', 'ponts'].includes(savedTab)) {
           switchTab(savedTab);
         }
       } catch (e) {}
