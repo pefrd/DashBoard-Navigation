@@ -2254,71 +2254,6 @@
       border-color: var(--primary);
       box-shadow: 0 2px 6px rgba(243, 112, 33, 0.4);
     }
-    .bridge-chip-pill.mastered {
-      border-color: #10B981;
-    }
-    .bridge-chip-pill.mastered::after {
-      content: '✓';
-      font-size: 0.65rem;
-      color: #10B981;
-      margin-left: 2px;
-      font-weight: 900;
-    }
-    .bridge-chip-pill.active.mastered::after {
-      color: #FFFFFF;
-    }
-
-    .bridge-quick-select-wrap {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 6px 12px;
-    }
-    .bridge-quick-select {
-      flex: 1;
-      background: transparent;
-      border: none;
-      color: var(--text-main);
-      font-size: 0.85rem;
-      font-weight: 700;
-      outline: none;
-      cursor: pointer;
-      font-family: inherit;
-    }
-
-    .mastery-progress-strip {
-      display: flex;
-      flex-direction: column;
-      gap: 5px;
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 8px 12px;
-    }
-    .mastery-progress-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 0.72rem;
-      font-weight: 800;
-      color: var(--text-muted);
-    }
-    .mastery-track {
-      width: 100%;
-      height: 6px;
-      background: var(--border);
-      border-radius: 999px;
-      overflow: hidden;
-    }
-    .mastery-fill {
-      height: 100%;
-      background: linear-gradient(90deg, var(--primary) 0%, #10B981 100%);
-      border-radius: 999px;
-      transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-    }
 
     @keyframes beaconPulse {
       0% { r: 11px; opacity: 0.9; stroke-width: 3px; }
@@ -3459,8 +3394,6 @@
           <!-- BARRE D'ORIENTATION NAUTIQUE INFÉRIEURE -->
           <div class="map-bottom-bar">
             <span class="map-pill-info" id="map-nautic-info">🧭 Bief Paris · PK 168</span>
-            <span class="map-pill-info" id="map-zoom-pill" style="color:#94A3B8;">Suivi</span>
-            <span class="map-pill-info" style="color:#38BDF8;">🌊 Amont (Est) &rarr; Aval (Ouest)</span>
           </div>
         </div>
 
@@ -3475,29 +3408,10 @@
           </div>
         </div>
 
-        <!-- SÉLECTEUR RAPIDE & BARRE DE MAÎTRISE -->
-        <div class="bridge-quick-select-wrap">
-          <span style="font-size:0.85rem;">🌉</span>
-          <select id="bridge-quick-select" class="bridge-quick-select" aria-label="Sélectionner un pont directement">
-            <!-- Rempli dynamiquement -->
-          </select>
-        </div>
-
-        <div class="mastery-progress-strip">
-          <div class="mastery-progress-header">
-            <span>Progression 37 Ponts de Paris</span>
-            <span id="mastery-progress-text" class="font-mono">0 / 37 maîtrisés (0%)</span>
-          </div>
-          <div class="mastery-track">
-            <div class="mastery-fill" id="mastery-progress-bar" style="width: 0%;"></div>
-          </div>
-        </div>
-
         <!-- CARTE DÉTAIL DU PONT SÉLECTIONNÉ -->
         <div class="bridge-card-detail">
-          <div style="display:flex; justify-content:space-between; align-items:center;">
+          <div style="margin-bottom:4px;">
             <span id="bridge-sec-tag" style="font-size:0.72rem; font-weight:800; padding:3px 10px; border-radius:99px; background:var(--primary); color:#fff;">Secteur 1 (Pont 1/37)</span>
-            <button type="button" class="btn-changer" id="btn-toggle-done" style="background:var(--success); color:#fff; border:none; padding:5px 10px;">Marquer maîtrisé</button>
           </div>
           <div class="bridge-name-lg" id="bridge-name">Pont amont</div>
           <div style="font-size:0.82rem; color:var(--text-muted);" id="bridge-meta">Rives : 13e ↔ 12e | 1969</div>
@@ -4730,7 +4644,6 @@
       } catch (e) {}
       updateMasteryProgressUI();
       updateBridgesCarousel();
-      updateQuickSelectUI();
     }
 
     function updateMasteryProgressUI() {
@@ -4751,8 +4664,6 @@
       if (pontsState.subModule === "explore") {
         renderMapAndDetails();
         updateBridgesCarousel();
-        updateQuickSelectUI();
-        updateMasteryProgressUI();
       } else if (pontsState.subModule === "flashcard") {
         renderFlashcard();
       } else if (pontsState.subModule === "quiz") {
@@ -4791,25 +4702,6 @@
       if (!svg) return;
       pontsState.viewBox = { ...vb };
       svg.setAttribute("viewBox", `${Math.round(vb.x)} ${Math.round(vb.y)} ${Math.round(vb.w)} ${Math.round(vb.h)}`);
-
-      // Mettre à jour l'indicateur de zoom
-      const zoomPill = document.getElementById("map-zoom-pill");
-      if (zoomPill) {
-        const zoomRatio = (935 / vb.w).toFixed(1);
-        if (pontsState.camMode === "follow") {
-          zoomPill.textContent = `🎯 Suivi · ${zoomRatio}x`;
-          zoomPill.style.color = "#38BDF8";
-        } else if (pontsState.camMode === "sector") {
-          zoomPill.textContent = `Secteur ${BRIDGES.find(x => x.id === pontsState.selectedId)?.sector || 1}`;
-          zoomPill.style.color = "#FCD34D";
-        } else if (pontsState.camMode === "full") {
-          zoomPill.textContent = `Vue d'ensemble`;
-          zoomPill.style.color = "#94A3B8";
-        } else {
-          zoomPill.textContent = `Manuel · ${zoomRatio}x`;
-          zoomPill.style.color = "#A7F3D0";
-        }
-      }
     }
 
     function renderMapAndDetails() {
@@ -5027,12 +4919,6 @@
       if (metaEl) metaEl.textContent = `Rives : ${b.banks} · Année : ${b.year} · Type : ${b.type}`;
       const clueEl = document.getElementById("bridge-clue");
       if (clueEl) clueEl.innerHTML = `💡 <strong>${b.key}</strong> : ${b.clue}`;
-      const btnDone = document.getElementById("btn-toggle-done");
-      if (btnDone) {
-        const isMastered = pontsState.mastered.has(b.id);
-        btnDone.textContent = isMastered ? "✓ Pont maîtrisé" : "Marquer maîtrisé";
-        btnDone.style.background = isMastered ? "var(--success)" : "var(--primary)";
-      }
 
       // Synchroniser les puces de secteurs
       document.querySelectorAll(".sector-chip").forEach(chip => {
@@ -5059,7 +4945,6 @@
       }
       renderMapAndDetails();
       updateBridgesCarousel();
-      updateQuickSelectUI();
       hideMapTooltip();
     }
 
@@ -5105,9 +4990,7 @@
         const pill = document.getElementById(`pill-bridge-${br.id}`);
         if (!pill) return;
         const isCur = (br.id === pontsState.selectedId);
-        const isDone = pontsState.mastered.has(br.id);
         pill.classList.toggle("active", isCur);
-        pill.classList.toggle("mastered", isDone);
         pill.style.borderLeft = isCur ? `3px solid #FFFFFF` : `3px solid ${SECTORS[br.sector].color}`;
 
         if (isCur) {
@@ -5115,31 +4998,6 @@
           carousel.scrollTo({ left: targetLeft, behavior: "smooth" });
         }
       });
-    }
-
-    // Sélecteur déroulant complet des 37 ponts
-    function updateQuickSelectUI() {
-      const sel = document.getElementById("bridge-quick-select");
-      if (!sel) return;
-
-      if (sel.options.length !== BRIDGES.length) {
-        sel.innerHTML = "";
-        BRIDGES.forEach(br => {
-          const opt = document.createElement("option");
-          opt.value = br.id;
-          sel.appendChild(opt);
-        });
-      }
-
-      BRIDGES.forEach((br, i) => {
-        const opt = sel.options[i];
-        if (!opt) return;
-        const isDone = pontsState.mastered.has(br.id);
-        opt.value = br.id;
-        opt.textContent = `${String(br.id).padStart(2, '0')}. ${br.name} (${SECTORS[br.sector].name.split(" : ")[1]})${isDone ? ' ✓' : ''}`;
-      });
-
-      sel.value = String(pontsState.selectedId);
     }
 
     // Zoom interactif & Gestes tactiles / Souris sur Seine SVG
@@ -5425,15 +5283,6 @@
         };
       }
 
-      // Sélecteur rapide dropdown
-      const bridgeSelect = document.getElementById("bridge-quick-select");
-      if (bridgeSelect) {
-        bridgeSelect.onchange = (e) => {
-          const id = parseInt(e.target.value, 10);
-          if (!isNaN(id)) selectBridge(id, "follow");
-        };
-      }
-
       // Navigation Amont / Aval
       const btnPrev = document.getElementById("btn-prev");
       if (btnPrev) {
@@ -5448,22 +5297,6 @@
         btnNext.onclick = () => {
           const nextId = pontsState.selectedId < 37 ? pontsState.selectedId + 1 : 1;
           selectBridge(nextId);
-        };
-      }
-
-      // Bouton Marquer maîtrisé
-      const btnToggleDone = document.getElementById("btn-toggle-done");
-      if (btnToggleDone) {
-        btnToggleDone.onclick = () => {
-          if (pontsState.mastered.has(pontsState.selectedId)) {
-            pontsState.mastered.delete(pontsState.selectedId);
-            showToast(`Pont ${pontsState.selectedId} marqué non-maîtrisé`);
-          } else {
-            pontsState.mastered.add(pontsState.selectedId);
-            showToast(`Pont ${pontsState.selectedId} marqué comme maîtrisé ! ✓`);
-          }
-          savePontsMastered();
-          renderMapAndDetails();
         };
       }
 
