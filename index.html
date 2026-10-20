@@ -2650,8 +2650,8 @@
       <div class="directory-banner">
         <div class="directory-banner-text">
           <span class="checklist-badge-tag" style="color:#FDE047;">Voies Navigables de France</span>
-          <h2>Écluses & Contacts VNF</h2>
-          <p>Liaisons fluviales et écluses de Suresnes à Alfortville</p>
+          <h2>Écluses VNF · Suresnes ↔ Alfortville</h2>
+          <p>Contacts directs et canaux VHF pour le franchissement des écluses</p>
         </div>
         <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#FDE047" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
           <circle cx="12" cy="5" r="3"></circle>
@@ -2660,18 +2660,13 @@
         </svg>
       </div>
 
-      <!-- AIDE-MÉMOIRE CANAUX VHF FLUVIALE -->
+      <!-- AIDE-MÉMOIRE CANAUX VHF ÉCLUSES & FLUVIAL -->
       <div class="vhf-strip-card">
         <div class="vhf-strip-header">
-          <span>Canaux VHF Veille Fluviale</span>
+          <span>Canaux VHF Écluses & Chenal Paris</span>
           <span>Aide-Mémoire</span>
         </div>
         <div class="vhf-grid">
-          <div class="vhf-channel-box">
-            <div class="vhf-ch-num">VHF 10</div>
-            <div class="vhf-ch-label">Veille Fluviale Paris</div>
-            <div class="vhf-ch-sub">Bateau à bateau / Sécurité de navigation</div>
-          </div>
           <div class="vhf-channel-box">
             <div class="vhf-ch-num">VHF 22</div>
             <div class="vhf-ch-label">Écluse de Suresnes</div>
@@ -2693,21 +2688,19 @@
             <div class="vhf-ch-sub">PK 168.0 · Bastille / Cale BPI</div>
           </div>
           <div class="vhf-channel-box">
+            <div class="vhf-ch-num">VHF 10</div>
+            <div class="vhf-ch-label">Veille Paris</div>
+            <div class="vhf-ch-sub">Sécurité chenal Paris</div>
+          </div>
+          <div class="vhf-channel-box">
             <div class="vhf-ch-num">VHF 16</div>
             <div class="vhf-ch-label">Détresse / Sécurité</div>
-            <div class="vhf-ch-sub">Fréquence d'urgence internationale</div>
+            <div class="vhf-ch-sub">Fréquence internationale</div>
           </div>
         </div>
       </div>
 
-      <!-- FILTRES D'ANNUAIRE -->
-      <div class="directory-filters" role="tablist">
-        <button type="button" class="dir-filter-chip active" onclick="filterDirectory('all')" id="dir-chip-all">Tous les contacts</button>
-        <button type="button" class="dir-filter-chip" onclick="filterDirectory('ecluses')" id="dir-chip-ecluses">⚓ Écluses VNF</button>
-        <button type="button" class="dir-filter-chip" onclick="filterDirectory('vnf')" id="dir-chip-vnf">Direction & PC Nav</button>
-      </div>
-
-      <!-- LISTE DES CONTACTS OPÉRATIONNELS VNF -->
+      <!-- LISTE DIRECTE DES ÉCLUSES VNF (SURESNES À ALFORTVILLE) -->
       <div style="display:flex;flex-direction:column;gap:11px;" id="directory-list">
         <!-- 1. ÉCLUSE VNF DE SURESNES (AVAL PARIS) -->
         <div class="contact-card vnf-card" data-cat="ecluses">
@@ -2882,84 +2875,15 @@
               </button>
             </div>
           </div>
-        </div>
-
-        <!-- 6. PC NAVIGATION VNF - BASSIN DE LA SEINE -->
-        <div class="contact-card vnf-card" data-cat="vnf">
-          <div class="contact-card-inner">
-            <div class="contact-card-top">
-              <div class="contact-title-group">
-                <div class="contact-badge-line">
-                  <span class="contact-badge badge-vnf">Direction VNF</span>
-                  <span class="contact-pk-pill">Bassin Seine Amont & Bief Paris</span>
-                </div>
-                <h3 class="contact-name">PC Navigation VNF — Bassin de la Seine</h3>
-                <div class="contact-loc">Direction Territoriale VNF · Gestion fluviale & avis à la batellerie</div>
-              </div>
-            </div>
-            <div class="contact-details">
-              Informations crues, avis officiels de navigation (AVINAV), chantiers fluviaux et arrêtés préfectoraux de navigation.
-            </div>
-            <div class="contact-card-actions">
-              <a href="tel:0140195100" class="btn-call-direct">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
-                </svg>
-                <span>Appeler 01 40 19 51 00</span>
-              </a>
-              <button type="button" class="btn-copy-num" onclick="copyContactPhone('0140195100', 'PC Navigation VNF')">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
-                </svg>
-                <span>Copier</span>
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <!-- 7. UTI VNF SEINE PARIS (MAINTENANCE & CHENAL) -->
-        <div class="contact-card vnf-card" data-cat="vnf">
-          <div class="contact-card-inner">
-            <div class="contact-card-top">
-              <div class="contact-title-group">
-                <div class="contact-badge-line">
-                  <span class="contact-badge badge-vnf">UTI VNF</span>
-                  <span class="contact-pk-pill">Bief de Paris</span>
-                </div>
-                <h3 class="contact-name">VNF — Unité Territoriale d'Itinéraire (UTI)</h3>
-                <div class="contact-loc">Gestion du chenal navigable, balisage et surveillance domaniale</div>
-              </div>
-            </div>
-            <div class="contact-details">
-              Surveillance de la voie d'eau, signalements d'obstacles dérivants, entretien des berges et pontons.
-            </div>
-            <div class="contact-card-actions">
-              <a href="tel:0144681800" class="btn-call-direct">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
-                </svg>
-                <span>Appeler 01 44 68 18 00</span>
-              </a>
-              <button type="button" class="btn-copy-num" onclick="copyContactPhone('0144681800', 'UTI VNF')">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
-                </svg>
-                <span>Copier</span>
-              </button>
-            </div>
-          </div>
-        </div>
       </div>
 
       <footer class="app-footer">
         <div class="footer-sync">
           <span class="footer-pulse-dot"></span>
-          <span>Écluses & Voies Navigables · Suresnes ↔ Alfortville</span>
+          <span>Écluses VNF · Suresnes ↔ Alfortville</span>
         </div>
         <div class="footer-meta">
-          Contacts directs VNF pour équipages BPI
+          Contacts d'éclusage directs VNF pour équipages BPI
         </div>
       </footer>
     </section>
@@ -2985,7 +2909,6 @@
       <!-- ONGLET 2: CHECK-LIST -->
       <button type="button" class="bottom-nav-btn" id="nav-btn-checklist" onclick="switchTab('checklist')" aria-selected="false" aria-controls="tab-checklist">
         <span class="bottom-nav-icon-wrap">
-          <span class="bottom-nav-badge" id="nav-checklist-badge">0/20</span>
           <svg class="bottom-nav-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
             <path d="M9 11l3 3L22 4"></path>
             <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
@@ -2994,14 +2917,14 @@
         <span class="bottom-nav-label">Check-list</span>
       </button>
 
-      <!-- ONGLET 3: ANNUAIRE -->
+      <!-- ONGLET 3: ÉCLUSES -->
       <button type="button" class="bottom-nav-btn" id="nav-btn-directory" onclick="switchTab('directory')" aria-selected="false" aria-controls="tab-directory">
         <span class="bottom-nav-icon-wrap">
           <svg class="bottom-nav-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
             <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
           </svg>
         </span>
-        <span class="bottom-nav-label">Annuaire</span>
+        <span class="bottom-nav-label">Écluses</span>
       </button>
     </div>
   </nav>
@@ -3837,7 +3760,7 @@
           brandTitle.textContent = 'Check-list BPI & Armement';
         } else if (tabId === 'directory') {
           brandSup.textContent = 'Voies Navigables de France';
-          brandTitle.textContent = 'Écluses & Contacts VNF';
+          brandTitle.textContent = 'Écluses Suresnes ↔ Alfortville';
         }
       }
 
@@ -3949,17 +3872,6 @@
 
       const percentText = document.getElementById('checklist-percent-text');
       if (percentText) percentText.textContent = `${percent}%`;
-
-      // Badge sur barre inférieure
-      const navBadge = document.getElementById('nav-checklist-badge');
-      if (navBadge) {
-        navBadge.textContent = `${totalChecked}/${totalItems}`;
-        if (totalChecked === totalItems) {
-          navBadge.style.backgroundColor = '#10B981';
-        } else {
-          navBadge.style.backgroundColor = 'var(--pc-orange)';
-        }
-      }
 
       // Badges par catégorie
       const bMoteur = document.getElementById('cat-badge-moteur');
