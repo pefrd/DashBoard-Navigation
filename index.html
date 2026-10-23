@@ -918,7 +918,14 @@
       padding-top: 7px;
       padding-bottom: max(10px, env(safe-area-inset-bottom, 16px));
       box-shadow: 0 -4px 18px rgba(0, 0, 0, 0.08);
-      transition: background-color 0.2s ease, border-color 0.2s ease;
+      transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease;
+    }
+    .bottom-nav.nav-hidden,
+    body:has(#station-drawer.open) #bottom-navbar,
+    body:has(.modal-overlay.open) #bottom-navbar {
+      transform: translateY(115%);
+      pointer-events: none;
+      opacity: 0;
     }
     body.dark .bottom-nav {
       background-color: rgba(10, 16, 30, 0.95);
@@ -1600,9 +1607,10 @@
     .drawer-overlay {
       position: fixed;
       inset: 0;
-      z-index: 55;
+      z-index: 90;
       background-color: rgba(0, 0, 0, 0.65);
-      backdrop-filter: blur(5px);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
       display: none;
       align-items: flex-end;
       justify-content: center;
@@ -1623,16 +1631,20 @@
       width: 100%;
       max-width: 600px;
       max-height: 86vh;
+      max-height: 86dvh;
       border-radius: 28px 28px 0 0;
       display: flex;
       flex-direction: column;
       overflow: hidden;
       box-shadow: 0 25px 30px -5px rgba(0,0,0,0.4);
       animation: slideUpSheet 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      padding-bottom: max(16px, env(safe-area-inset-bottom, 20px));
+      touch-action: pan-y;
     }
     @media (min-width: 640px) {
       .drawer-sheet {
         border-radius: 20px;
+        padding-bottom: 0;
       }
     }
 
@@ -1658,6 +1670,7 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
+      flex-shrink: 0;
     }
     .drawer-title {
       font-size: 16px;
@@ -1672,12 +1685,15 @@
     }
 
     .drawer-content {
-      padding: 14px 16px;
+      padding: 14px 16px max(36px, calc(env(safe-area-inset-bottom, 20px) + 24px)) 16px;
       overflow-y: auto;
-      max-height: 68vh;
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior: contain;
+      max-height: calc(86dvh - 84px);
       display: flex;
       flex-direction: column;
       gap: 16px;
+      flex: 1;
     }
 
     .station-group-title {
@@ -1793,9 +1809,10 @@
     .modal-overlay {
       position: fixed;
       inset: 0;
-      z-index: 60;
+      z-index: 90;
       background-color: rgba(0, 0, 0, 0.65);
       backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
       display: none;
       align-items: flex-end;
       justify-content: center;
@@ -2522,7 +2539,7 @@
               <span class="unit">m</span>
             </div>
             <div class="metric-trend font-mono">
-              <span>Var. 6h :</span>
+              <span id="label-height-trend-sub">Var. 6h :</span>
               <strong id="val-height-trend">+1 cm</strong>
             </div>
           </div>
@@ -3130,6 +3147,11 @@
             <div class="vhf-ch-sub">Sécurité chenal Paris</div>
           </div>
           <div class="vhf-channel-box">
+            <div class="vhf-ch-num">VHF 18</div>
+            <div class="vhf-ch-label">Grand Carré (Lille)</div>
+            <div class="vhf-ch-sub">Deûle · Citadelle / VNF</div>
+          </div>
+          <div class="vhf-channel-box">
             <div class="vhf-ch-num">VHF 16</div>
             <div class="vhf-ch-label">Détresse / Sécurité</div>
             <div class="vhf-ch-sub">Fréquence internationale</div>
@@ -3137,7 +3159,7 @@
         </div>
       </div>
 
-      <!-- LISTE DIRECTE DES ÉCLUSES VNF (SURESNES À ALFORTVILLE) -->
+      <!-- LISTE DES ÉCLUSES VNF (SEINE, MARNE & DEÛLE LILLE) -->
       <div style="display:flex;flex-direction:column;gap:11px;" id="directory-list">
         <!-- 1. ÉCLUSE VNF DE SURESNES (AVAL PARIS) -->
         <div class="contact-card vnf-card" data-cat="ecluses">
@@ -3312,12 +3334,48 @@
               </button>
             </div>
           </div>
+        </div>
+
+        <!-- 6. ÉCLUSE DU GRAND CARRÉ (LILLE CITADELLE - DEÛLE) -->
+        <div class="contact-card vnf-card" data-cat="ecluses">
+          <div class="contact-card-inner">
+            <div class="contact-card-top">
+              <div class="contact-title-group">
+                <div class="contact-badge-line">
+                  <span class="contact-badge badge-vnf">Écluse VNF</span>
+                  <span class="contact-pk-pill">Deûle · Lille / Citadelle (PK 23.4)</span>
+                  <span class="contact-badge badge-vhf">VHF 18</span>
+                </div>
+                <h3 class="contact-name">Écluse du Grand Carré (Lille Citadelle · VNF)</h3>
+                <div class="contact-loc">Canal de la Deûle · Au pied de la Citadelle / Port de Lille</div>
+              </div>
+            </div>
+            <div class="contact-details">
+              Franchissement de l'écluse du Grand Carré à Lille Citadelle, liaison vers Wambrechies et la Deûle canalisée. Cale d'intervention et secours nautiques Métropole Européenne de Lille.
+            </div>
+            <div class="contact-card-actions">
+              <a href="tel:0320548112" class="btn-call-direct">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                </svg>
+                <span>Appeler 03 20 54 81 12</span>
+              </a>
+              <button type="button" class="btn-copy-num" onclick="copyContactPhone('0320548112', 'Écluse Grand Carré Lille')">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                </svg>
+                <span>Copier</span>
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
 
       <footer class="app-footer">
         <div class="footer-sync">
           <span class="footer-pulse-dot"></span>
-          <span>Écluses VNF · Suresnes ↔ Alfortville</span>
+          <span>Écluses VNF · Seine, Marne & Deûle (Lille)</span>
         </div>
         <div class="footer-meta">
           Contacts d'éclusage directs VNF pour équipages BPI
@@ -3670,6 +3728,38 @@
                   <polyline points="20 6 9 17 4 12"></polyline>
                 </svg>
               </div>
+          </div>
+        </div>
+
+        <!-- GROUPE 3: BASSIN DE LA DEÛLE -->
+        <div>
+          <div class="station-group-title">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M2 6c.6.5 1.2 1 2.5 1C7 7 7 5 9.5 5c2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"></path>
+              <path d="M2 12c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"></path>
+            </svg>
+            <span>Bassin de la Deûle</span>
+          </div>
+
+          <div class="station-list">
+            <!-- Lille Citadelle / Wambrechies -->
+            <div class="station-option" id="opt-deule_lille" onclick="selectStation('deule_lille')">
+              <div class="station-option-left">
+                <div class="station-option-name">
+                  <span>LA DEÛLE — Lille (Citadelle)</span>
+                </div>
+                <div class="station-option-loc">Cale : Citadelle / Port de Lille · Écluse Grand Carré</div>
+                <div class="station-option-tags">
+                  <span class="tag-badge tag-pk">Deûle · Lille / Citadelle</span>
+                  <span class="tag-badge tag-type">Débit Q + Cote H</span>
+                  <span class="tag-badge" style="background:#DBEAFE;color:#1E40AF;">E341210001</span>
+                </div>
+              </div>
+              <div class="station-option-check">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+              </div>
             </div>
           </div>
         </div>
@@ -3839,6 +3929,32 @@
         obsTime: new Date().toISOString(),
         currentVelocityMs: 0.16,
         currentVelocityKmh: 0.6
+      },
+      deule_lille: {
+        id: 'deule_lille',
+        river: 'deule',
+        riverLabel: 'Deûle',
+        name: 'LA DEÛLE — Lille (Citadelle)',
+        shortName: 'Lille (Citadelle)',
+        location: 'Cale : Citadelle / Port de Lille · Écluse Grand Carré',
+        subLocation: 'Citadelle / Grand Carré',
+        pk: 'Deûle · Lille / Citadelle',
+        codeStation: 'E341210001',
+        fallbackCodeStation: 'E310211001',
+        baseHeightM: 3.50, // Mouillage nominal canal de la Deûle (3,50 m)
+        isCanalBief: true,
+        lat: 50.6412,
+        lon: 3.0416,
+        hasFlow: true,
+        isTidal: false,
+        flowM3s: 8.8,
+        flowTrend: 'Stable (±1 m³/s)',
+        heightM: 3.54,
+        biefDeltaCm: 4,
+        heightTrendCm: 0,
+        obsTime: new Date().toISOString(),
+        currentVelocityMs: 0.06,
+        currentVelocityKmh: 0.2
       }
     };
 
@@ -3878,6 +3994,13 @@
     // 2. LOGIC HELPERS
     function computeRiverVelocityMs(flowM3s, heightM, stationId) {
       if (!flowM3s || flowM3s <= 0) return 0;
+      if (stationId.startsWith('deule') || stationId.includes('deule') || stationId.includes('lille')) {
+        // Gabarit canal de la Deûle à Lille : largeur moyenne ~45 m, tirant d'eau 3,5 m => section mouillée de base ~155 m²
+        // Si heightM est la cote complète (~3.54m), on prend l'écart par rapport à 3.5m ; si c'est déjà l'écart (~0.04m), on l'utilise directement
+        const deltaH = heightM !== null ? (heightM > 2.0 ? heightM - 3.5 : heightM) : 0;
+        const dynamicArea = Math.max(100, 155 + deltaH * 45);
+        return Number((flowM3s / dynamicArea).toFixed(2));
+      }
       const isSeine = stationId.startsWith('seine');
       const h = heightM !== null && heightM > 0 ? heightM : (isSeine ? 1.5 : 1.2);
       const dynamicArea = isSeine ? (380 + Math.max(0, h - 1.0) * 115) : (125 + Math.max(0, h - 0.8) * 55);
@@ -3946,8 +4069,13 @@
       }
 
       // Station Bar (Top Trigger)
-      document.getElementById('bar-river-label').textContent = cur.riverLabel.toUpperCase();
-      document.getElementById('bar-pk-label').textContent = cur.pk;
+      if (cur.river === 'deule') {
+        document.getElementById('bar-river-label').textContent = 'DEÛLE';
+        document.getElementById('bar-pk-label').textContent = 'Lille / Citadelle';
+      } else {
+        document.getElementById('bar-river-label').textContent = cur.riverLabel.toUpperCase();
+        document.getElementById('bar-pk-label').textContent = cur.pk;
+      }
       document.getElementById('bar-station-name').textContent = cur.name;
       document.getElementById('bar-station-loc').textContent = cur.location;
 
@@ -4005,10 +4133,23 @@
         document.getElementById('unit-flow').textContent = 'm³/s';
         document.getElementById('val-flow-trend-text').textContent = cur.flowTrend;
 
-        document.getElementById('label-metric-h').textContent = cur.id === 'seine_suresnes' ? 'Cote Amont (H)' : 'Hauteur d\'Eau (H)';
-        document.getElementById('val-height').textContent = cur.heightM !== null ? cur.heightM.toFixed(2) : '--';
-        document.getElementById('val-height-trend').textContent =
-          cur.heightTrendCm !== null ? `${cur.heightTrendCm > 0 ? '+' : ''}${cur.heightTrendCm} cm` : '--';
+        const labelTrendSub = document.getElementById('label-height-trend-sub');
+        if (cur.river === 'deule' || cur.isCanalBief) {
+          document.getElementById('label-metric-h').textContent = 'Cote de Bief (H)';
+          document.getElementById('val-height').textContent = cur.heightM !== null ? cur.heightM.toFixed(2) : '--';
+          if (labelTrendSub) labelTrendSub.textContent = 'Écart RN :';
+          const deltaSign = cur.biefDeltaCm && cur.biefDeltaCm > 0 ? '+' : '';
+          const deltaStr = cur.biefDeltaCm !== null && cur.biefDeltaCm !== undefined ? `${deltaSign}${cur.biefDeltaCm} cm` : '0 cm';
+          const trendSign = cur.heightTrendCm !== null && cur.heightTrendCm > 0 ? '+' : '';
+          const trendStr = cur.heightTrendCm !== null ? `${trendSign}${cur.heightTrendCm} cm` : '0 cm';
+          document.getElementById('val-height-trend').textContent = `${deltaStr} (Var 6h : ${trendStr})`;
+        } else {
+          document.getElementById('label-metric-h').textContent = cur.id === 'seine_suresnes' ? 'Cote Amont (H)' : 'Hauteur d\'Eau (H)';
+          document.getElementById('val-height').textContent = cur.heightM !== null ? cur.heightM.toFixed(2) : '--';
+          if (labelTrendSub) labelTrendSub.textContent = 'Var. 6h :';
+          document.getElementById('val-height-trend').textContent =
+            cur.heightTrendCm !== null ? `${cur.heightTrendCm > 0 ? '+' : ''}${cur.heightTrendCm} cm` : '--';
+        }
       }
 
       // Weather Metrics
@@ -4067,9 +4208,15 @@
         const weatherUrl = `https://api.open-meteo.com/v1/forecast?latitude=${curStation.lat}&longitude=${curStation.lon}&past_days=7&forecast_days=2&current=temperature_2m,apparent_temperature,precipitation,weather_code,wind_speed_10m,wind_direction_10m,wind_gusts_10m&hourly=temperature_2m,precipitation,wind_speed_10m,wind_gusts_10m,soil_temperature_54cm&daily=sunrise,sunset&timezone=Europe%2FParis`;
 
         // 2. Fetch Hydrometry from Hub'Eau for all active stations
-        const codesList = 'F700000103,F704000101,H503011001,F664000404,F664000104';
-        const hubeauQUrl = `https://hubeau.eaufrance.fr/api/v2/hydrometrie/observations_tr?code_entite=${codesList}&grandeur_hydro=Q&size=80&sort=desc`;
-        const hubeauHUrl = `https://hubeau.eaufrance.fr/api/v2/hydrometrie/observations_tr?code_entite=${codesList}&grandeur_hydro=H&size=80&sort=desc`;
+        const codeSet = new Set();
+        Object.values(STATIONS).forEach(st => {
+          if (st.codeStation) codeSet.add(st.codeStation);
+          if (st.refFlowCode) codeSet.add(st.refFlowCode);
+          if (st.fallbackCodeStation) codeSet.add(st.fallbackCodeStation);
+        });
+        const codesList = Array.from(codeSet).join(',');
+        const hubeauQUrl = `https://hubeau.eaufrance.fr/api/v2/hydrometrie/observations_tr?code_entite=${codesList}&grandeur_hydro=Q&size=100&sort=desc`;
+        const hubeauHUrl = `https://hubeau.eaufrance.fr/api/v2/hydrometrie/observations_tr?code_entite=${codesList}&grandeur_hydro=H&size=100&sort=desc`;
 
         const [resW, resQ, resH] = await Promise.allSettled([
           fetch(weatherUrl),
@@ -4135,9 +4282,11 @@
           const qData = await resQ.value.json();
           if (qData.data && qData.data.length > 0) {
             Object.values(STATIONS).forEach(st => {
-              const codeToSearch = st.codeStation;
-              const matches = qData.data.filter(d => d.code_station === codeToSearch);
-              if (matches.length > 0) {
+              let matches = qData.data.filter(d => d.code_station === st.codeStation);
+              if ((!matches || matches.length === 0) && st.fallbackCodeStation) {
+                matches = qData.data.filter(d => d.code_station === st.fallbackCodeStation);
+              }
+              if (matches && matches.length > 0) {
                 st.flowM3s = matches[0].resultat_obs / 1000;
                 st.obsTime = matches[0].date_obs;
                 const oldest = matches[matches.length - 1].resultat_obs / 1000;
@@ -4159,12 +4308,25 @@
           const hData = await resH.value.json();
           if (hData.data && hData.data.length > 0) {
             Object.values(STATIONS).forEach(st => {
-              const matches = hData.data.filter(d => d.code_station === st.codeStation);
-              if (matches.length > 0) {
-                st.heightM = matches[0].resultat_obs / 1000;
+              let matches = hData.data.filter(d => d.code_station === st.codeStation);
+              if ((!matches || matches.length === 0) && st.fallbackCodeStation) {
+                matches = hData.data.filter(d => d.code_station === st.fallbackCodeStation);
+              }
+              if (matches && matches.length > 0) {
+                const rawDeltaM = matches[0].resultat_obs / 1000;
                 st.obsTime = matches[0].date_obs;
                 const oldest = matches[matches.length - 1].resultat_obs / 1000;
-                st.heightTrendCm = Math.round((st.heightM - oldest) * 100);
+                st.heightTrendCm = Math.round((rawDeltaM - oldest) * 100);
+
+                if (st.baseHeightM) {
+                  // Sur un canal à bief régulé (comme la Deûle où le zéro capteur = Retenue Normale RN),
+                  // on ajoute le mouillage / tirant d'eau nominal de 3,50 m pour afficher la hauteur d'eau réelle
+                  st.heightM = Number((st.baseHeightM + rawDeltaM).toFixed(2));
+                  st.biefDeltaCm = Math.round(rawDeltaM * 100);
+                } else {
+                  st.heightM = rawDeltaM;
+                  st.biefDeltaCm = null;
+                }
               }
             });
           }
@@ -4191,11 +4353,17 @@
 
     // 5. USER ACTIONS & DRAWER MANAGEMENT
     function openStationDrawer() {
-      document.getElementById('station-drawer').classList.add('open');
+      const drawer = document.getElementById('station-drawer');
+      if (drawer) drawer.classList.add('open');
+      const nav = document.getElementById('bottom-navbar');
+      if (nav) nav.classList.add('nav-hidden');
     }
 
     function closeStationDrawer() {
-      document.getElementById('station-drawer').classList.remove('open');
+      const drawer = document.getElementById('station-drawer');
+      if (drawer) drawer.classList.remove('open');
+      const nav = document.getElementById('bottom-navbar');
+      if (nav) nav.classList.remove('nav-hidden');
     }
 
     function selectStation(stationId) {
@@ -4252,6 +4420,14 @@
           `• Régime : Marée maritime estuaire (HAROPA)`,
           `• Cote d'eau (H) : ${cur.heightM !== null ? cur.heightM.toFixed(2) : '--'} m (Var 6h : ${cur.heightTrendCm !== null ? cur.heightTrendCm : 0} cm)`
         );
+      } else if (cur.isCanalBief || cur.river === 'deule') {
+        const deltaSign = cur.biefDeltaCm && cur.biefDeltaCm > 0 ? '+' : '';
+        const biefInfo = cur.biefDeltaCm !== null && cur.biefDeltaCm !== undefined ? ` (RN ${deltaSign}${cur.biefDeltaCm} cm)` : '';
+        lines.push(
+          `• Vitesse courant : ${cur.currentVelocityKmh.toFixed(1)} km/h (${cur.currentVelocityMs.toFixed(2)} m/s)`,
+          `• Débit : ${cur.flowM3s !== null ? Math.round(cur.flowM3s) : '--'} m³/s (${cur.flowTrend})`,
+          `• Hauteur / Bief : ${cur.heightM !== null ? cur.heightM.toFixed(2) : '--'} m${biefInfo} (Var 6h : ${cur.heightTrendCm !== null ? cur.heightTrendCm : 0} cm)`
+        );
       } else {
         lines.push(
           `• Vitesse courant : ${cur.currentVelocityKmh.toFixed(1)} km/h (${cur.currentVelocityMs.toFixed(2)} m/s)`,
@@ -4268,10 +4444,14 @@
       document.getElementById('briefing-text').textContent = text;
       document.getElementById('link-whatsapp').href = `https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`;
       document.getElementById('briefing-modal').classList.add('open');
+      const nav = document.getElementById('bottom-navbar');
+      if (nav) nav.classList.add('nav-hidden');
     }
 
     function closeBriefingModal() {
       document.getElementById('briefing-modal').classList.remove('open');
+      const nav = document.getElementById('bottom-navbar');
+      if (nav) nav.classList.remove('nav-hidden');
       const btnText = document.getElementById('label-modal-copy');
       if (btnText) btnText.textContent = 'Copier le Point Nav';
     }

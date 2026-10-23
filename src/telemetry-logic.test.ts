@@ -16,10 +16,31 @@ test('computeRiverVelocityMs calculates velocity for Seine station', () => {
   assert.ok(v > 0.2 && v < 0.35, `Expected velocity around 0.26 m/s, got ${v}`);
 });
 
+test('computeRiverVelocityMs calculates velocity for Deule Lille station with 155 m² base section', () => {
+  // 15.5 m3/s on 155 m2 section => exactly 0.10 m/s
+  const v1 = computeRiverVelocityMs(15.5, 0, 'deule_lille');
+  assert.equal(v1, 0.10);
+
+  // 15.5 m3/s with nominal height 3.5m => exactly 0.10 m/s
+  const v1b = computeRiverVelocityMs(15.5, 3.5, 'deule_lille');
+  assert.equal(v1b, 0.10);
+
+  // 31.0 m3/s on 155 m2 section => 0.20 m/s
+  const v2 = computeRiverVelocityMs(31.0, 0, 'deule_lille');
+  assert.equal(v2, 0.20);
+
+  // 8.78 m3/s with slight variation (both delta 0.04m and total 3.54m)
+  const v3a = computeRiverVelocityMs(8.78, 0.04, 'deule_lille');
+  const v3b = computeRiverVelocityMs(8.78, 3.54, 'deule_lille');
+  assert.equal(v3a, v3b);
+  assert.ok(v3a >= 0.05 && v3a <= 0.07, `Expected velocity ~0.06 m/s, got ${v3a}`);
+});
+
 test('computeRiverVelocityMs returns 0 if flow is 0 or negative', () => {
   assert.equal(computeRiverVelocityMs(0, 1.0, 'seine_austerlitz'), 0);
   assert.equal(computeRiverVelocityMs(-10, 1.0, 'seine_austerlitz'), 0);
   assert.equal(computeRiverVelocityMs(null, 1.0, 'seine_austerlitz'), 0);
+  assert.equal(computeRiverVelocityMs(0, 0, 'deule_lille'), 0);
 });
 
 test('degreesToCardinal converts angles properly', () => {

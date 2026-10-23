@@ -19,6 +19,9 @@ export interface StationData {
   obsTime: string;
   currentVelocityMs: number;
   currentVelocityKmh: number;
+  baseHeightM?: number;
+  biefDeltaCm?: number | null;
+  isCanalBief?: boolean;
 }
 
 export interface WeatherData {
@@ -43,6 +46,13 @@ export function computeRiverVelocityMs(
   stationId: string
 ): number {
   if (!flowM3s || flowM3s <= 0) return 0;
+  if (stationId.startsWith('deule') || stationId.includes('deule') || stationId.includes('lille')) {
+    // Gabarit canal de la Deûle à Lille : largeur moyenne ~45 m, tirant d'eau 3,5 m => section mouillée de base ~155 m²
+    // Si heightM est la cote complète (~3.54m), on prend l'écart par rapport à 3.5m ; si c'est déjà l'écart (~0.04m), on l'utilise directement
+    const deltaH = heightM !== null ? (heightM > 2.0 ? heightM - 3.5 : heightM) : 0;
+    const dynamicArea = Math.max(100, 155 + deltaH * 45);
+    return Number((flowM3s / dynamicArea).toFixed(2));
+  }
   const isSeine = stationId.startsWith('seine');
   const h = heightM !== null && heightM > 0 ? heightM : isSeine ? 1.5 : 1.2;
   const dynamicArea = isSeine
@@ -129,6 +139,14 @@ export function generateBriefingText(
     lines.push(
       `• Régime : Marée maritime estuaire (HAROPA)`,
       `• Cote d'eau (H) : ${cur.heightM !== null ? cur.heightM.toFixed(2) : '--'} m (Var 6h : ${cur.heightTrendCm !== null ? cur.heightTrendCm : 0} cm)`
+    );
+  } else if (cur.isCanalBief || cur.river === 'deule') {
+    const deltaSign = cur.biefDeltaCm && cur.biefDeltaCm > 0 ? '+' : '';
+    const biefInfo = cur.biefDeltaCm !== null && cur.biefDeltaCm !== undefined ? ` (RN ${deltaSign}${cur.biefDeltaCm} cm)` : '';
+    lines.push(
+      `• Vitesse courant : ${cur.currentVelocityKmh.toFixed(1)} km/h (${cur.currentVelocityMs.toFixed(2)} m/s)`,
+      `• Débit : ${cur.flowM3s !== null ? Math.round(cur.flowM3s) : '--'} m³/s (${cur.flowTrend})`,
+      `• Hauteur / Bief : ${cur.heightM !== null ? cur.heightM.toFixed(2) : '--'} m${biefInfo} (Var 6h : ${cur.heightTrendCm !== null ? cur.heightTrendCm : 0} cm)`
     );
   } else {
     lines.push(
